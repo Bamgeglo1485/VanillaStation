@@ -12,17 +12,29 @@
     redphosphorus: 6
 
 - type: reaction
+<<<<<<< HEAD
   id: BlueSkyReaction
+=======
+  id: EphedronexReaction
+>>>>>>> f6e27ed77855e1dac2b19dc24f4d446835abc65e
   minTemp: 380.5
   reactants:
     redphosphorus:
       amount: 2
+<<<<<<< HEAD
     Ephedrine:
+=======
+    Desoxyephedrine:
+>>>>>>> f6e27ed77855e1dac2b19dc24f4d446835abc65e
       amount: 3
     PotassiumChlorate:
       amount: 2
   products:
+<<<<<<< HEAD
     BlueSky: 6
+=======
+    Ephedronex: 6
+>>>>>>> f6e27ed77855e1dac2b19dc24f4d446835abc65e
 
 - type: reaction
   id: HCIOReaction
@@ -63,4 +75,8 @@
       intensitySlope: 4
       maxTotalIntensity: 100
     - !type:CreateGas
+<<<<<<< HEAD
       gas: CarbonDioxide
+=======
+      gas: CarbonDioxide
+>>>>>>> f6e27ed77855e1dac2b19dc24f4d446835abc65e

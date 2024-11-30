@@ -65,7 +65,11 @@
             Asphyxiation: 2
 
 - type: reagent
+<<<<<<< HEAD
   id: BlueSky
+=======
+  id: Ephedronex
+>>>>>>> f6e27ed77855e1dac2b19dc24f4d446835abc65e
   name: reagent-name-blue-sky
   group: Narcotics
   desc: reagent-desc-blue-sky
@@ -78,8 +82,13 @@
     Narcotic:
       effects:
       - !type:MovespeedModifier
+<<<<<<< HEAD
         walkSpeedModifier: 1.2
         sprintSpeedModifier: 1.4
+=======
+        walkSpeedModifier: 1.35
+        sprintSpeedModifier: 1.55
+>>>>>>> f6e27ed77855e1dac2b19dc24f4d446835abc65e
       - !type:HealthChange
         conditions:
         - !type:ReagentThreshold
@@ -117,4 +126,8 @@
       - !type:ResetNarcolepsy
         conditions:
         - !type:ReagentThreshold
+<<<<<<< HEAD
           min: 30
+=======
+          min: 30
+>>>>>>> f6e27ed77855e1dac2b19dc24f4d446835abc65e

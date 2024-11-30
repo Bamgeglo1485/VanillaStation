@@ -54,4 +54,8 @@
       ChemistryLevel: 2
       MedicineLevel: 2
       RangeWeaponLevel: 2
+<<<<<<< HEAD
       MeleeWeaponLevel: 2
+=======
+      MeleeWeaponLevel: 2
+>>>>>>> f6e27ed77855e1dac2b19dc24f4d446835abc65e

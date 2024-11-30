@@ -40,7 +40,7 @@
       prob: 0.25
     # - id: ClothingBeltSheathFilled #Vanilla-loadouts
     - id: ClothingHeadsetAltCommand
-    - id: ClothingOuterArmorCaptainCarapace
+    - id: ClothingOuterArmorCaptainCarapace # Corvax-Next-CaptainDrobe
     - id: CommsComputerCircuitboard
     - id: DoorRemoteCommand
     - id: MedalCase
@@ -53,8 +53,7 @@
     - id: WeaponDisabler
     - id: ClothingEyesGlassesCommand
     # Corvax-Resprite-Start
-    - id: ClothingHeadCaptainHat
-    - id: ClothingOuterCoatCaptain
+#    - id: ClothingOuterCoatCaptain # Corvax-Next-CaptainDrobe
     # Corvax-Resprite-End
 
 # No laser table + Laser table
