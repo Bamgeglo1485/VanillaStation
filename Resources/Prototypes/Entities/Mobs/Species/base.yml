@@ -279,6 +279,8 @@
         Asphyxiation: -1.0
   - type: FireVisuals
     alternateState: Standing
+  - type: FootprintOwner # Corvax-Next-Footprints
+  - type: SkillLearner # vanilla-station
 
 - type: entity
   save: false
