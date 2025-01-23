@@ -1,0 +1,85 @@
+- type: entity
+  parent: BaseItem
+  id: HeatLamp
+  name: heatlamp
+  description: The uranium heat lamp almost completely prevents freezing and has a connector for slowly but surely charging the batteries.
+  components:
+  - type: Sprite
+    sprite: Vanilla/Objects/Misc/HeatLamp.rsi
+    layers:
+      - state: base
+      - state: light
+        shader: unshaded
+        visible: false
+        map: [ "light" ]
+  - type: Item
+    size: Normal
+  - type: Clothing
+    sprite: Vanilla/Objects/Misc/HeatLamp.rsi
+    state: on-equipped-NECK
+    equippedPrefix: off
+    quickEquip: false
+    equipSound:
+      path: /Audio/Items/belt_equip.ogg
+    slots:
+      - Neck
+  - type: PointLight
+    enabled: false
+    radius: 9
+    energy: 1
+    color: "#FFC458"
+    netsync: false
+  - type: Appearance
+  - type: PowerCellSlot
+    cellSlotId: cell_slot
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+  - type: ContainerContainer
+    containers:
+      cell_slot: !type:ContainerSlot {}
+  - type: ItemTogglePointLight
+  - type: ItemToggle
+    soundActivate:
+      path: /Audio/Vanilla/Effects/HeatLamp/enable.ogg
+      params:
+        volume: -5
+        variation: 0.1
+    soundDeactivate:
+      path: /Audio/Vanilla/Effects/HeatLamp/disable.ogg
+      params:
+        volume: -5
+        variation: 0.1
+  - type: UseDelay
+    delay: 2.0
+  - type: ComponentToggler
+    components:
+    - type: TemperatureProtection
+      heatingCoefficient: 2.5
+      coolingCoefficient: 0.05
+  - type: Armor
+    modifiers:
+      coefficients:
+        Slash: 0.98
+        Cold: 0.5
+  - type: GenericVisualizer
+    visuals:
+      enum.ToggleVisuals.Toggled:
+        enum.ToggleVisuals.Layer:
+          True: {state: light}
+          False: {state: base}
+  - type: ToggleableLightVisuals
+    spriteLayer: enum.ToggleVisuals.Layer
+    clothingVisuals:
+      neck:
+      - state: on-equipped-NECK
+  - type: ApcPowerReceiver
+    needsPower: false
+    powerLoad: 0
+  - type: StaticPrice
+    price: 5500
+  - type: Charger
+    slotId: cell_slot
+    portable: true
+    chargeRate: 3
