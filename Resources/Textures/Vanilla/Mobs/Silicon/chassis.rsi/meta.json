@@ -33,6 +33,26 @@
         },
         {
             "name": "R2_Arm"
+        },
+        {
+            "name": "SV_Body",
+            "directions": 4
+        },
+        {
+            "name": "SV_Enabled",
+            "directions": 4
+        },
+        {
+            "name": "SV_Arm"
+        },
+        {
+            "name": "SV_LArm"
+        },
+        {
+            "name": "SV_Leg"
+        },
+        {
+            "name": "SV_Head"
         }
     ]
 }

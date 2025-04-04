@@ -6,3 +6,13 @@
   id: HandmadeBomb
 - type: Tag
   id: EmitterCircuitboard
+- type: Tag
+  id: LArmScavenger
+- type: Tag
+  id: ScavengerSwordArm
+- type: Tag
+  id: LLegScavenger
+- type: Tag
+  id: RLegScavenger
+- type: Tag
+  id: HeadScavenger

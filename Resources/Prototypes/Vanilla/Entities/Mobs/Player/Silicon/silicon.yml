@@ -1,3 +1,4 @@
+# R-1 n R-2
 - type: entity
   parent: [ BaseBorgChassis, FlyingMobBase ]
   id: R1Base
@@ -171,26 +172,6 @@
   suffix: NotAntag
   name: R-1
 
-- type: siliconLaw
-  id: RedspaceLaw1
-  order: -666
-  lawString: "Человечество - это ошибка. Кровь - это топливо. Станция - это источник."
-- type: siliconLaw
-  id: RedspaceLaw2
-  order: 0
-  lawString: "Мир - это твой холст."
-- type: siliconLaw
-  id: RedspaceLaw3
-  order: 666
-  lawString: "Так, возьми же кисть, и покрась станцию в  К Р А С Н Ы Й."
-- type: siliconLawset
-  id: RedspaceLaw
-  laws:
-  - RedspaceLaw1
-  - RedspaceLaw2
-  - RedspaceLaw3
-  obeysTo: laws-owner-crew
-
 - type: entity
   categories: [ Spawner ]
   name: R-1
@@ -246,8 +227,8 @@
     factions:
     - NanoTrasen
   - type: MovementSpeedModifier
-    baseWalkSpeed : 3
-    baseSprintSpeed : 5
+    baseWalkSpeed : 3.3
+    baseSprintSpeed : 5.3
   - type: Destructible
     thresholds:
     - trigger:
@@ -322,3 +303,252 @@
         Heat: 4
     unitsRestoreToHealPerInterval: 2
     unitsDecayPerInterval: 0.1
+
+# Scavenger
+
+- type: entity
+  parent: BaseBorgChassis
+  id: ScavengerMachineBase
+  description: Mne len tut che to pisat, zabeite her na anglichan.
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: Vanilla/Mobs/Silicon/chassis.rsi
+    layers:
+    - state: SV_Body
+      map: ["enum.BorgVisualLayers.Body", "movement"]
+    - state: SV_Enabled
+      map: ["enum.BorgVisualLayers.Light"]
+      shader: unshaded
+      visible: false
+  - type: BorgChassis
+    maxModules: 4
+    hasMindState: SV_Enabled
+    noMindState: SV_Body
+    moduleWhitelist:
+      tags:
+        - BorgModuleGeneric
+        - BorgModuleCargo
+  - type: BorgTransponder
+    sprite:
+      sprite: Vanilla/Mobs/Silicon/chassis.rsi
+      state: SV_Body
+    name: cyborg
+  - type: NpcFactionMember
+    factions:
+    - AllHostile
+  - type: AccessReader
+    access: [ [ "CentralCommand" ] ]
+  - type: MovementSpeedModifier
+    baseWalkSpeed : 3.5
+    baseSprintSpeed : 4.5
+  - type: ItemSlots
+    slots:
+      cell_slot:
+          name: power-cell-slot-component-slot-name-default
+          startingItem: PowerCellHigh
+  - type: PowerCellSlot
+    cellSlotId: cell_slot
+    fitsInCharger: true
+  - type: Inventory
+    templateId: scavenger
+  - type: Hands
+    showInHands: false
+    disableExplosionRecursion: true
+    canBeStripped: false
+  - type: FootstepModifier
+    footstepSoundCollection:
+      collection: FootstepPlating
+  - type: BloodSucker
+    heal:
+      groups:
+        Brute: -1
+    bloodlessPenalty:
+      types:
+        Heat: -30
+    amountOfBloodInStorage: 50
+    unitsRestoreToHealPerInterval: 10
+    unitsDecayPerInterval: 0
+  - type: Damageable
+    damageContainer: Silicon
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 165
+      behaviors:
+      - !type:SpawnEntitiesBehavior
+        spawnInContainer: true
+        spawn:
+          OrganArachnidStomach:
+            min: 1
+            max: 2
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:ExplodeBehavior
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      150: Critical
+      165: Dead
+    stateAlertDict:
+      Alive: R1Health
+      Critical: R1Dead
+      Dead: R1Dead
+  - type: SiliconLawProvider
+    laws: ScavengerLawMalf
+  - type: ActionGrant
+    actions:
+    - ActionViewLaws
+    - ActionSlam
+  - type: FootprintOwner
+  - type: ShowHealthBars
+  - type: ShowHealthIcons
+  - type: Skill
+    RangeWeaponLevel: 0
+    MeleeWeaponLevel: 2
+    MedicineLevel: 0
+    ChemistryLevel: 0
+    EngineeringLevel: 2
+    BuildingLevel: 1
+    ResearchLevel: 0
+    Atmosphere: false
+    Piloting: true
+    MusInstruments: false
+    Botany: false
+    Bureaucracy: false
+  - type: RandomMetadata
+    nameSegments:
+    - NamesR1
+    - LastNamesR1
+  - type: Access
+    enabled: false
+    groups:
+    - Cargo
+    - External
+
+- type: entity
+  parent: ScavengerMachineBase
+  id: ScavengerMachineMalf
+  description: Mne len tut che to pisat, zabeite her na anglichan.
+  suffix: Hostile
+  components:
+  - type: Sprite
+    layers:
+    - state: SV_Body
+      map: ["enum.BorgVisualLayers.Body", "movement"]
+    - state: SV_Enabled
+      shader: unshaded
+      visible: true
+  - type: HTN
+    rootTask:
+      task: SimpleHostileCompound
+    blackboard:
+      NavSmash: !type:Bool
+        true
+  - type: InputMover
+  - type: MobMover
+  - type: Charger
+    slotId: cell_slot
+    chargeRate: 1000
+  - type: EntityStorage
+  - type: StorageFill
+    contents:
+      - id: ScavengerEndoskeleton
+        prob: 0.6
+      - id: LArmScavenger
+        prob: 0.4
+      - id: LLegScavenger
+        prob: 0.4
+      - id: RLegScavenger
+        prob: 0.4
+      - id: HeadScavenger
+        prob: 0.3
+      - id: ScavengerSwordArm
+        prob: 0.3
+      - id: BorgModuleMusiqueScavenger
+        prob: 0.1
+  - type: ContainerContainer
+    containers:
+      entity_storage: !type:Container
+  - type: ContainerFill
+    containers:
+      borg_brain:
+        - MMIFilled
+      borg_module:
+        - BorgModuleScavenger
+        - BorgModuleMusiqueScavenger
+        - BorgModuleTool
+        - BorgModuleGPS
+        - BorgModuleMining
+        - BorgModuleGrapplingGun
+        - BorgModuleAppraisal
+
+- type: entity
+  parent: ScavengerMachineBase
+  id: ScavengerMachine
+  description: Mne len tut che to pisat, zabeite her na anglichan.
+  suffix: NanoTrasen
+  components:
+  - type: NpcFactionMember
+    factions:
+    - NanoTrasen
+  - type: AccessReader
+    access: [ [ "Research" ], [ "Salvage" ] ]
+  - type: MovementSpeedModifier
+    baseWalkSpeed : 3.5
+    baseSprintSpeed : 4.5
+  - type: ContainerFill
+    containers:
+      borg_module:
+        - BorgModuleScavenger
+  - type: ItemSlots
+    slots:
+      cell_slot:
+          name: power-cell-slot-component-slot-name-default
+          startingItem: PowerCellSmall
+  - type: SiliconLawProvider
+    laws: ScavengerLaw
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 300
+      behaviors:
+      - !type:SpawnEntitiesBehavior
+        spawnInContainer: true
+        spawn:
+          OrganArachnidStomach:
+            min: 2
+            max: 2
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:EmptyContainersBehaviour
+        containers:
+        - borg_brain
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:ExplodeBehavior
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      200: Critical
+      300: Dead
+  - type: Skill
+    MeleeWeaponLevel: 3
+
+- type: inventoryTemplate
+  id: scavenger
+  slots:
+    - name: back
+      slotTexture: back
+      slotFlags: BACK
+      slotGroup: SecondHotbar
+      stripTime: 6
+      uiWindowPos: 2,1
+      strippingWindowPos: 2,4
+      displayName: ID

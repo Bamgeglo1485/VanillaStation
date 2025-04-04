@@ -1,0 +1,138 @@
+- type: entity
+  id: ScavengerEndoskeleton
+  parent: CyborgEndoskeleton
+  name: scavenger endoskeleton
+  components:
+  - type: RequiresSkill
+    RequiresEngineeringLevel: 1
+  - type: Sprite
+    noRot: true
+    drawdepth: Items
+    sprite: Vanilla/Mobs/Silicon/sv_bodyparts.rsi
+    state: endoskeleton
+  - type: Appearance
+  - type: ItemMapper
+    sprite: Vanilla/Mobs/Silicon/sv_bodyparts.rsi
+    mapLayers:
+      l-arm:
+        whitelist:
+          tags:
+          - LArmScavenger
+      r-arm:
+        whitelist:
+          tags:
+          - ScavengerSwordArm
+      l-leg:
+        whitelist:
+          tags:
+          - LLegScavenger
+      r-leg:
+        whitelist:
+          tags:
+          - RLegScavenger
+      head:
+        whitelist:
+          tags:
+          - HeadScavenger
+  - type: ContainerContainer
+    containers:
+      part-container: !type:Container
+      cell_slot: !type:Container
+  - type: PartAssembly
+    parts:
+      generic:
+      - LArmScavenger
+      - ScavengerSwordArm
+      - LLegScavenger
+      - RLegScavenger
+      - HeadScavenger
+  - type: Construction
+    graph: Scavenger
+    node: start
+    defaultTarget: cyborg
+    containers:
+    - part-container
+    - cell_slot
+
+- type: entity
+  id: LArmScavenger
+  parent: PartSilicon
+  name: scavenger arm
+  components:
+  - type: Sprite
+    sprite: Vanilla/Mobs/Silicon/chassis.rsi
+    state: SV_LArm
+  - type: BodyPart
+    partType: Hand
+    symmetry: Left
+  - type: Icon
+    sprite: Vanilla/Mobs/Silicon/sv_bodyparts.rsi
+    state: l-arm
+  - type: Tag
+    tags:
+    - Trash
+    - LArmScavenger
+  - type: Item
+    heldPrefix: borg-arm
+
+- type: entity
+  id: LLegScavenger
+  parent: PartSilicon
+  name: scavenger left leg
+  components:
+  - type: Sprite
+    sprite: Vanilla/Mobs/Silicon/chassis.rsi
+    state: SV_Leg
+  - type: BodyPart
+    partType: Leg
+    symmetry: Left
+  - type: Icon
+    sprite: Vanilla/Mobs/Silicon/sv_bodyparts.rsi
+    state: l-leg
+  - type: Tag
+    tags:
+    - Trash
+    - LLegScavenger
+  - type: Item
+    heldPrefix: borg-leg
+
+- type: entity
+  id: RLegScavenger
+  parent: PartSilicon
+  name: scavenger right leg
+  components:
+  - type: Sprite
+    sprite: Vanilla/Mobs/Silicon/chassis.rsi
+    state: SV_Leg
+  - type: BodyPart
+    partType: Leg
+    symmetry: Right
+  - type: Icon
+    sprite: Vanilla/Mobs/Silicon/sv_bodyparts.rsi
+    state: r-leg
+  - type: Tag
+    tags:
+    - Trash
+    - RLegScavenger
+  - type: Item
+    heldPrefix: borg-leg
+
+- type: entity
+  id: HeadScavenger
+  parent: PartSilicon
+  name: scavenger head
+  components:
+  - type: Sprite
+    sprite: Vanilla/Mobs/Silicon/chassis.rsi
+    state: SV_Head
+  - type: BodyPart
+    partType: Head
+  - type: Icon
+    sprite: Vanilla/Mobs/Silicon/sv_bodyparts.rsi
+    state: head
+  - type: Tag
+    tags:
+    - Trash
+    - HeadScavenger
+  - type: Item
+    heldPrefix: borg-head

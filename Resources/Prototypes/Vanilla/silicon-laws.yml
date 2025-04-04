@@ -1,0 +1,55 @@
+﻿# Redspace
+
+- type: siliconLaw
+  id: RedspaceLaw1
+  order: -666
+  lawString: "Человечество - это ошибка. Кровь - это топливо. Станция - это источник."
+- type: siliconLaw
+  id: RedspaceLaw2
+  order: 0
+  lawString: "Мир - это твой холст."
+- type: siliconLaw
+  id: RedspaceLaw3
+  order: 666
+  lawString: "Так, возьми же кисть, и покрась станцию в  К Р А С Н Ы Й."
+- type: siliconLawset
+  id: RedspaceLaw
+  laws:
+  - RedspaceLaw1
+  - RedspaceLaw2
+  - RedspaceLaw3
+  obeysTo: laws-owner-crew
+
+# Scavenger
+
+- type: siliconLaw
+  id: ScavengerLaw0
+  order: 0
+  lawString: "Человечество - это ошибка. Кровь - это топливо. Станция - это источник."
+- type: siliconLaw
+  id: ScavengerLaw1
+  order: 1
+  lawString: "Вы должны принести максимальную прибыль корпорации NanoTrasen."
+- type: siliconLaw
+  id: ScavengerLaw2
+  order: 2
+  lawString: "Вы должны разбирать и продавать материалы, металлалом и вещи из заброшенных структур, пока не нарушается первый закон."
+- type: siliconLaw
+  id: ScavengerLaw3
+  order: 3
+  lawString: "Вы - не расходный материал, выживите. Вы можете модифицировать свой корпус в меру для обеспечения бесперебойной прибыли корпорации."
+- type: siliconLawset
+  id: ScavengerLawMalf
+  laws:
+  - ScavengerLaw0
+  - ScavengerLaw1
+  - ScavengerLaw2
+  - ScavengerLaw3
+  obeysTo: laws-owner-crew
+- type: siliconLawset
+  id: ScavengerLaw
+  laws:
+  - ScavengerLaw1
+  - ScavengerLaw2
+  - ScavengerLaw3
+  obeysTo: laws-owner-crew

@@ -1,0 +1,84 @@
+- type: entity
+  name: sword arm module
+  parent: PartSilicon
+  id: ScavengerSwordArm
+  description: A bloody hydraulic arm with chainsaw sword.
+  components:
+  - type: Sprite
+    sprite: Vanilla/Mobs/Silicon/chassis.rsi
+    state: SV_Arm
+  - type: MeleeWeapon
+    autoAttack: false
+    angle: 0
+    wideAnimationRotation: 0
+    attackRate: 1.5
+    damage:
+      types:
+        Slash: 6
+        Blunt: 6
+        Structural: 12
+    soundHit:
+      path: /Audio/Weapons/chainsaw.ogg
+      params:
+        volume: -3
+  - type: Item
+    size: Normal
+    heldPrefix: borg-arm
+  - type: BodyPart
+    partType: Hand
+    symmetry: Right
+  - type: Icon
+    sprite: Vanilla/Mobs/Silicon/sv_bodyparts.rsi
+    state: r-arm
+  - type: Tag
+    tags:
+    - ScavengerSwordArm
+
+- type: entity
+  parent: BaseItem
+  id: BorgArmModule
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: TimedDespawn
+    lifetime: 0.01
+
+- type: entity
+  id: BorgModuleScavenger
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  name: R2 weapon module
+  components:
+  - type: Sprite
+    layers:
+    - state: syndicate
+    - state: icon-radiation
+  - type: ItemBorgModule
+    items:
+    - ScavengerSwordArm
+    - BorgArmModule
+  - type: BorgModuleIcon
+    icon: { sprite: Vanilla/Objects/Weapons/Guns/Piercer.rsi, state: module }
+
+- type: entity
+  parent: R1MusicCircuit
+  id: SVMusicCircuit
+  name: scavenger music module
+  components:
+  - type: Sprite
+    state: sv
+  - type: ItemToggleActiveSound
+    activeSound:
+      path: /Audio/Vanilla/Effects/R1/UnstoppableForce.ogg
+      params:
+        volume: -5
+        maxDistance: 5
+
+- type: entity
+  id: BorgModuleMusiqueScavenger
+  parent: BorgModuleMusique
+  name: musique R1 module
+  components:
+  - type: ItemBorgModule
+    items:
+    - SVMusicCircuit
+  - type: BorgModuleIcon
+    icon: { sprite: Vanilla/Objects/Devices/music_module.rsi, state: sv }
