@@ -302,7 +302,7 @@
       types:
         Heat: 4
     unitsRestoreToHealPerInterval: 2
-    unitsDecayPerInterval: 0.1
+    unitsDecayPerInterval: 0
 
 # Scavenger
 
@@ -333,7 +333,7 @@
     sprite:
       sprite: Vanilla/Mobs/Silicon/chassis.rsi
       state: SV_Body
-    name: cyborg
+    name: scavenger
   - type: NpcFactionMember
     factions:
     - AllHostile
@@ -350,8 +350,6 @@
   - type: PowerCellSlot
     cellSlotId: cell_slot
     fitsInCharger: true
-  - type: Inventory
-    templateId: scavenger
   - type: Hands
     showInHands: false
     disableExplosionRecursion: true
@@ -428,7 +426,6 @@
     enabled: false
     groups:
     - Cargo
-    - External
 
 - type: entity
   parent: ScavengerMachineBase
@@ -443,6 +440,8 @@
     - state: SV_Enabled
       shader: unshaded
       visible: true
+    - state: LiterallyNothing
+      map: ["enum.BorgVisualLayers.Light"]
   - type: HTN
     rootTask:
       task: SimpleHostileCompound
@@ -496,8 +495,6 @@
   - type: NpcFactionMember
     factions:
     - NanoTrasen
-  - type: AccessReader
-    access: [ [ "Research" ], [ "Salvage" ] ]
   - type: MovementSpeedModifier
     baseWalkSpeed : 3.5
     baseSprintSpeed : 4.5
@@ -540,6 +537,67 @@
       300: Dead
   - type: Skill
     MeleeWeaponLevel: 3
+  - type: Inventory
+    templateId: scavenger
+  - type: Body
+    prototype: Scavenger
+    requiredLegs: 0
+
+- type: entity
+  parent: ScavengerMachine
+  id: ScavengerMachineMalfGhostrole
+  description: Mne len tut che to pisat, zabeite her na anglichan.
+  suffix: Ghostrole, Hostile
+  components:
+  - type: NpcFactionMember
+    factions:
+    - AllHostile
+  - type: ContainerFill
+    containers:
+      borg_module:
+        - BorgModuleScavenger
+        - BorgModuleMusiqueScavenger
+        - BorgModuleTool
+        - BorgModuleGPS
+        - BorgModuleMining
+        - BorgModuleGrapplingGun
+        - BorgModuleAppraisal
+  - type: ItemSlots
+    slots:
+      cell_slot:
+          name: power-cell-slot-component-slot-name-default
+          startingItem: PowerCellHigh
+  - type: Charger
+    slotId: cell_slot
+    chargeRate: 1000
+  - type: SiliconLawProvider
+    laws: ScavengerLawMalf
+  - type: HTN
+    rootTask:
+      task: SimpleHostileCompound
+    blackboard:
+      NavSmash: !type:Bool
+        true
+  - type: InputMover
+  - type: MobMover
+  - type: Body
+    prototype: null
+    requiredLegs: 0
+  - type: GhostRole
+    name: ghost-role-information-scavenger-name
+    description: ghost-role-information-scavenger-description
+    rules: ghost-role-information-antagonist-rules
+    mindRoles:
+    - MindRoleGhostRoleSoloAntagonist
+  - type: Sprite
+    layers:
+    - state: SV_Body
+      map: ["enum.BorgVisualLayers.Body", "movement"]
+    - state: SV_Enabled
+      shader: unshaded
+      visible: true
+    - state: LiterallyNothing
+      map: ["enum.BorgVisualLayers.Light"]
 
 - type: inventoryTemplate
   id: scavenger
@@ -552,3 +610,19 @@
       uiWindowPos: 2,1
       strippingWindowPos: 2,4
       displayName: ID
+
+- type: body
+  id: Scavenger
+  name: "scavenger"
+  root: torso
+  slots:
+    torso:
+      part: TorsoHuman
+      connections:
+      - right_arm
+    right_arm:
+      part: RightArmHuman
+      connections:
+      - right_hand
+    right_hand:
+      part: RightHandHuman

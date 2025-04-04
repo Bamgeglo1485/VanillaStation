@@ -35,14 +35,6 @@
     - ScavengerSwordArm
 
 - type: entity
-  parent: BaseItem
-  id: BorgArmModule
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: TimedDespawn
-    lifetime: 0.01
-
-- type: entity
   id: BorgModuleScavenger
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
   name: R2 weapon module
@@ -54,7 +46,6 @@
   - type: ItemBorgModule
     items:
     - ScavengerSwordArm
-    - BorgArmModule
   - type: BorgModuleIcon
     icon: { sprite: Vanilla/Objects/Weapons/Guns/Piercer.rsi, state: module }
 
