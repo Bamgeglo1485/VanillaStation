@@ -2,10 +2,10 @@
   id: Packed
   mapName: 'Packed'
   mapPath: /Maps/packed.yml
-  # Corvax-start
+  # Vanilla-start
   minPlayers: 0
   maxPlayers: 25
-  # Corvax-end
+  # Vanilla-end
   stations:
     Packed:
       stationProto: StandardNanotrasenStation
