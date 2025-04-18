@@ -2,26 +2,31 @@
   id: VanillaMapPool
   maps:
   # Lowpop (0)
-  - CorvaxTushkan
   - CorvaxSilly
   - CorvaxFrame
-  - CorvaxTerra
   - Reach
-  - Packed
   - Saltern
   - Cluster
-  # Midpop (15)
-  - CorvaxMaus
-  - Train
+  # Lowpop+ (5)
+  - CorvaxTushkan
+  - CorvaxTerra
+  - Packed
   - Omega
-  # Midpop+ (20)
+  # Midpop (15)
   - CorvaxAwesome
+  - CorvaxPaper
+  - CorvaxMaus
+  - Elkridge
+  - Train
+  - Core
+  # Midpop+ (20)
+  - CorvaxIshimura
   - CorvaxGlacier
   - Bagel
-  - Plasma
   - Meta
   # Highpop (25)
   - CorvaxPilgrim
   - CorvaxDelta
   - CorvaxPearl
+  - CorvaxAvrite
   - Box
