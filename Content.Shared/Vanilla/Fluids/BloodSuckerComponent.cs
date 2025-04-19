@@ -36,13 +36,13 @@ public sealed partial class BloodSuckerComponent : Component
     /// Сколько юнитов крови будет сгорать просто так из хранилища при фулл хп в интервал
     /// </summary>
     [DataField]
-    public float UnitsDecayPerInterval = 0.2f;
+    public float UnitsDecayPerInterval = 0.3f;
 
     /// <summary>
     /// Сколько юнитов крови из хранилища будет переводиться в отхилл в интервал
     /// </summary>
     [DataField]
-    public float UnitsRestoreToHealPerInterval = 4f;
+    public float UnitsRestoreToHealPerInterval = 2.5f;
 
     /// <summary>
     /// Наше кровехранилище

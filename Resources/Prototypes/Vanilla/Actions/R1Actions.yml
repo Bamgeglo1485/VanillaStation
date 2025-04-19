@@ -116,7 +116,7 @@
       types:
         Blunt: 10
   - type: StaminaDamageOnCollide
-    damage: 20
+    damage: 30
   - type: TimedDespawn
     lifetime: 3
 
@@ -128,7 +128,7 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 19
+        Piercing: 25
     ignoreResistances: true
 
 - type: entity
@@ -263,9 +263,9 @@
   - type: CombatMode
     toggleMouseRotator: false
   - type: HTN
-    planCooldown: 0.1
+    planCooldown: 0.01
     rootTask:
-      task: TurretCompound
+      task: CoinCompound
     blackboard:
       RotateSpeed: !type:Single
         500
@@ -346,3 +346,31 @@
     fireCost: 200
   - type: SpawnOnDespawn
     prototype: ProjectileCoinReflectedCoin
+
+- type: htnCompound
+  id: CoinCompound
+  branches:
+    - tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:UtilityOperator
+            proto: NearbyGunTargets
+
+        - !type:HTNPrimitiveTask
+          preconditions:
+            - !type:KeyExistsPrecondition
+              key: Target
+            - !type:TargetInRangePrecondition
+              targetKey: Target
+              rangeKey: RangedRange
+            - !type:TargetInLOSPrecondition
+              targetKey: Target
+              rangeKey: RangedRange
+              opaqueKey: true
+          operator: !type:GunOperator
+            targetKey: Target
+            opaqueKey: true
+          services:
+            - !type:UtilityService
+              id: RangedService
+              proto: NearbyGunTargets
+              key: Target
