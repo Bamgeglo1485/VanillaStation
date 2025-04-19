@@ -63,12 +63,11 @@
   - type: BloodSucker
     heal:
       groups:
-        Brute: -2
-        Burn: -2
+        Brute: -1.5
+        Burn: -1.5
     bloodlessPenalty:
       types:
         Heat: 20
-    amountOfBloodInStorage: 150
   - type: SolutionContainerManager
     solutions:
       Blood:
