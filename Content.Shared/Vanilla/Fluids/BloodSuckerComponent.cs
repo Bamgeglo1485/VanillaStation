@@ -74,7 +74,7 @@ public sealed partial class BloodSuckerComponent : Component
     /// Радиус сосания
     /// </summary>
     [DataField]
-    public float Range = 1f;
+    public float Range = 2f;
 
     /// <summary>
     /// Звук всасывания крови

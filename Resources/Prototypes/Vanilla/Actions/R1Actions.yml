@@ -24,7 +24,7 @@
 - type: entity
   id: ActionDash
   name: Dash
-  description: +Tactical Repreat
+  description: +Tactical Retreat
   components:
   - type: InstantAction
     useDelay: 20
@@ -45,7 +45,7 @@
     revertOnCrit: true
     allowRepeatedMorphs: false
     exitPolymorphSound: /Audio/Vanilla/Effects/R1/Slam.ogg
-    duration: 3
+    duration: 4
 
 - type: entity
   parent: [BaseMob, Incorporeal]
@@ -78,6 +78,8 @@
   - type: Input
     context: "ghost"
   - type: InputMover
+  - type: SpawnOnTrigger
+    proto: R1DashTrack
   - type: TimedSpawner
     prototypes:
     - R1DashTrack

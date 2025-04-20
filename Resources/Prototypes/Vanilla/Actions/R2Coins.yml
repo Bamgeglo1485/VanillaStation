@@ -1,7 +1,7 @@
 ﻿- type: entity
   id: ActionDashR2
   name: Dash
-  description: +Tactical Repreat
+  description: +Tactical Retreat
   components:
   - type: InstantAction
     useDelay: 20
@@ -22,7 +22,7 @@
     revertOnCrit: true
     allowRepeatedMorphs: false
     exitPolymorphSound: /Audio/Vanilla/Effects/R1/Slam.ogg
-    duration: 3
+    duration: 4
 
 - type: entity
   parent: R1DashEntity
@@ -32,6 +32,8 @@
   - type: Sprite
     layers:
     - state: R2_Dash
+  - type: SpawnOnTrigger
+    proto: R2DashTrack
   - type: TimedSpawner
     prototypes:
     - R2DashTrack

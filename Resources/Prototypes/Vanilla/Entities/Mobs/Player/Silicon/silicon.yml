@@ -63,8 +63,8 @@
   - type: BloodSucker
     heal:
       groups:
-        Brute: -1.5
-        Burn: -1.5
+        Brute: -2
+        Burn: -2
     bloodlessPenalty:
       types:
         Heat: 20
@@ -339,5 +339,5 @@
     bloodlessPenalty:
       types:
         Heat: 4
-    unitsRestoreToHealPerInterval: 2
-    unitsDecayPerInterval: 0.1
+    unitsRestoreToHealPerInterval: 1
+    unitsDecayPerInterval: 0
