@@ -1,5 +1,6 @@
 delivery-recipient-examine = Этот предназначен для { $recipient }, { $job }.
 delivery-already-opened-examine = Он уже был открыт.
+delivery-earnings-examine = Доставка принесёт станции [color=yellow]{ $spesos }[/color] кредитов.
 delivery-recipient-no-name = Безымянный
 delivery-recipient-no-job = Неизвестно
 delivery-unlocked-self = Вы открыли { $delivery } с помощью своего отпечатка пальца.
@@ -16,3 +17,6 @@ delivery-teleporter-amount-examine =
     }
 delivery-teleporter-empty = { $entity } пуст(а).
 delivery-teleporter-empty-verb = Забрать почту
+# modifiers
+delivery-priority-examine = Это [color=orange]приоритетный { $type }[/color]. У вас осталось [color=orange]{ $time }[/color] для доставки, чтобы получить бонус.
+delivery-priority-expired-examine = Это [color=orange]приоритетный { $type }[/color]. Похоже, вы не успели в срок.
