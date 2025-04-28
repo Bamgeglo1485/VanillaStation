@@ -10,11 +10,9 @@
   - type: CartridgeAmmo
     proto: ProjectileFlame
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Ammunition/Casings/large_casing.rsi
+    sprite: Vanilla/Objects/Weapons/Guns/Ammunition/Casings/flamethrower.rsi
     layers:
     - state: base
       map: ["enum.AmmoVisualLayers.Base"]
-  - type: Appearance
-  - type: SpentAmmoVisuals
   - type: StaticPrice
     price: 20

@@ -11,7 +11,6 @@
     size: Small
   - type: BallisticAmmoProvider
     proto: CartridgeFlamethrower
-    mayTransfer: true
     whitelist:
       tags:
         - CartridgeFlamethrower

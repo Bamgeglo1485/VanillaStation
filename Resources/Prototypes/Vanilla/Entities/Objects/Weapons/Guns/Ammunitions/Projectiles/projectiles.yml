@@ -25,11 +25,11 @@
     temperature: 1000
     ignited: true
   - type: TimedDespawn
-    lifetime: .7
+    lifetime: .8
   - type: IgniteOnCollide
     fireStacks: .25
   - type: RepeatingTrigger
-    delay: .1
+    delay: .15
   - type: SpawnOnTrigger
     proto: FloorFire
   - type: Fixtures
