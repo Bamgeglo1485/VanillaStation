@@ -124,12 +124,9 @@
     belt: WeaponAdvancedLaser
   storage:
     back:
-    - BoxMagazineShotgunIncendiary
     - GrenadeIncendiary
     - PillAmbuzolPlus
     - PillAmbuzol
     - PillAmbuzol
     - PillAmbuzol
     - MeleeWeaponPlasmaSword
-  inhand:
-  - WeaponShotgunBulldog
