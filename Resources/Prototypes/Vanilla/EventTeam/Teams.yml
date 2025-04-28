@@ -65,26 +65,27 @@
 
 - type: eventteam
   id: CBURN_Zombie
-  shuttlePath: Maps/Vanilla/Purifier.yml
+  shuttlePath: Maps/Vanilla/Knocker_CBURN_Zombie.yml
   announcementText: eventteam-cburn-announcement-text
   sender: eventteam-cburn-announcement-sender
   announcementColor: Violet
   sound:
-    path: /Audio/Vanilla/StationEvents/ERT_Approved_V5.ogg
-    volume: -4
+    path: /Audio/Vanilla/StationEvents/ERT_Approved_V6.ogg
+    volume: -3
   specialUnits:
     EventTeamCBURNComander: SpawnMobCBURNComander
   regularUnit: SpawnMobCBURNRegular
+  maxRegularUnitAmount: 3
 
 - type: eventteam
   id: CBURN_Fauna
-  shuttlePath: Maps/Vanilla/Knocker_CBURN.yml
+  shuttlePath: Maps/Vanilla/Knocker_CBURN_Fauna.yml
   announcementText: eventteam-cburn-fauna-announcement-text
   sender: eventteam-cburn-announcement-sender
   announcementColor: Orange
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V5.ogg
-    volume: -4
+    volume: -3
   specialUnits:
     EventTeamCBURNComander: SpawnMobCBURNComander
   regularUnit: SpawnMobCBURNRegular
