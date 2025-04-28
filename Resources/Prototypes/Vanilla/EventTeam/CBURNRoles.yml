@@ -64,8 +64,8 @@
     ChemistryLevel: 3
     EngineeringLevel: 0
     BuildingLevel: 2
-    ResearchLevel: 0
-    Atmosphere: false
+    ResearchLevel: 1
+    Atmosphere: true
     Piloting: true
     MusInstruments: true
     Botany: false
