@@ -46,7 +46,7 @@
     prototypes: [ERTImplantedLeaderLoot]
   - type: Skill
     RangeWeaponLevel: 2
-    MeleeWeaponLevel: 2
+    MeleeWeaponLevel: 1
     MedicineLevel: 3
     ChemistryLevel: 3
     EngineeringLevel: 0
@@ -83,7 +83,7 @@
     prototypes: [ERTImplantedMedicLoot]
   - type: Skill
     RangeWeaponLevel: 2
-    MeleeWeaponLevel: 2
+    MeleeWeaponLevel: 1
     MedicineLevel: 3
     ChemistryLevel: 3
     EngineeringLevel: 0
