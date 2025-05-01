@@ -1,9 +1,8 @@
 # Роли
 - type: entity
-  name: Лидер ОБР
   parent: MobERTLeader
-  suffix: ОБР-Л
   id: MobERTSploderLeader
+  suffix: "ОБР-Л, Подрывник"
   components:
   - type: Loadout
     prototypes: [ERTSploderLeaderLoot]
@@ -22,10 +21,9 @@
     Bureaucracy: true
 
 - type: entity
-  name: оперативник ОБР
   parent: MobERTRegular
-  suffix: ОБР-О
   id: MobERTPSploderRegular
+  suffix: "ОБР-И, Подрывник"
   components:
   - type: Loadout
     prototypes: [ERTSploderRegularLoot]
@@ -65,7 +63,6 @@
     - WeaponDisabler
     - MedicatedSuture
     - RegenerativeMesh
-    - BoxZiptie
     - CrowbarRed
     - MagazineMagnum
     - CombatMedipen
