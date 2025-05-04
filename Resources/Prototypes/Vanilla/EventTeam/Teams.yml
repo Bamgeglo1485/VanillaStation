@@ -41,7 +41,6 @@
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V3.ogg
     params:
-    params:
       volume: -3
   specialUnits:
     EventTeamERTLeader: SpawnMobERTLeader
