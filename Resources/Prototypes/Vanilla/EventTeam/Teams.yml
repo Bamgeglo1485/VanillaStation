@@ -8,7 +8,8 @@
   announcementColor: Orange
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V2.ogg
-    volume: -2
+    params:
+      volume: -3
   specialUnits:
     EventTeamERTLeader: SpawnMobERTLeader
     EventTeamERTMedic: SpawnMobERTMedic
@@ -23,7 +24,8 @@
   announcementColor: Orange
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V1.ogg
-    volume: -3
+    params:
+      volume: -3
   specialUnits:
     EventTeamERTLeader: SpawnMobERTPeacekeeperLeader
     EventTeamERTMedic: SpawnMobERTPeacekeeperMedic
@@ -38,7 +40,9 @@
   announcementColor: Orange
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V3.ogg
-    volume: -3
+    params:
+    params:
+      volume: -3
   specialUnits:
     EventTeamERTLeader: SpawnMobERTLeader
     EventTeamERTMedic: SpawnMobERTMedic
@@ -54,7 +58,8 @@
   announcementColor: Orange
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V4.ogg
-    volume: -3
+    params:
+      volume: -3
   specialUnits:
     EventTeamERTLeader: SpawnMobERTPeacekeeperLeader
     EventTeamERTMedic: SpawnMobERTPeacekeeperMedic
@@ -69,7 +74,8 @@
   announcementColor: Orange
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V7.ogg
-    volume: -3
+    params:
+      volume: -3
   specialUnits:
     EventTeamERTLeader: SpawnMobERTSploderLeader
   regularUnit: SpawnMobERTSploderRegular
@@ -83,7 +89,8 @@
   announcementColor: Orange
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V7_Short.ogg
-    volume: -3
+    params:
+      volume: -3
   specialUnits:
     EventTeamERTLeader: SpawnMobERTSploderLeader
   regularUnit: SpawnMobERTSploderRegular
@@ -97,7 +104,8 @@
   announcementColor: Orange
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V7.ogg
-    volume: -3
+    params:
+      volume: -3
   specialUnits:
     EventTeamERTLeader: SpawnMobERTImplantedLeader
   regularUnit: SpawnMobERTImplantedRegular
@@ -113,7 +121,8 @@
   announcementColor: Violet
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V6.ogg
-    volume: -3
+    params:
+      volume: -3
   specialUnits:
     EventTeamCBURNComander: SpawnMobCBURNComander
   regularUnit: SpawnMobCBURNRegular
@@ -127,7 +136,8 @@
   announcementColor: Orange
   sound:
     path: /Audio/Vanilla/StationEvents/ERT_Approved_V5.ogg
-    volume: -3
+    params:
+      volume: -3
   specialUnits:
     EventTeamCBURNComander: SpawnMobCBURNComander
   regularUnit: SpawnMobCBURNRegular
