@@ -96,7 +96,7 @@
 - type: entity
   categories: [ HideSpawnMenu ]
   parent: ReflectCoin
-  id: ReflectCoin2
+  id: ReflectCoinR2
   name: coin
   components:
   - type: NpcFactionMember
