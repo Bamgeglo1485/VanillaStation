@@ -3,6 +3,7 @@ using Robust.Shared.GameStates;
 using Content.Shared.Damage;
 using Robust.Shared.Prototypes;
 using Content.Shared.Alert;
+using Content.Shared.Actions;
 
 namespace Content.Shared.Vanilla.BloodSucker;
 
@@ -75,6 +76,12 @@ public sealed partial class BloodSuckerComponent : Component
     /// </summary>
     [DataField]
     public float Range = 2f;
+    
+    /// <summary>
+    /// Должен ли переводить кровь в отхилл
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool CanHeal = true;
 
     /// <summary>
     /// Звук всасывания крови
@@ -85,4 +92,11 @@ public sealed partial class BloodSuckerComponent : Component
     [DataField]
     public ProtoId<AlertPrototype> BloodAlert = "BloodR1";
 
+    [DataField]
+    public ProtoId<AlertPrototype> BloodHealAlert = "BloodHealToggle";
+
+}
+
+public sealed partial class ToggleHealingActionEvent : InstantActionEvent
+{
 }

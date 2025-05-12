@@ -22,6 +22,8 @@ public sealed class BloodSuckerSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
+
+        SubscribeLocalEvent<BloodSuckerComponent, ToggleHealingActionEvent>(ToggleHealing);
     }
 
     public override void Update(float frameTime)
@@ -56,7 +58,7 @@ public sealed class BloodSuckerSystem : EntitySystem
                 return;
 
             // Если у персонажа есть повреждения, начинаем лечить его
-            if (damageable.TotalDamage > 0)
+            if (damageable.TotalDamage > 0 && bloodSucker.CanHeal == true)
             {
                 var AmountToHeal = bloodSucker.Heal * bloodSucker.UnitsRestoreToHealPerInterval;
                 _damageableSystem.TryChangeDamage(uid, AmountToHeal, ignoreResistances: true);
@@ -118,6 +120,12 @@ public sealed class BloodSuckerSystem : EntitySystem
                 return;
             }
         }
+    }
+
+    private void ToggleHealing(EntityUid uid, BloodSuckerComponent bloodSucker, ToggleHealingActionEvent args)
+    {
+        bloodSucker.CanHeal = !bloodSucker.CanHeal;
+        Dirty(uid, bloodSucker);
     }
 
 }

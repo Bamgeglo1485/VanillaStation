@@ -193,10 +193,10 @@
       - state: uranium
   - type: ExplodeOnTrigger
   - type: Explosive
-    explosionType: Default
-    totalIntensity: 30
-    intensitySlope: 5
-    maxIntensity: 50
+    explosionType: FireBomb
+    totalIntensity: 70
+    intensitySlope: 3
+    maxIntensity: 70
 
 - type: entity
   id: BorgModuleR1

@@ -153,6 +153,7 @@
     - AllAccess
   - type: MobPrice
     price: 1800000
+  - type: FlashImmunity
 
 - type: entity
   parent: R1Base
@@ -170,6 +171,7 @@
     - ActionSlam
     - ActionDash
     - ActionToggleLighting
+    - ActionToggleHealing
 
 - type: entity
   parent: R1Base
@@ -183,6 +185,7 @@
     - ActionSlam
     - ActionDash
     - ActionToggleLighting
+    - ActionToggleHealing
 
 - type: siliconLaw
   id: RedspaceLaw1
@@ -319,6 +322,7 @@
     - ActionSlam
     - ActionDashR2
     - ActionToggleLighting
+    - ActionToggleHealing
   - type: ActionGun
     action: FistfulOfDollarActionR2
     gunProto: FistfulOfDollarR2
