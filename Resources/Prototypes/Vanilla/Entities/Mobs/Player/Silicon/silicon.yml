@@ -345,3 +345,7 @@
         Heat: 4
     unitsRestoreToHealPerInterval: 1
     unitsDecayPerInterval: 0
+  - type: GhostRole
+    name: ghost-role-information-r2-name
+    description: ghost-role-information-r2-description
+    rules: ghost-role-information-silicon-rules

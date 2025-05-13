@@ -1,0 +1,11 @@
+ent-CoinBullet = { ent-BaseBulletAP }
+    .desc = { ent-BaseBulletAP.desc }
+ent-CoinCartidge = серебрянная монета
+    .desc = Выглядит обожённо.
+    .suffix = CoinCartridge, Antimateriel
+ent-ReflectCoin = монетка
+    .desc = { ent-BaseStructureDynamic.desc }
+ent-CoinFlash = вспышка
+    .desc = { "" }
+ent-ReflectCoinR2 = coin
+    .desc = { ent-ReflectCoin.desc }

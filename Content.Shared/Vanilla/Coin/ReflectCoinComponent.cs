@@ -5,7 +5,6 @@ using Content.Shared.Damage;
 
 namespace Content.Shared.Vanilla.Coin;
 
-
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class ReflectCoinComponent : Component
 {
@@ -33,7 +32,4 @@ public sealed partial class ReflectCoinComponent : Component
 
     [DataField("flashSound")]
     public SoundSpecifier FlashSound = new SoundPathSpecifier("/Audio/Vanilla/Effects/R1/Coin.ogg");
-
-    [DataField("reflectSound")]
-    public SoundSpecifier ReflectSound = new SoundPathSpecifier("/Audio/Vanilla/Effects/R1/Ricochet.ogg");
 }
