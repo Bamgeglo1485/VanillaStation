@@ -1,10 +1,10 @@
-ent-ActionDashR2 = Dash
-    .desc = +Tactical Retreat
+ent-ActionDashR2 = Рывок
+    .desc = +Тактическое отступление
 ent-R2DashEntity = { ent-R1DashEntity }
     .desc = { ent-R1DashEntity.desc }
 ent-R2DashTrack = { ent-R1DashTrack }
     .desc = { ent-R1DashTrack.desc }
-ent-FistfulOfDollarR2 = fistful of dollar
-    .desc = +fistful of dollar
-ent-FistfulOfDollarActionR2 = Fistful Of Dollar
-    .desc = +Fistful Of Dollar +Ricoshot
+ent-FistfulOfDollarR2 = кулак монет
+    .desc = +Кулак монет
+ent-FistfulOfDollarActionR2 = Кулак монет
+    .desc = +Кулак монет +Рикошет
