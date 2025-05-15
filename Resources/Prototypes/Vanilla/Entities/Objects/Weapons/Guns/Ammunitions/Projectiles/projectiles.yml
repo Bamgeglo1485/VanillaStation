@@ -95,7 +95,7 @@
   components:
   - type: ProjectileSpread
     proto: ShotCoreEjectProjectile
-    count: 3
+    count: 4
     spread: 10
 
 - type: entity
@@ -167,18 +167,3 @@
     lifetime: .3
   - type: RepeatingTrigger
     delay: .1
-  - type: SpawnOnDespawn
-    prototype: ExplosionCoreEject
-
-- type: entity
-  categories: [ HideSpawnMenu ]
-  id: ExplosionCoreEject
-  components:
-  - type: TriggerOnSpawn
-  - type: ExplodeOnTrigger
-  - type: Explosive
-    explosionType: FireBomb
-    totalIntensity: 10
-    intensitySlope: 1
-    maxIntensity: 10
-    canCreateVacuum: false

@@ -142,7 +142,7 @@
   id: RailPiercer
   damage:
     types:
-      Heat: 15
+      Heat: 10
       Piercing: 5
   muzzleFlash:
     sprite: Objects/Weapons/Guns/Projectiles/projectiles.rsi
