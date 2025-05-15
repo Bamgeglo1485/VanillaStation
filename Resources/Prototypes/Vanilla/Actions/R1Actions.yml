@@ -68,6 +68,9 @@
       collection: FootstepPlating
   - type: FootprintOwner
   - type: ShowHealthBars
+  - type: Reflect
+    reflectProb: 1
+    spread: 0
   - type: ShowHealthIcons
   - type: Access
     enabled: false

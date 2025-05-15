@@ -10,10 +10,10 @@ public sealed partial class ReflectCoinComponent : Component
 {
 
     [DataField, AutoNetworkedField]
-    public float DamageModifier = 2f;
+    public float DamageModifier = 1.5f;
 
     [DataField, AutoNetworkedField]
-    public float FlashingDamageModifier = 3f;
+    public float FlashingDamageModifier = 2.5f;
 
     [ViewVariables]
     public DamageSpecifier? StoredDamage;

@@ -1,22 +1,27 @@
 using Content.Shared.Vanilla.Coin;
-using Content.Shared.Damage;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Systems;
-using Robust.Server.GameObjects;
-using Robust.Shared.GameObjects;
-using Robust.Shared.Map;
-using Robust.Shared.Maths;
-using System.Numerics;
-using Content.Server.Weapons.Ranged.Systems;
-using Robust.Shared.Physics.Systems;
-using Content.Shared.Projectiles;
 using Content.Shared.Weapons.Ranged.Events;
+using Content.Shared.Mobs.Components;
 using Content.Shared.NPC.Components;
 using Content.Shared.NPC.Systems;
+using Content.Shared.Projectiles;
+using Content.Shared.Mobs;
+
+using Robust.Shared.Physics.Systems;
+using Robust.Shared.Audio.Systems;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Robust.Shared.Audio;
-using Robust.Shared.Audio.Systems;
+using Robust.Shared.Maths;
+using Robust.Shared.Map;
+
+using Content.Server.Weapons.Ranged.Systems;
+using Robust.Server.GameObjects;
+using Content.Shared.Damage;
+using System.Numerics;
+
 
 namespace Content.Server.Vanilla.Coin;
 
@@ -29,13 +34,11 @@ public sealed class ReflectCoinSystem : EntitySystem
     [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
 
-    private readonly HashSet<EntityUid> _excludedTargets = new();
-
     public override void Initialize()
     {
         base.Initialize();
         SubscribeLocalEvent<ReflectCoinComponent, DamageChangedEvent>(OnDamageReceived);
-        SubscribeLocalEvent<ReflectCoinComponent, AmmoShotEvent>(ModifieDamage);
+        SubscribeLocalEvent<ReflectCoinComponent, AmmoShotEvent>(ModifyDamage);
         SubscribeLocalEvent<ReflectCoinComponent, ComponentStartup>(OnCoinStartup);
     }
 
@@ -96,7 +99,7 @@ public sealed class ReflectCoinSystem : EntitySystem
         _gunSystem.AttemptShoot(uid, uid, gun, new EntityCoordinates(target.Value, Vector2.Zero));
     }
 
-    private void ModifieDamage(EntityUid uid, ReflectCoinComponent component, AmmoShotEvent args)
+    private void ModifyDamage(EntityUid uid, ReflectCoinComponent component, AmmoShotEvent args)
     {
         if (component.StoredDamage == null)
             return;
@@ -129,7 +132,7 @@ public sealed class ReflectCoinSystem : EntitySystem
         var query = EntityQueryEnumerator<ReflectCoinComponent>();
         while (query.MoveNext(out var uid, out _))
         {
-            if (uid == sourceUid || _excludedTargets.Contains(uid))
+            if (uid == sourceUid)
                 continue;
 
             var distance = (_transformSystem.GetWorldPosition(uid) - sourcePos).LengthSquared();
@@ -150,11 +153,13 @@ public sealed class ReflectCoinSystem : EntitySystem
         var nearestDistance = float.MaxValue;
         EntityUid? nearestTarget = null;
 
-        var query = EntityQueryEnumerator<NpcFactionMemberComponent>();
-        while (query.MoveNext(out var uid, out var factions))
+        var query = EntityQueryEnumerator<NpcFactionMemberComponent, MobStateComponent>();
+        while (query.MoveNext(out var uid, out var factions, out var mobState))
         {
-            if (uid == sourceUid || _excludedTargets.Contains(uid))
+            if (uid == sourceUid || mobState.CurrentState != MobState.Alive)
+            {
                 continue;
+            }
 
             var distance = (_transformSystem.GetWorldPosition(uid) - sourcePos).LengthSquared();
 

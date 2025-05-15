@@ -8,5 +8,5 @@ roles-antag-r1-objective = Добудьте кровь любой ценой.
 objective-issuer-r1-survive = [color=#c9baff]Модуль самосохранения R-1[/color]
 objective-issuer-r1-blood = [color=#d12642]Модуль битв R-1[/color]
 guide-r1 = R-1
-ghost-role-information-r2-name = R-2
+ghost-role-information-r2-name = Борг ОБР R-2
 ghost-role-information-r2-description = Убейте R-1, либо помогите ОБР справится с угрозой.

@@ -13,10 +13,6 @@
       map: ["enum.BorgVisualLayers.Light"]
       shader: unshaded
       visible: false
-    - state: R1_Light
-      shader: unshaded
-      map: ["light","enum.BorgVisualLayers.LightStatus"]
-      visible: false
   - type: BorgChassis
     maxModules: 4
     hasMindState: R1_Enabled
@@ -30,10 +26,7 @@
     factions:
     - Dragon
   - type: AccessReader
-    access: [ [ "CentralCommand" ] ]
-  - type: MovementSpeedModifier
-    baseWalkSpeed : 3.5
-    baseSprintSpeed : 5.5
+    access: [ [ "CentralCommand" ] ]=
   - type: ContainerFill
     containers:
       borg_brain:
@@ -41,7 +34,7 @@
       borg_module:
         - BorgModuleR1
         - BorgModuleTool
-        - BorgHandheldGPSBasic
+        - BorgModuleFireExtinguisher
         - BorgModuleMusiqueR1
   - type: ItemSlots
     slots:
@@ -60,14 +53,6 @@
   - type: FootstepModifier
     footstepSoundCollection:
       collection: FootstepPlating
-  - type: BloodSucker
-    heal:
-      groups:
-        Brute: -2
-        Burn: -2
-    bloodlessPenalty:
-      types:
-        Heat: 20
   - type: SolutionContainerManager
     solutions:
       Blood:
@@ -126,7 +111,7 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      200: Critical
+      170: Critical
       300: Dead
     stateAlertDict:
       Alive: R1Health
@@ -154,6 +139,24 @@
   - type: MobPrice
     price: 1800000
   - type: FlashImmunity
+
+  - type: HealForDamage
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 1.5
+        Heat: 1.5
+  - type: BloodSucker
+    heal:
+      groups:
+        Brute: -1
+        Burn: -1
+    bloodlessPenalty:
+      types:
+        Heat: 20
+  - type: MovementSpeedModifier
+    baseWalkSpeed : 6
+    baseSprintSpeed : 6
 
 - type: entity
   parent: R1Base
@@ -261,14 +264,11 @@
   - type: NpcFactionMember
     factions:
     - NanoTrasen
-  - type: MovementSpeedModifier
-    baseWalkSpeed : 3
-    baseSprintSpeed : 5
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 300
+        damage: 330
       behaviors:
       - !type:SpawnEntitiesBehavior
         spawnInContainer: true
@@ -308,8 +308,8 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      250: Critical
-      300: Dead
+      300: Critical
+      330: Dead
     stateAlertDict:
       Alive: R1Health
       Critical: R2Dead
@@ -333,19 +333,43 @@
       borg_module:
         - BorgModuleR2
         - BorgModuleTool
-        - BorgHandheldGPSBasic
+        - BorgModuleFireExtinguisher
         - BorgModuleMusiqueR2
+
+  - type: MovementSpeedModifier
+    baseWalkSpeed : 4.5
+    baseSprintSpeed : 4.5
   - type: BloodSucker
     heal:
       groups:
-        Brute: -1
-        Burn: -1
+        Brute: -0.5
+        Burn: -0.5
     bloodlessPenalty:
       types:
         Heat: 4
     unitsRestoreToHealPerInterval: 1
     unitsDecayPerInterval: 0
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 1
+        Piercing: 1.2
+        Heat: 1
+  - type: HealForDamage
+    healMultiplier: 1
+- type: entity
+  categories: [ Spawner ]
+  name: R-2
+  parent: BaseAntagSpawner
+  id: R2Spawner
+  suffix: Spawner
+  components:
   - type: GhostRole
     name: ghost-role-information-r2-name
     description: ghost-role-information-r2-description
     rules: ghost-role-information-silicon-rules
+  - type: Sprite
+    layers:
+    - state: green
+    - sprite: Vanilla/Mobs/Silicon/chassis.rsi
+      state: R2_Body

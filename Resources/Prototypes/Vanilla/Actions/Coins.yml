@@ -15,8 +15,12 @@
       shader: unshaded
   - type: PointLight
     color: "#ffd139"
-    radius: 1.0
+    radius: 2.0
     energy: 1.5
+  - type: SpawnOnTrigger
+    proto: CoinTrack
+  - type: RepeatingTrigger
+    delay: .05
 
 - type: entity
   parent: BaseCartridgeCaselessRifle
@@ -49,6 +53,7 @@
         density: 190
         layer:
         - SmallMobLayer
+        - Impassable
   - type: PointLight
     color: "#ffd139"
     radius: 2.0
@@ -90,6 +95,19 @@
   - type: Tag
     tags:
     - HideContextMenu
+
+- type: entity
+  id: CoinTrack
+  categories: [ HideSpawnMenu ]
+  name: монетка
+  components:
+  - type: Sprite
+    sprite: Vanilla/Objects/Weapons/Guns/Projectiles/projectiles.rsi
+    layers:
+    - state: coin
+      shader: unshaded
+  - type: TimedDespawn
+    lifetime: 0.1
 
 # R-2
 

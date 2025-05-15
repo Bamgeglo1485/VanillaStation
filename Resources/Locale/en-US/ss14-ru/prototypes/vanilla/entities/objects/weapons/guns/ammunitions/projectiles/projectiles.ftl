@@ -1,2 +1,16 @@
 ent-ProjectileFlame = flame
     .desc = Try not to get toasted.
+ent-ShotCoreEjectProjectile = { ent-BaseBullet }
+    .desc = { ent-BaseBullet.desc }
+ent-ShotCoreEject = { ent-ShotCoreEjectProjectile }
+    .desc = { ent-ShotCoreEjectProjectile.desc }
+ent-ShotCoreEjectProjectileHeat = { ent-BaseBullet }
+    .desc = { ent-BaseBullet.desc }
+ent-ShotCoreEjectHeat = shot
+    .desc = { ent-ShotCoreEjectProjectileHeat.desc }
+ent-CoreEjectProjectile = core
+    .desc = { ent-BaseBulletTrigger.desc }
+ent-ProjectileFlameCoreEject = { ent-ProjectileFlame }
+    .desc = { ent-ProjectileFlame.desc }
+ent-ExplosionCoreEject = { "" }
+    .desc = { "" }

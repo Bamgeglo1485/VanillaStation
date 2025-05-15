@@ -81,7 +81,7 @@ public sealed partial class BloodSuckerComponent : Component
     /// Должен ли переводить кровь в отхилл
     /// </summary>
     [DataField, AutoNetworkedField]
-    public bool CanHeal = true;
+    public bool CanHeal = false;
 
     /// <summary>
     /// Звук всасывания крови

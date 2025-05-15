@@ -7,5 +7,7 @@ ent-ReflectCoin = монетка
     .desc = { ent-BaseStructureDynamic.desc }
 ent-CoinFlash = вспышка
     .desc = { "" }
+ent-CoinTrack = монетка
+    .desc = { "" }
 ent-ReflectCoinR2 = coin
     .desc = { ent-ReflectCoin.desc }
