@@ -26,7 +26,7 @@
     factions:
     - Dragon
   - type: AccessReader
-    access: [ [ "CentralCommand" ] ]=
+    access: [ [ "CentralCommand" ] ]
   - type: ContainerFill
     containers:
       borg_brain:
@@ -353,7 +353,7 @@
     modifiers:
       coefficients:
         Blunt: 1
-        Piercing: 1.2
+        Piercing: 1.3
         Heat: 1
   - type: HealForDamage
     healMultiplier: 1
