@@ -2,6 +2,8 @@ using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Content.Shared.Damage;
+using Content.Shared.NPC.Prototypes;
+using Content.Shared.NPC.Systems;
 
 namespace Content.Shared.Vanilla.Coin;
 
@@ -14,6 +16,9 @@ public sealed partial class ReflectCoinComponent : Component
 
     [DataField, AutoNetworkedField]
     public float FlashingDamageModifier = 2.5f;
+
+    [DataField]
+    public HashSet<ProtoId<NpcFactionPrototype>> Faction = new();
 
     [ViewVariables]
     public DamageSpecifier? StoredDamage;

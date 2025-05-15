@@ -86,7 +86,7 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 11
+        Piercing: 8
 
 - type: entity
   id: ShotCoreEject
@@ -95,8 +95,8 @@
   components:
   - type: ProjectileSpread
     proto: ShotCoreEjectProjectile
-    count: 4
-    spread: 10
+    count: 5
+    spread: 30
 
 - type: entity
   id: ShotCoreEjectProjectileHeat
@@ -113,8 +113,7 @@
     impactEffect: BulletImpactEffectOrangeDisabler
     damage:
       types:
-        Heat: 8
-        Piercing: 3
+        Heat: 10
   - type: ChangeTemperatureOnCollide
     heat: 10000
 
@@ -126,8 +125,8 @@
   components:
   - type: ProjectileSpread
     proto: ShotCoreEjectProjectileHeat
-    count: 5
-    spread: 20
+    count: 3
+    spread: 5
 
 - type: entity
   id: CoreEjectProjectile
@@ -152,6 +151,60 @@
     intensitySlope: 1
     maxIntensity: 100
   - type: ExplodeOnTrigger
+  - type: Damageable
+  - type: Projectile
+    damage:
+      types:
+        Heat: 20
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 5
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:ExplodeBehavior
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          CoreEjectMiniExplode:
+            min: 1
+            max: 1
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "0.16,0.24,-0.16,-0.29"
+        density: 190
+        layer:
+        - SmallMobLayer
+        - Impassable
+      projectile:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "0.17,0.25,-0.17,-0.30"
+        hard: false
+        mask:
+        - Impassable
+        - BulletImpassable
+
+- type: entity
+  id: CoreEjectMiniExplode
+  parent: BaseItem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Projectiles/projectiles2.rsi
+    layers:
+      - state: uranium
+  - type: TriggerOnSpawn
+  - type: ExplodeOnTrigger
+  - type: Explosive
+    explosionType: DemolitionCharge
+    totalIntensity: 100
+    intensitySlope: 5
+    maxIntensity: 100
 
 - type: entity
   categories: [ HideSpawnMenu ]

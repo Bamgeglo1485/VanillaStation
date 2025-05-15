@@ -90,6 +90,17 @@ public sealed class ReflectCoinSystem : EntitySystem
             !HasComp<ProjectileBatteryAmmoProviderComponent>(uid))
             return;
 
+        if (args.Origin is { } attacker && TryComp<NpcFactionMemberComponent>(attacker, out var attackerFactions))
+        {
+            RemComp<NpcFactionMemberComponent>(uid);
+            AddComp<NpcFactionMemberComponent>(uid);
+
+            foreach (var faction in attackerFactions.Factions)
+            {
+                _factionSystem.AddFaction(uid, faction);
+            }
+        }
+
         component.StoredDamage = args.DamageDelta;
         var target = FindCoinTarget(uid) ?? FindNpcTarget(uid);
 

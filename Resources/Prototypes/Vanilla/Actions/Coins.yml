@@ -70,11 +70,23 @@
   - type: ProjectileBatteryAmmoProvider
     proto: CoinCartidge
     fireCost: 1
-  - type: NpcFactionMember
-    factions:
-    - Dragon
   - type: TimedDespawn
     lifetime: 3
+  - type: Explosive
+    explosionType: DemolitionCharge
+    totalIntensity: 200
+    intensitySlope: 5
+    maxIntensity: 200
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damage: 2
+        damageType: Shock
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:ExplodeBehavior
 
 - type: entity
   id: CoinFlash

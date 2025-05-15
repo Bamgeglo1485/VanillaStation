@@ -100,6 +100,48 @@
     autoRechargeRate: 2
     autoRecharge: true
 
+# Railgun
+
+- type: entity
+  name: Railcannon
+  parent: BaseItem
+  id: WeaponRailcannon
+  description: A railcannon that fires iron mined from blood.
+  components:
+  - type: Gun
+    soundGunshot:
+      path: /Audio/Vanilla/Effects/R1/Railcannon.ogg
+      params:
+        volume: -1
+  - type: Sprite
+    sprite: Vanilla/Objects/Weapons/Guns/Railgun.rsi
+    layers:
+      - state: base
+        map: ["enum.GunVisualLayers.Base"]
+      - state: charge-unshaded-1
+        map: ["enum.GunVisualLayers.MagUnshaded"]
+        shader: unshaded
+      - state: charge-unshaded-0
+        map: ["enum.GunVisualLayers.MagUnshaded"]
+        shader: unshaded
+  - type: ContainerContainer
+    containers:
+      ballistic-ammo: !type:Container
+  - type: Appearance
+  - type: ProjectileBatteryAmmoProvider
+    proto: ProjectileRailgun
+    fireCost: 50
+  - type: Battery
+    maxCharge: 50
+    startingCharge: 50
+  - type: BatterySelfRecharger
+    autoRecharge: true
+    autoRechargeRate: 1
+  - type: AmmoCounter
+  - type: MagazineVisuals
+    magState: charge
+    steps: 2
+    zeroVisible: true
 
 # Shotgun
 
@@ -130,11 +172,11 @@
     - proto: CoreEjectProjectile
       fireCost: 10
   - type: Battery
-    maxCharge: 12
-    startingCharge: 12
+    maxCharge: 15
+    startingCharge: 15
   - type: BatterySelfRecharger
     autoRecharge: true
-    autoRechargeRate: 0.2
+    autoRechargeRate: 0.3
 
 # Hitscan
 
@@ -153,3 +195,59 @@
   impactFlash:
     sprite: Objects/Weapons/Guns/Projectiles/projectiles.rsi
     state: impact_blue
+
+- type: entity
+  categories: [ HideSpawnMenu ]
+  parent: BaseBulletTrigger
+  id: ProjectileRailgun
+  components:
+  - type: PointLight
+    color: "#1fcbff"
+    radius: 3.0
+    energy: 5.0
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
+    layers:
+    - state: bluespace
+      shader: unshaded
+  - type: Projectile
+    damage:
+      types:
+        Shock: 60
+        Structural: 226
+    penetrationThreshold: 360
+    penetrationDamageTypeRequirement:
+    - Structural
+    deleteOnCollide: true
+  - type: IgnitionSource
+    temperature: 1000
+    ignited: true
+  - type: RepeatingTrigger
+    delay: .05
+  - type: SpawnOnTrigger
+    proto: RailTrack
+  - type: Electrified
+    requirePower: false
+  - type: LightningArcShooter
+    arcDepth: 2
+    maxLightningArc: 1
+    shootMinInterval: 0.3
+    shootMaxInterval: 0.3
+    shootRange: 3
+    lightningPrototype: Lightning
+
+- type: entity
+  categories: [ HideSpawnMenu ]
+  id: RailTrack
+  components:
+  - type: PointLight
+    color: "#1fcbff"
+    radius: 1.0
+    energy: 3.0
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
+    layers:
+    - state: magicm_cyan
+      shader: unshaded
+  - type: TimedDespawn
+    lifetime: .3

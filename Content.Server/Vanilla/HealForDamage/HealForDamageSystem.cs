@@ -58,7 +58,6 @@ public sealed class HealForDamageSystem : EntitySystem
             healDamage.DamageDict[type] = -amount * damage;
         }
 
-        // Применение исцеления
         _damageableSystem.TryChangeDamage(origin, healDamage);
     }
 }
