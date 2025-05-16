@@ -111,7 +111,6 @@
 - type: entity
   id: CoinTrack
   categories: [ HideSpawnMenu ]
-  name: монетка
   components:
   - type: Sprite
     sprite: Vanilla/Objects/Weapons/Guns/Projectiles/projectiles.rsi
@@ -120,6 +119,21 @@
       shader: unshaded
   - type: TimedDespawn
     lifetime: 0.1
+
+- type: entity
+  id: CoinShoot
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Vanilla/Actions/R1.rsi
+    layers:
+    - state: CoinBreake
+      shader: unshaded
+  - type: TimedDespawn
+    lifetime: 0.6
+  - type: TriggerOnSpawn
+  - type: SoundOnTrigger
+    sound: /Audio/Vanilla/Effects/R1/Ricochet.ogg
 
 # R-2
 

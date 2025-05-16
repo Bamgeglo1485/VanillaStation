@@ -82,7 +82,7 @@
   - type: Sprite
     sprite: Objects/Weapons/Guns/Projectiles/projectiles2.rsi
     layers:
-    - state: grapeshot
+    - state: buckshot-flare
   - type: Projectile
     damage:
       types:
@@ -220,3 +220,87 @@
     lifetime: .3
   - type: RepeatingTrigger
     delay: .1
+
+- type: entity
+  categories: [ HideSpawnMenu ]
+  parent: BaseBulletTrigger
+  id: ProjectileRailgun
+  components:
+  - type: PointLight
+    color: "#1fcbff"
+    radius: 3.0
+    energy: 5.0
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
+    layers:
+    - state: bluespace
+      shader: unshaded
+  - type: Projectile
+    damage:
+      types:
+        Shock: 60
+        Structural: 226
+    penetrationThreshold: 360
+    penetrationDamageTypeRequirement:
+    - Structural
+    deleteOnCollide: true
+  - type: IgnitionSource
+    temperature: 1000
+    ignited: true
+  - type: RepeatingTrigger
+    delay: .05
+  - type: SpawnOnTrigger
+    proto: RailTrack
+  - type: Electrified
+    requirePower: false
+  - type: LightningArcShooter
+    arcDepth: 2
+    maxLightningArc: 1
+    shootMinInterval: 0.3
+    shootMaxInterval: 0.3
+    shootRange: 3
+    lightningPrototype: Lightning
+
+- type: entity
+  categories: [ HideSpawnMenu ]
+  id: RailTrack
+  components:
+  - type: PointLight
+    color: "#1fcbff"
+    radius: 1.0
+    energy: 3.0
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
+    layers:
+    - state: magicm_cyan
+      shader: unshaded
+  - type: TimedDespawn
+    lifetime: .3
+
+- type: entity
+  id: BulletSlab
+  parent: BaseBullet
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - state: buckshot-flare
+  - type: Projectile
+    damage:
+      types:
+        Piercing: 15
+    ignoreResistances: true
+
+- type: entity
+  id: BulletNail
+  parent: BaseBullet
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - state: shard
+  - type: Projectile
+    damage:
+      types:
+        Piercing: 2
+    ignoreResistances: true

@@ -17,8 +17,8 @@ public sealed partial class ReflectCoinComponent : Component
     [DataField, AutoNetworkedField]
     public float FlashingDamageModifier = 2.5f;
 
-    [DataField]
-    public HashSet<ProtoId<NpcFactionPrototype>> Faction = new();
+    [ViewVariables]
+    public EntityUid? Shooter;
 
     [ViewVariables]
     public DamageSpecifier? StoredDamage;
@@ -31,6 +31,9 @@ public sealed partial class ReflectCoinComponent : Component
 
     [ViewVariables]
     public TimeSpan? FlashingEndTime { get; set; }
+
+    [DataField("shootEffect")]
+    public string ShootEffectPrototype = "CoinShoot";
 
     [DataField("flashEffect")]
     public string FlashEffectPrototype = "CoinFlash";

@@ -95,6 +95,8 @@ public sealed class ReflectCoinSystem : EntitySystem
             RemComp<NpcFactionMemberComponent>(uid);
             AddComp<NpcFactionMemberComponent>(uid);
 
+            component.Shooter = args.Origin;
+
             foreach (var faction in attackerFactions.Factions)
             {
                 _factionSystem.AddFaction(uid, faction);
@@ -108,6 +110,8 @@ public sealed class ReflectCoinSystem : EntitySystem
             return;
 
         _gunSystem.AttemptShoot(uid, uid, gun, new EntityCoordinates(target.Value, Vector2.Zero));
+        var coords = Transform(uid).Coordinates;
+        Spawn(component.ShootEffectPrototype, coords);
     }
 
     private void ModifyDamage(EntityUid uid, ReflectCoinComponent component, AmmoShotEvent args)
@@ -128,6 +132,7 @@ public sealed class ReflectCoinSystem : EntitySystem
             if (TryComp<ProjectileComponent>(projectile, out var projectileComp))
             {
                 projectileComp.Damage = newDamage;
+                projectileComp.Shooter = component.Shooter;
             }
         }
 
