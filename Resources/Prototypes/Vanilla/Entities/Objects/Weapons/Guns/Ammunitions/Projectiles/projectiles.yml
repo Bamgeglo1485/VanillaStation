@@ -199,6 +199,7 @@
     layers:
       - state: uranium
   - type: TriggerOnSpawn
+  - type: DeleteOnTrigger
   - type: ExplodeOnTrigger
   - type: Explosive
     explosionType: DemolitionCharge
@@ -289,7 +290,6 @@
     damage:
       types:
         Piercing: 15
-    ignoreResistances: true
 
 - type: entity
   id: BulletNail
