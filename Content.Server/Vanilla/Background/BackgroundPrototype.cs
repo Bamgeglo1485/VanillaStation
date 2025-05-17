@@ -9,6 +9,10 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Roles;
 using Content.Shared.Vanilla.Jammer;
 using Robust.Shared.GameObjects;
+using JetBrains.Annotations;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Set;
+using Robust.Shared.Utility;
+using Content.Shared.Implants;
 
 
 using Robust.Shared.Utility;
@@ -47,6 +51,14 @@ public sealed partial class RaiseEventSpecial : BackgroundSpecial
 {
     [DataField(required: true)]
     public List<BackgroundEvent> Events { get; private set; }
+    public override void apply(EntityUid mob)
+    {
+    }
+}
+public sealed partial class AddImplantSpecial : BackgroundSpecial
+{
+    [DataField("implants", customTypeSerializer: typeof(PrototypeIdHashSetSerializer<EntityPrototype>))]
+    public HashSet<String> Implants { get; private set; } = new();
     public override void apply(EntityUid mob)
     {
     }
