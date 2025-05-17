@@ -1,4 +1,3 @@
-using Content.Shared.Vanilla.Coin;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Systems;
 using Content.Shared.Weapons.Ranged.Events;
@@ -7,7 +6,7 @@ using Content.Shared.NPC.Components;
 using Content.Shared.NPC.Systems;
 using Content.Shared.Projectiles;
 using Content.Shared.Mobs;
-
+using Content.Shared.Damage;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.GameObjects;
@@ -16,71 +15,34 @@ using Robust.Shared.Timing;
 using Robust.Shared.Audio;
 using Robust.Shared.Maths;
 using Robust.Shared.Map;
-
-using Content.Server.Weapons.Ranged.Systems;
-using Robust.Server.GameObjects;
-using Content.Shared.Damage;
 using System.Numerics;
 
 
-namespace Content.Server.Vanilla.Coin;
+namespace Content.Shared.Vanilla.Coin;
 
 public sealed class ReflectCoinSystem : EntitySystem
 {
-    [Dependency] private readonly DamageableSystem _damageableSystem = default!;
-    [Dependency] private readonly TransformSystem _transformSystem = default!;
+    [Dependency] private readonly SharedTransformSystem _transformSystem = default!;
     [Dependency] private readonly SharedGunSystem _gunSystem = default!;
     [Dependency] private readonly NpcFactionSystem _factionSystem = default!;
-    [Dependency] private readonly IGameTiming _gameTiming = default!;
-    [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
 
     public override void Initialize()
     {
         base.Initialize();
         SubscribeLocalEvent<ReflectCoinComponent, DamageChangedEvent>(OnDamageReceived);
         SubscribeLocalEvent<ReflectCoinComponent, AmmoShotEvent>(ModifyDamage);
-        SubscribeLocalEvent<ReflectCoinComponent, ComponentStartup>(OnCoinStartup);
+        SubscribeLocalEvent<ReflectCoinComponent, MapInitEvent>(OnCoinStartup);
     }
-
-    private void OnCoinStartup(EntityUid uid, ReflectCoinComponent component, ComponentStartup args)
+    private void OnCoinStartup(EntityUid uid, ReflectCoinComponent component, MapInitEvent args)
     {
-        var curTime = _gameTiming.CurTime;
-        component.FlashingStartTime = curTime + TimeSpan.FromSeconds(1.5);
-        component.FlashingEndTime = component.FlashingStartTime + TimeSpan.FromSeconds(0.5);
-    }
-
-    public override void Update(float frameTime)
-    {
-        base.Update(frameTime);
-
-        var currentTime = _gameTiming.CurTime;
-        var query = EntityQueryEnumerator<ReflectCoinComponent>();
-
-        while (query.MoveNext(out var uid, out var component))
+        uid.SpawnTimer(TimeSpan.FromSeconds(1.5), () =>
         {
-            if (component.FlashingStartTime == null)
-                continue;
+            component.Flashing = true;
+            Spawn(component.FlashEffectPrototype, Transform(uid).Coordinates);
 
-            if (!component.Flashing && currentTime >= component.FlashingStartTime)
-            {
-                component.Flashing = true;
-                if (component.FlashEffectPrototype != null)
-                {
-                    var coords = Transform(uid).Coordinates;
-                    Spawn(component.FlashEffectPrototype, coords);
-                }
-
-                _audioSystem.PlayPvs(component.FlashSound, uid);
-            }
-            else if (component.Flashing && currentTime >= component.FlashingEndTime)
-            {
-                component.Flashing = false;
-                component.FlashingStartTime = null;
-                component.FlashingEndTime = null;
-            }
-        }
+            uid.SpawnTimer(TimeSpan.FromSeconds(0.5), () => component.Flashing = false);
+        });
     }
-
     private void OnDamageReceived(EntityUid uid, ReflectCoinComponent component, DamageChangedEvent args)
     {
         if (args.DamageDelta?.GetTotal() <= 0f)
@@ -92,16 +54,9 @@ public sealed class ReflectCoinSystem : EntitySystem
 
         if (args.Origin is { } attacker && TryComp<NpcFactionMemberComponent>(attacker, out var attackerFactions))
         {
-            RemComp<NpcFactionMemberComponent>(uid);
-            AddComp<NpcFactionMemberComponent>(uid);
-
-            component.Shooter = args.Origin;
-
-            foreach (var faction in attackerFactions.Factions)
-            {
-                _factionSystem.AddFaction(uid, faction);
-            }
+            CopyComp(attacker, uid, attackerFactions);
         }
+
 
         component.StoredDamage = args.DamageDelta;
         var target = FindCoinTarget(uid) ?? FindNpcTarget(uid);
@@ -120,23 +75,19 @@ public sealed class ReflectCoinSystem : EntitySystem
             return;
 
         var modifier = component.Flashing ? component.FlashingDamageModifier : component.DamageModifier;
-        var newDamage = new DamageSpecifier();
-
-        foreach (var (damageType, damageValue) in component.StoredDamage.DamageDict)
-        {
-            newDamage.DamageDict[damageType] = damageValue * modifier;
-        }
 
         foreach (var projectile in args.FiredProjectiles)
         {
             if (TryComp<ProjectileComponent>(projectile, out var projectileComp))
             {
-                projectileComp.Damage = newDamage;
+                projectileComp.Damage = component.StoredDamage * modifier;
                 projectileComp.Shooter = component.Shooter;
             }
         }
-
-        QueueDel(uid);
+        // крч если монетка удаляется сразу, то появляются ошибки в консоли,
+        // ошибка связана с анимацией выстрела, варианты фикса либо как-то убрать их, либо отсрочить удаление монетки до момента пока анимация выстрела не закончится
+        // либо еще какие-нибудь костыли, спавн еще одной невидимой монетки которая будет стрелять яхз
+        uid.SpawnTimer(TimeSpan.FromSeconds(0.4), () => QueueDel(uid));
     }
 
     private EntityUid? FindCoinTarget(EntityUid sourceUid)

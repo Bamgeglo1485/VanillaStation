@@ -107,6 +107,11 @@
   - type: Tag
     tags:
     - HideContextMenu
+  - type: EmitSoundOnSpawn
+    sound:
+      path: /Audio/Vanilla/Effects/R1/Coin.ogg
+      params:
+        variation: 0.3
 
 - type: entity
   id: CoinTrack
@@ -131,10 +136,11 @@
       shader: unshaded
   - type: TimedDespawn
     lifetime: 0.6
-  - type: TriggerOnSpawn
-  - type: SoundOnTrigger
-    sound: /Audio/Vanilla/Effects/R1/Ricochet.ogg
-
+  - type: EmitSoundOnSpawn
+    sound:
+      path: /Audio/Vanilla/Effects/R1/Ricochet.ogg
+      params:
+        variation: 0.3
 # R-2
 
 - type: entity
