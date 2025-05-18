@@ -1,5 +1,7 @@
 ent-BorgModuleR1 = R1 weapon module
     .desc = { ent-BaseBorgModule.desc }
+ent-BorgModuleR1Misc = R1 weapon module
+    .desc = { ent-BaseBorgModule.desc }
 ent-R2arm = R2 arm module
     .desc = A bloody hydraulic arm which has increased power.
 ent-R2armDebuffed = R2 arm module

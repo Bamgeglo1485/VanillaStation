@@ -3,6 +3,7 @@ using Content.Server.Chemistry.Containers.EntitySystems;
 using Content.Shared.Vanilla.BloodSucker;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.FixedPoint;
+using Content.Shared.Actions;
 using Robust.Shared.Audio;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
@@ -13,6 +14,7 @@ namespace Content.Server.Vanilla.BloodSucker;
 
 public sealed class BloodSuckerSystem : EntitySystem
 {
+    [Dependency] private readonly SharedActionsSystem _actions = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly DamageableSystem _damageableSystem = default!;
@@ -24,12 +26,19 @@ public sealed class BloodSuckerSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<BloodSuckerComponent, ToggleHealingActionEvent>(ToggleHealing);
+        SubscribeLocalEvent<BloodSuckerComponent, MapInitEvent>(OnMapInit);
+    }
+
+    private void OnMapInit(EntityUid uid, BloodSuckerComponent component, MapInitEvent args)
+    {
+        _actions.AddAction(uid, ref component.HealingActionEntity, component.HealingAction);
     }
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
         var currentTime = _gameTiming.CurTime;
+        //добавляем действие переключения ремонта
 
         //проходим по всем сущностям с компонентом кровосакера
         var query = EntityQueryEnumerator<BloodSuckerComponent>();
@@ -124,6 +133,9 @@ public sealed class BloodSuckerSystem : EntitySystem
 
     private void ToggleHealing(EntityUid uid, BloodSuckerComponent bloodSucker, ToggleHealingActionEvent args)
     {
+        args.Handled = true;
+        _actions.SetToggled(bloodSucker.HealingActionEntity, !bloodSucker.CanHeal);
+
         bloodSucker.CanHeal = !bloodSucker.CanHeal;
         Dirty(uid, bloodSucker);
     }

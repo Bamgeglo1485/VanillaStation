@@ -36,7 +36,6 @@ public sealed class ClientBloodSuckerSystem : EntitySystem
     private void OnShutdown(EntityUid uid, BloodSuckerComponent component, ComponentShutdown args)
     {
         _alerts.ClearAlert(uid, component.BloodAlert);
-        _alerts.ClearAlert(uid, component.BloodHealAlert);
     }
 
     private void SetBloodStorageAlert(EntityUid uid, BloodSuckerComponent component)
@@ -53,6 +52,5 @@ public sealed class ClientBloodSuckerSystem : EntitySystem
 
         // Показываем алерт
         _alerts.ShowAlert(uid, component.BloodAlert, severity);
-        _alerts.ShowAlert(uid, component.BloodHealAlert, component.CanHeal ? (short)1 : (short)0);
     }
 }

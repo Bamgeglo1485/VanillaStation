@@ -127,10 +127,10 @@
   - type: Appearance
   - type: ProjectileBatteryAmmoProvider
     proto: ProjectileRailgun
-    fireCost: 50
+    fireCost: 150
   - type: Battery
-    maxCharge: 50
-    startingCharge: 50
+    maxCharge: 150
+    startingCharge: 0
   - type: BatterySelfRecharger
     autoRecharge: true
     autoRechargeRate: 1
@@ -219,8 +219,8 @@
   id: RailPiercer
   damage:
     types:
-      Heat: 8
-      Piercing: 3
+      Heat: 11
+      Piercing: 5
   muzzleFlash:
     sprite: Objects/Weapons/Guns/Projectiles/projectiles.rsi
     state: muzzle_blue

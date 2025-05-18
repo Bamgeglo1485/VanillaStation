@@ -14,7 +14,7 @@
       shader: unshaded
       visible: false
   - type: BorgChassis
-    maxModules: 4
+    maxModules: 5
     hasMindState: R1_Enabled
     noMindState: R1_Body
   - type: BorgTransponder
@@ -33,6 +33,7 @@
         - R1Head
       borg_module:
         - BorgModuleR1
+        - BorgModuleR1Misc
         - BorgModuleTool
         - BorgModuleFireExtinguisher
         - BorgModuleMusiqueR1
@@ -174,7 +175,6 @@
     - ActionSlam
     - ActionDash
     - ActionToggleLighting
-    - ActionToggleHealing
 
 - type: entity
   parent: R1Base
@@ -188,7 +188,6 @@
     - ActionSlam
     - ActionDash
     - ActionToggleLighting
-    - ActionToggleHealing
 
 - type: siliconLaw
   id: RedspaceLaw1
@@ -322,7 +321,6 @@
     - ActionSlam
     - ActionDashR2
     - ActionToggleLighting
-    - ActionToggleHealing
   - type: ActionGun
     action: FistfulOfDollarActionR2
     gunProto: FistfulOfDollarR2
@@ -332,6 +330,7 @@
         - OrganHumanBrain
       borg_module:
         - BorgModuleR2
+        - BorgModuleR1Misc
         - BorgModuleTool
         - BorgModuleFireExtinguisher
         - BorgModuleMusiqueR2

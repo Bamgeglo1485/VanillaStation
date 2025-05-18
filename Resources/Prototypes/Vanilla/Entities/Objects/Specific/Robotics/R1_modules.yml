@@ -16,6 +16,22 @@
   - type: BorgModuleIcon
     icon: { sprite: Vanilla/Objects/Weapons/Guns/Piercer.rsi, state: module }
 
+- type: entity
+  id: BorgModuleR1Misc
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  name: R1 weapon module
+  components:
+  - type: Sprite
+    layers:
+    - state: syndicate
+    - state: icon-radiation
+  - type: ItemBorgModule
+    items:
+    - WeaponRailcannon
+    - WeaponNailgun
+  - type: BorgModuleIcon
+    icon: { sprite: Vanilla/Objects/Weapons/Guns/Railgun.rsi, state: module }
+
 # R2
 
 - type: entity

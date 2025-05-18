@@ -1,5 +1,7 @@
 ent-BorgModuleR1 = модуль вооружения R-1
     .desc = { ent-BaseBorgModule.desc }
+ent-BorgModuleR1Misc = модуль дополнительного вооружения R-1
+    .desc = { ent-BaseBorgModule.desc }
 ent-R2arm = модуль руки R-2
     .desc = Кровяная гидравлическая рука, который поглощает энергию и высвобождает её, подобно перчатке Г.О.Р.И.Л.Л.А.
 ent-R2armDebuffed = Модуль руки R2

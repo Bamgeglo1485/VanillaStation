@@ -1,5 +1,5 @@
-background-ui-SkillsLabel-prefix = [color=#00d0ff][bold]Навыки:[/bold][/color] { $skills }
-background-ui-EasySkills = [color={ $skilltype ->
+background-ui-SkillsLabel-prefix =  [color=#00d0ff][bold]Навыки:[/bold][/color] { $skills }
+background-ui-EasySkills =  [color={ $skilltype ->
         [Piloting] #85490c
         [Botany] #6db33f
         [MusInstruments] #355f44
@@ -14,7 +14,7 @@ background-ui-EasySkills = [color={ $skilltype ->
         [Atmosphere] Атмосфера
        *[other] ???
     }[/color]
-background-ui-Skills = [color={ $skilltype ->
+background-ui-Skills =  [color={ $skilltype ->
         [Piloting] #85490c
         [RangeWeapon] #a90000
         [MeleeWeapon] #ed4646
@@ -47,9 +47,10 @@ background-ui-Skills = [color={ $skilltype ->
         [Crime] Преступность
        *[other] ???
     }[/color]: { $lvl }
-background-ui-specials-header = [color=gold][bold]Особенности:[/bold][/color]
-background-ui-SkillPoints = [color=#0073ff] • { $count } очков навыка[/color]
+background-ui-specials-header =  [color=gold][bold]Особенности:[/bold][/color]
+background-ui-SkillPoints =  [color=#0073ff] • { $count } очков навыка[/color]
 #ui rolebackground
-rolebackground-ui-SkillPoints = [color=gold][bold]Свободных очков навыка:[/bold][/color] { $count }
-rolebackground-ui-selectedbackgrounds-header = [bold][color=#0ec7ec]Выбранные предыстории:[/color][/bold]
+rolebackground-ui-SkillPoints =  [color=gold][bold]Свободных очков навыка:[/bold][/color] { $count }
+rolebackground-ui-selectedbackgrounds-header =  [bold][color=#0ec7ec]Выбранные предыстории:[/color][/bold]
 rolebackground-ui-selectedbackgrounds-item = - { $name }
+background-window = Предыстория

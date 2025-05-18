@@ -33,6 +33,12 @@
         {
             "name": "CoinBreake",
             "delays": [ [ 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1 ] ]
+        },
+        {
+            "name": "Repair"
+        },
+        {
+            "name": "Repair2"
         }
     ]
 }

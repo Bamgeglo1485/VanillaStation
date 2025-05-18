@@ -93,7 +93,10 @@ public sealed partial class BloodSuckerComponent : Component
     public ProtoId<AlertPrototype> BloodAlert = "BloodR1";
 
     [DataField]
-    public ProtoId<AlertPrototype> BloodHealAlert = "BloodHealToggle";
+    public EntityUid? HealingActionEntity;
+
+    [DataField]
+    public EntProtoId HealingAction = "ActionToggleHealing";
 
 }
 
