@@ -1,5 +1,5 @@
-ent-ActionSlam = Слам
-    .desc = +Удар по земле
+ent-ActionSlam = Отталкивание
+    .desc = +Повышенное давление
 ent-ActionDash = Уклонение
     .desc = +Тактическое отступление
 ent-R1DashEntity = { ent-BaseMob }
@@ -21,4 +21,4 @@ ent-R2DashTrack = { ent-R1DashTrack }
 ent-FistfulOfDollarR2 = Горсть долларов
     .desc = +Горсть долларов
 ent-FistfulOfDollarActionR2 = Горсть долларов
-    .desc = +FГорсть долларов +Рикошет
+    .desc = +Горсть долларов +Рикошет
