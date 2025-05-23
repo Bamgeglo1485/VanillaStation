@@ -1,0 +1,21 @@
+- type: entity
+  parent: BaseGameRule
+  id: Whiteout
+  components:
+  - type: GameRule
+    delay:
+      min:  5
+      max:  5
+  - type: WhiteoutRule
+
+- type: gamePreset
+  id: Whiteout
+  name: whiteout-title
+  showInVote: false
+  description: whiteout-description
+  rules:
+  - BasicStationEventScheduler
+  - MeteorSwarmWhiteoutScheduler
+  - SpaceTrafficControlEventScheduler
+  - BasicRoundstartVariation
+  - Whiteout
