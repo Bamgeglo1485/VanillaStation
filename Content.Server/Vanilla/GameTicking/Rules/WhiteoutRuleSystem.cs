@@ -264,7 +264,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
             if (_processedHardsuits.Contains(uid))
                 continue;
 
-            if (HasComp<TemperatureProtectionComponent>(uid) && HasComp<PressureProtectionComponentt>(uid) && _tagSystem.HasTag(uid, "Hardsuit"))
+            if (HasComp<TemperatureProtectionComponent>(uid) && HasComp<PressureProtectionComponent>(uid) && _tagSystem.HasTag(uid, "Hardsuit"))
             {
                 RemComp<TemperatureProtectionComponent>(uid);
                 RemComp<PressureProtectionComponent>(uid);
