@@ -7,6 +7,8 @@
       min:  5
       max:  5
   - type: WhiteoutRule
+  - type: SetJammerOnSpawn
+    duration: 120
 
 - type: gamePreset
   id: Whiteout
@@ -19,3 +21,19 @@
   - SpaceTrafficControlEventScheduler
   - BasicRoundstartVariation
   - Whiteout
+
+- type: gamePreset
+  id: WhiteoutLondoners
+  name: whiteout-londoners-title
+  showInVote: false
+  description: whiteout-londoners-description
+  alias:
+    - Londoners
+    - WhiteoutRevolutionary
+  rules:
+  - BasicStationEventScheduler
+  - MeteorSwarmWhiteoutScheduler
+  - SpaceTrafficControlEventScheduler
+  - BasicRoundstartVariation
+  - Whiteout
+  - Revolutionary

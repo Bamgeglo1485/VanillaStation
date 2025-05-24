@@ -1,19 +1,14 @@
-- type: entityTable
-  id: MeteorSwarmWhiteout
-  table: !type:AllSelector
-    children:
-    - id: GameRuleMeteorSwarmLarge
-
 - type: entity
   parent: BaseGameRule
   id: MeteorSwarmWhiteoutScheduler
   components:
   - type: GameRule
   - type: BasicStationEventScheduler
-    minimumTimeUntilFirstEvent: 5
+    minimumTimeUntilFirstEvent: 60
     minMaxEventTiming:
       min: 5
       max: 5
     scheduledGameRules: !type:NestedSelector
       tableId: BasicMeteorSwarmEventsTable
+
 

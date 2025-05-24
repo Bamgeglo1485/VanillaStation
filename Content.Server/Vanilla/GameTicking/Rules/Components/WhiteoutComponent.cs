@@ -15,17 +15,17 @@ public sealed partial class WhiteoutRuleComponent : Component
     [DataField]
     public float WhiteoutFinalLength = 300f;
     [DataField]
-    public float WhiteoutPrepareTime = 10f;
+    public float WhiteoutPrepareTime = 50f;
 
     [DataField]
-    public float WhiteoutTemp = 123,15f;
+    public float WhiteoutTemp = 123.15f;
     [DataField]
     public float WhiteoutFinalTemp = 23.15f;
 
     [DataField]
-    public float WhiteoutStrength = 0.03f;
+    public float WhiteoutStrength = 0.02f;
     [DataField]
-    public float WhiteoutFinalModifier = 3f;
+    public float WhiteoutFinalModifier = 4f;
 
     [DataField]
     public string Weather = "SnowfallHeavy";

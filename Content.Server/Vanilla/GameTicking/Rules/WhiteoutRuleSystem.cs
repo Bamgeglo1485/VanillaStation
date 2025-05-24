@@ -3,6 +3,7 @@ using Content.Server.Administration.Managers;
 using Content.Server.Temperature.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Light.EntitySystems;
+using Content.Server.Cargo.Components;
 using Content.Server.GameTicking.Rules;
 using Content.Server.Atmos.Components;
 using Content.Server.Light.Components;
@@ -19,8 +20,10 @@ using Content.Shared.Weather;
 using Content.Shared.Damage;
 using Content.Shared.Atmos;
 using Content.Shared.Audio;
+using Content.Shared.Maps;
 using Content.Shared.Tag;
 
+using Robust.Shared.Map.Components;
 using Robust.Shared.Configuration;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Prototypes;
@@ -38,6 +41,7 @@ namespace Content.Server.Vanilla.GameTicking.Rules;
 
 public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 {
+    [Dependency] private readonly ITileDefinitionManager _tileDefinitionManager = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly PoweredLightSystem _poweredLight = default!;
     [Dependency] private readonly ServerGlobalSoundSystem _sound = default!;
@@ -51,6 +55,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     [Dependency] private readonly WeatherSystem _weather = default!;
     [Dependency] private readonly TagSystem _tagSystem = default!;
     [Dependency] private readonly ChatSystem _chat = default!;
+
 
     private enum WhiteoutState
     {
@@ -73,6 +78,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         base.Initialize();
     }
 
+    // Базовые действия при начале геймрула
     protected override void Started(EntityUid uid, WhiteoutRuleComponent comp, GameRuleComponent rule, GameRuleStartedEvent args)
     {
         base.Started(uid, comp, rule, args);
@@ -99,10 +105,13 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
             _activeMapUid = _mapManager.GetMapEntityId(_activeMapId);
         }
 
+        RemoveTradeStation();
+
         if (comp.WhiteoutPrepareAnnouncement != null)
             Announce(comp.WhiteoutPrepareAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
 
+    // Ну тут понятно
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
@@ -122,9 +131,9 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         }
     }
 
+    // Действия при буре
     private void ProcessWhiteout(EntityUid uid, WhiteoutRuleComponent comp, GameRuleComponent rule)
     {
-
         switch (_state)
         {
             case WhiteoutState.Preparing:
@@ -137,28 +146,34 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
             case WhiteoutState.Active:
             case WhiteoutState.FinalPhase:
+
                 var isFinal = _state == WhiteoutState.FinalPhase;
                 var (temp, strength) = GetWhiteoutParams(comp, isFinal);
 
+                // Заморозка газов на всех гридах карты
                 Freeze(temp, strength, _activeMapId);
 
+                // Ломание лампочек, окон(при финале) и превращение обычных тайлов в снег
                 var currentTime = _gameTiming.CurTime;
                 if (currentTime >= _nextGlassBreak)
                 {
                     BreakLights();
+                    ChangeTiles();
                     _nextGlassBreak = currentTime + TimeSpan.FromSeconds(5);
+
                     if (isFinal)
                     {
-                        DamageWithTag("Window", 100);
+                        DamageWithTag("Window", 130);
                     }
                 }
 
+                // Переход в финальчик
                 if (!isFinal && comp.WhiteoutLength - comp.TimeActive <= comp.WhiteoutFinalLength)
                 {
                     MakeAtmos(comp.WhiteoutFinalTemp);
-
                     _state = WhiteoutState.FinalPhase;
 
+                    // Объявление
                     if (comp.WhiteoutFinalAnnouncement != null)
                     {
                         _audio.PlayGlobal("/Audio/Vanilla/StationEvents/whiteout_final.ogg", Filter.Broadcast(), true);
@@ -166,6 +181,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                     }
                 }
 
+                // Конец
                 if (comp.TimeActive >= comp.WhiteoutPrepareTime + comp.WhiteoutLength)
                 {
                     EndWhiteout(uid, comp, rule, _activeMapId);
@@ -179,6 +195,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         }
     }
 
+    // Действия при начале
     private void StartWhiteout(EntityUid uid, WhiteoutRuleComponent comp, MapId mapId)
     {
         comp.TimeActive = 0f;
@@ -197,6 +214,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
             Announce(comp.WhiteoutAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
 
+    // Действия при конце
     private void EndWhiteout(EntityUid uid, WhiteoutRuleComponent comp, GameRuleComponent rule, MapId mapId)
     {
         GameTicker.EndGameRule(uid, rule);
@@ -209,6 +227,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
             Announce(comp.WhiteoutEndAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
 
+    // Заморозка газов
     private void Freeze(float targetTemp, float strength, MapId mapId)
     {
         var query = EntityQueryEnumerator<GridAtmosphereComponent, TransformComponent>();
@@ -236,6 +255,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         }
     }
 
+    // Убирание резистов скафов для баланса
     private void RemoveHardsuitProtection()
     {
         var query = _lookup.GetEntitiesInRange(_activeMapUid, 1000f);
@@ -246,18 +266,33 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
             if (HasComp<TemperatureProtectionComponent>(uid) && _tagSystem.HasTag(uid, "Hardsuit"))
             {
-                RemComp<TemperatureProtectionComponent>(uid);
+                RemComp<TemperatureProtectionComponent>(uid)
+                RemComp<PressureProtectionComponent>(uid);
                 _processedHardsuits.Add(uid);
             }
         }
     }
 
+    // Удаление компонента трейдпоста у поста для усложнения
+    private void RemoveTradeStation()
+    {
+        var query = EntityQueryEnumerator<TradeStationComponent, MapGridComponent>();
+        while (query.MoveNext(out var uid, out _, out _))
+        {
+            RemComp<TradeStationComponent>(uid);
+        }
+    }
+
+    // Ломание лампочек для красоты, если -90 и ниже
     private void BreakLights()
     {
         var query = _lookup.GetEntitiesInRange(_activeMapUid, 1000f);
         foreach (var uid in query)
         {
-            if (_processedLights.Contains(uid))
+            if (!Exists(uid) || Deleted(uid) || _processedLights.Contains(uid))
+                continue;
+
+            if (!CheckTileTemperature(uid, 183.15f))
                 continue;
 
             if (TryComp<PoweredLightComponent>(uid, out var light))
@@ -271,6 +306,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         }
     }
 
+    // Нанесение урона если у предмета тэг, ну окнам
     private void DamageWithTag(string tag, float damageAmount)
     {
         var damage = new DamageSpecifier();
@@ -293,28 +329,85 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         }
     }
 
+    // Проверка температуры тайла энтити, для проведения действий
+    private bool CheckTileTemperature(EntityUid uid, float threshold)
+    {
+        if (!Exists(uid) || Deleted(uid))
+            return false;
+
+        var transform = Transform(uid);
+        if (!TryComp<MapGridComponent>(transform.GridUid, out var grid))
+            return false;
+
+        var tile = grid.TileIndicesFor(transform.Coordinates);
+        var atmosphere = _atmosphere.GetTileMixture(transform.GridUid, null, tile, true);
+
+        return atmosphere != null && atmosphere.Temperature < threshold;
+    }
+
+    // Смена тайлов на снежочек
+    private void ChangeTiles(float freezeThreshold = 122f)
+    {
+        if (!_prototypeManager.TryIndex<ContentTileDefinition>("FloorSnowPlating", out var iceTile))
+            return;
+
+        var query = EntityQueryEnumerator<GridAtmosphereComponent, MapGridComponent>();
+        while (query.MoveNext(out var gridUid, out var gridAtmos, out var grid))
+        {
+            if (Transform(gridUid).MapID != _activeMapId)
+                continue;
+
+            foreach (var (tile, atmosTile) in gridAtmos.Tiles)
+            {
+                if (atmosTile.Air == null || atmosTile.Air.Temperature >= freezeThreshold)
+                    continue;
+
+                var tileRef = grid.GetTileRef(tile);
+                var tileDef = tileRef.Tile.GetContentTileDefinition();
+
+                if (tileRef.Tile.IsEmpty ||
+                    tileDef.ID == "FloorSnowPlating" ||
+                    tileDef.ID == "Lattice")
+                    continue;
+
+                if (RobustRandom.Prob(0.3f))
+                {
+                    grid.SetTile(tile, new Tile(iceTile.TileId));
+                }
+            }
+        }
+    }
+
+    // Создание атмосферы при начале бури, реалистик и +сложность
     private void MakeAtmos(float temp)
     {
-        var moles = new float[Atmospherics.AdjustedNumberOfGases];
-        moles[(int)Gas.Oxygen] = 36f;
-        moles[(int)Gas.Frezon] = 81f;
-        moles[(int)Gas.NitrousOxide] = 72f;
+        if (!_mapManager.MapExists(_activeMapId))
+            return;
 
+        var moles = new float[Atmospherics.AdjustedNumberOfGases];
+        moles[(int)Gas.Oxygen] = 126f;
+        moles[(int)Gas.Frezon] = 141f;
+        moles[(int)Gas.NitrousOxide] = 132f;
 
         var mixture = new GasMixture(moles, temp);
 
-        var mapAtmos = EnsureComp<MapAtmosphereComponent>(_activeMapUid);
-        _atmosphere.SetMapAtmosphere(_activeMapUid, false, mixture);
+        if (Exists(_activeMapUid))
+        {
+            var mapAtmos = EnsureComp<MapAtmosphereComponent>(_activeMapUid);
+            _atmosphere.SetMapAtmosphere(_activeMapUid, false, mixture);
+        }
     }
 
+    // Объявление
     private void Announce(string message, SoundSpecifier sound)
     {
         _audio.PlayGlobal(sound, Filter.Broadcast(), true);
         _chat.DispatchGlobalAnnouncement(Loc.GetString(message), playSound: false, colorOverride: Color.Red);
     }
 
+    // Вычисления всякие умные
     private (float Temp, float Strength) GetWhiteoutParams(WhiteoutRuleComponent comp, bool isFinal)
         => isFinal
-            ? (comp.WhiteoutFinalTemp, comp.WhiteoutStrength * comp.TimeActive / 1000 * comp.WhiteoutFinalModifier)
+            ? (comp.WhiteoutFinalTemp, comp.WhiteoutStrength * (comp.TimeActive / 1000+1) * comp.WhiteoutFinalModifier)
             : (comp.WhiteoutTemp, comp.WhiteoutStrength);
 }
