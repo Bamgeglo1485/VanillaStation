@@ -443,6 +443,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     // Вычисления всякие умные
     private (float Temp, float Strength) GetWhiteoutParams(WhiteoutRuleComponent comp, bool isFinal)
         => isFinal
-            ? (comp.WhiteoutFinalTemp, comp.WhiteoutStrength * (comp.TimeActive / 350+1) * comp.WhiteoutFinalModifier)
-            : (comp.WhiteoutTemp, comp.WhiteoutStrength);
+            ? (comp.WhiteoutFinalTemp, comp.WhiteoutStrength * (comp.TimeActive / 350+1) * comp.WhiteoutFinalModifier) 
+            : (comp.WhiteoutTemp, comp.WhiteoutStrength) * (comp.TimeActive / 350 + 1); // Сила охлаждение зависит от времени
 }
