@@ -44,6 +44,11 @@ public sealed partial class WhiteoutRuleComponent : Component
     [DataField]
     public SoundSpecifier WhiteoutFinalSoundAnnouncement = new SoundPathSpecifier("/Audio/Vanilla/StationEvents/whiteout_siren.ogg");
 
+    [DataField]
+    public SoundSpecifier WhiteoutMusic = new SoundPathSpecifier("/Audio/Vanilla/StationEvents/whiteout.ogg");
+    [DataField]
+    public SoundSpecifier WhiteoutFinalMusic = new SoundPathSpecifier("/Audio/Vanilla/StationEvents/whiteout_final.ogg");
+
     public float TimeActive;
     public TimeSpan NextUpdate;
 }

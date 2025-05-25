@@ -10,6 +10,19 @@
   - type: SetJammerOnSpawn
     duration: 120
 
+- type: entity
+  parent: BaseGameRule
+  id: WhiteoutRev
+  components:
+  - type: GameRule
+    delay:
+      min:  5
+      max:  5
+  - type: WhiteoutRule
+
+  - type: SetJammerOnSpawn
+    duration: 120
+
 - type: gamePreset
   id: Whiteout
   name: whiteout-title

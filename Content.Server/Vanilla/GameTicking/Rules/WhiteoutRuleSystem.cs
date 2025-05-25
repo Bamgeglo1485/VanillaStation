@@ -179,7 +179,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                     // Объявление
                     if (comp.WhiteoutFinalAnnouncement != null)
                     {
-                        _audio.PlayGlobal("/Audio/Vanilla/StationEvents/whiteout_final.ogg", Filter.Broadcast(), true);
+                        _audio.PlayGlobal(comp.WhiteoutFinalMusic, Filter.Broadcast(), true);
                         Announce(comp.WhiteoutFinalAnnouncement, comp.WhiteoutFinalSoundAnnouncement);
                     }
                 }
@@ -210,7 +210,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         MakeAtmos(comp.WhiteoutTemp);
 
-        _audio.PlayGlobal("/Audio/Vanilla/StationEvents/whiteout.ogg", Filter.Broadcast(), true);
+        _audio.PlayGlobal(comp.WhiteoutMusic, Filter.Broadcast(), true);
 
         if (!_prototypeManager.TryIndex<WeatherPrototype>(comp.Weather, out var weatherProto))
             return;
@@ -444,5 +444,5 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     private (float Temp, float Strength) GetWhiteoutParams(WhiteoutRuleComponent comp, bool isFinal)
         => isFinal
             ? (comp.WhiteoutFinalTemp, comp.WhiteoutStrength * (comp.TimeActive / 350+1) * comp.WhiteoutFinalModifier) 
-            : (comp.WhiteoutTemp, comp.WhiteoutStrength) * (comp.TimeActive / 350 + 1); // Сила охлаждение зависит от времени
+            : (comp.WhiteoutTemp, comp.WhiteoutStrength * (comp.TimeActive / 350+1)); // Сила охлаждение зависит от времени
 }
