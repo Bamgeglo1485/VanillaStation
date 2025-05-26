@@ -19,7 +19,6 @@
       min:  5
       max:  5
   - type: WhiteoutRule
-
   - type: SetJammerOnSpawn
     duration: 120
 
@@ -48,5 +47,5 @@
   - MeteorSwarmWhiteoutScheduler
   - SpaceTrafficControlEventScheduler
   - BasicRoundstartVariation
-  - Whiteout
+  - WhiteoutRev
   - Revolutionary
