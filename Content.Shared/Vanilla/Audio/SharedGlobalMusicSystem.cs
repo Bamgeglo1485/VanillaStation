@@ -1,7 +1,7 @@
 using Robust.Shared.Audio;
 using Robust.Shared.Serialization;
 
-namespace Content.Shared.Audio;
+namespace Content.Shared.Vanilla.Audio;
 
 [Serializable, NetSerializable]
 public sealed class PlayGlobalMusicEvent : EntityEventArgs
