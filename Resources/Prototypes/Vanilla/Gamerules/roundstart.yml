@@ -16,7 +16,7 @@
   components:
   - type: WhiteoutRule
     planetMap: true
-    whiteouthiteoutPrepareAnnouncement: whiteout-planet-prepare-announcement
+    whiteoutPrepareAnnouncement: whiteout-planet-prepare-announcement
     whiteoutAnnouncement: whiteout-planet-announcement
     whiteoutFinalAnnouncement: whiteout-announcement-final
     whiteoutEndAnnouncement: whiteout-announcement-end
