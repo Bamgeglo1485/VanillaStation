@@ -23,7 +23,7 @@ public sealed partial class WhiteoutRuleComponent : Component
     public float WhiteoutFinalTemp = 23.15f;
 
     [DataField]
-    public float WhiteoutStrength = 0.01f;
+    public float WhiteoutStrength = 0.035f;
     [DataField]
     public float WhiteoutFinalModifier = 2f;
 

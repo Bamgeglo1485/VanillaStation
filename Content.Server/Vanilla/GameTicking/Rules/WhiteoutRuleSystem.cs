@@ -1,5 +1,6 @@
 using Content.Server.GameTicking.Rules.Components;
 using Content.Server.Administration.Managers;
+using Content.Server.Explosion.EntitySystems;
 using Content.Server.Temperature.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Light.EntitySystems;
@@ -55,6 +56,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly IMapManager _mapManager = default!;
     [Dependency] private readonly WeatherSystem _weather = default!;
+    [Dependency] private readonly ExplosionSystem _boom = default!;
     [Dependency] private readonly TagSystem _tagSystem = default!;
     [Dependency] private readonly ChatSystem _chat = default!;
 
@@ -345,20 +347,14 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         if (_activeMapUid == null || !Exists(_activeMapUid))
             return;
 
-        const float lightningThreshold = 133.15f;
         var query = EntityQueryEnumerator<SmesComponent, TransformComponent>();
 
         while (query.MoveNext(out var uid, out var smes, out var transform))
         {
-            if (HasComp<LightningArcShooterComponent>(uid))
+            if (!CheckTileTemperature(uid, 133.15f))
                     continue;
 
-            if (!CheckTileTemperature(uid, lightningThreshold))
-                    continue;
-
-            var damage = new DamageSpecifier();
-            damage.DamageDict.Add("Blunt", FixedPoint2.New(500));
-            _damageable.TryChangeDamage(uid, damage);
+            _boom.QueueExplosion( uid, "Cryo", 200, 10, 200 );
         }
     }
 
@@ -443,6 +439,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     // Вычисления всякие умные
     private (float Temp, float Strength) GetWhiteoutParams(WhiteoutRuleComponent comp, bool isFinal)
         => isFinal
-            ? (comp.WhiteoutFinalTemp, comp.WhiteoutStrength * (comp.TimeActive / 350+1) * comp.WhiteoutFinalModifier) 
-            : (comp.WhiteoutTemp, comp.WhiteoutStrength * (comp.TimeActive / 350+1)); // Сила охлаждение зависит от времени
+            ? (comp.WhiteoutFinalTemp, comp.WhiteoutStrength * (comp.TimeActive / (comp.WhiteoutLength + comp.WhiteoutFinalLength)) * comp.WhiteoutFinalModifier) 
+            : (comp.WhiteoutTemp, comp.WhiteoutStrength * (comp.TimeActive / (comp.WhiteoutLength + comp.WhiteoutFinalLength))); // Сила охлаждение зависит от близости к концу
 }
