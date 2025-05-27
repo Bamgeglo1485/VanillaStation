@@ -113,8 +113,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         RemoveTradeStation();
 
-        if (comp.WhiteoutPrepareAnnouncement != null)
-            Announce(comp.WhiteoutPrepareAnnouncement, comp.WhiteoutSoundAnnouncement);
+        Announce(comp.WhiteoutPrepareAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
 
     // Ну тут понятно
@@ -176,16 +175,14 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                 // Переход в финальчик
                 if (!isFinal && comp.TimeActive >= comp.WhiteoutPrepareTime + comp.WhiteoutLength)
                 {
-                    MakeAtmos(comp.WhiteoutFinalTemp);
+                    MakeAtmos(comp.WhiteoutFinalTemp, comp.PlanetMap);
                     _state = WhiteoutState.FinalPhase;
 
                     _music.PlayGlobalMusic(_audio.ResolveSound(comp.WhiteoutFinalMusic));
 
                     // Объявление
-                    if (comp.WhiteoutFinalAnnouncement != null)
-                    {
-                        Announce(comp.WhiteoutFinalAnnouncement, comp.WhiteoutFinalSoundAnnouncement);
-                    }
+
+                    Announce(comp.WhiteoutFinalAnnouncement, comp.WhiteoutFinalSoundAnnouncement);
                 }
                 // Эвак
                 if (isFinal && comp.TimeActive >= comp.WhiteoutPrepareTime + comp.WhiteoutLength + comp.WhiteoutFinalLength - 60f)
@@ -212,7 +209,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     {
         comp.TimeActive = 0f;
 
-        MakeAtmos(comp.WhiteoutTemp);
+        MakeAtmos(comp.WhiteoutTemp, comp.PlanetMap);
 
         _music.PlayGlobalMusic(_audio.ResolveSound(comp.WhiteoutMusic));
 
@@ -222,8 +219,8 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         _weather.SetWeather(mapId, weatherProto, TimeSpan.FromMinutes(30));
         RemoveHardsuitProtection();
 
-        if (comp.WhiteoutAnnouncement != null)
-            Announce(comp.WhiteoutAnnouncement, comp.WhiteoutSoundAnnouncement);
+
+        Announce(comp.WhiteoutAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
 
     // Действия при конце
@@ -234,8 +231,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         RemComp<MapAtmosphereComponent>(_activeMapUid);
 
-        if (comp.WhiteoutEndAnnouncement != null)
-            Announce(comp.WhiteoutEndAnnouncement, comp.WhiteoutSoundAnnouncement);
+        Announce(comp.WhiteoutEndAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
 
     // Заморозка газов
@@ -275,7 +271,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
             if (_processedHardsuits.Contains(uid))
                 continue;
 
-            if (HasComp<TemperatureProtectionComponent>(uid) && HasComp<PressureProtectionComponent>(uid) && _tagSystem.HasTag(uid, "Hardsuit"))
+            if (HasComp<TemperatureProtectionComponent>(uid) && HasComp<PressureProtectionComponent>(uid) && HasComp<TransformComponent>(uid) && _tagSystem.HasTag(uid, "Hardsuit"))
             {
                 RemComp<TemperatureProtectionComponent>(uid);
                 RemComp<PressureProtectionComponent>(uid);
@@ -303,7 +299,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
             if (!Exists(uid) || Deleted(uid) || _processedLights.Contains(uid))
                 continue;
 
-            if (!TryComp<TransformComponent>(uid, out var xform))
+            if (!TryComp<TransformComponent>(uid, out var xform) || xform.GridUid == null)
                 continue;
 
             if (!CheckTileTemperature(uid, 183.15f))
@@ -375,7 +371,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         var tile = grid.TileIndicesFor(transform.Coordinates);
         var atmosphere = _atmosphere.GetTileMixture(transform.GridUid, null, tile, true);
 
-        return atmosphere != null && atmosphere.Temperature < threshold;
+        return atmosphere?.Temperature < threshold;
     }
 
     // Смена тайлов на снежочек
@@ -412,15 +408,24 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     }
 
     // Создание атмосферы при начале бури, реалистик и +сложность
-    private void MakeAtmos(float temp)
+    private void MakeAtmos(float temp, bool planet)
     {
         if (!_mapManager.MapExists(_activeMapId))
             return;
 
         var moles = new float[Atmospherics.AdjustedNumberOfGases];
-        moles[(int)Gas.Oxygen] = 126f;
-        moles[(int)Gas.Frezon] = 141f;
-        moles[(int)Gas.NitrousOxide] = 132f;
+
+        if (planet == true)
+        {
+            moles[(int)Gas.Oxygen] = 43.649558f;
+            moles[(int)Gas.Nitrogen] = 164.20624f;
+        }
+        else
+        {
+            moles[(int)Gas.Oxygen] = 126f;
+            moles[(int)Gas.Frezon] = 141f;
+            moles[(int)Gas.NitrousOxide] = 132f;
+        }
 
         var mixture = new GasMixture(moles, temp);
 
