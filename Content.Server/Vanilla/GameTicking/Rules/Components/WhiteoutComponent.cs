@@ -11,11 +11,11 @@ public sealed partial class WhiteoutRuleComponent : Component
 {
 
     [DataField]
-    public float WhiteoutLength = 900;
+    public float WhiteoutLength = 5;
     [DataField]
     public float WhiteoutFinalLength = 180f;
     [DataField]
-    public float WhiteoutPrepareTime = 50f;
+    public float WhiteoutPrepareTime = 1f;
 
     [DataField]
     public float WhiteoutTemp = 123.15f;

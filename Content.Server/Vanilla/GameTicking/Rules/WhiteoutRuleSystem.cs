@@ -9,6 +9,7 @@ using Content.Server.Tesla.Components;
 using Content.Server.Cargo.Components;
 using Content.Server.Atmos.Components;
 using Content.Server.Light.Components;
+using Content.Server.Vanilla.Audio;
 using Content.Server.Chat.Managers;
 using Content.Server.Chat.Systems;
 using Content.Server.Power.SMES;
@@ -47,7 +48,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     [Dependency] private readonly ITileDefinitionManager _tileDefinitionManager = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly PoweredLightSystem _poweredLight = default!;
-    [Dependency] private readonly ServerGlobalSoundSystem _sound = default!;
+    [Dependency] private readonly ServerGlobalMusicSystem _music = default!;
     [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
@@ -178,10 +179,11 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                     MakeAtmos(comp.WhiteoutFinalTemp);
                     _state = WhiteoutState.FinalPhase;
 
+                    _music.PlayGlobalMusic(_audio.ResolveSound(comp.WhiteoutFinalMusic));
+
                     // Объявление
                     if (comp.WhiteoutFinalAnnouncement != null)
                     {
-                        _audio.PlayGlobal(comp.WhiteoutFinalMusic, Filter.Broadcast(), true);
                         Announce(comp.WhiteoutFinalAnnouncement, comp.WhiteoutFinalSoundAnnouncement);
                     }
                 }
@@ -212,7 +214,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         MakeAtmos(comp.WhiteoutTemp);
 
-        _audio.PlayGlobal(comp.WhiteoutMusic, Filter.Broadcast(), true);
+        _music.PlayGlobalMusic(_audio.ResolveSound(comp.WhiteoutMusic));
 
         if (!_prototypeManager.TryIndex<WeatherPrototype>(comp.Weather, out var weatherProto))
             return;
