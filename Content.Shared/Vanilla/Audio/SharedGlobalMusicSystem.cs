@@ -6,8 +6,8 @@ namespace Content.Shared.Vanilla.Audio;
 [Serializable, NetSerializable]
 public sealed class PlayGlobalMusicEvent : EntityEventArgs
 {
-    public ResolvedSoundSpecifier Specifier;
-    public AudioParams? AudioParams;
+    public ResolvedSoundSpecifier Specifier { get; }
+    public AudioParams? AudioParams { get; }
 
     public PlayGlobalMusicEvent(ResolvedSoundSpecifier specifier, AudioParams? audioParams = null)
     {

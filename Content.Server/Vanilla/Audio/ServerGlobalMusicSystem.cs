@@ -2,6 +2,8 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
 
+using Content.Shared.Vanilla.Audio;
+
 namespace Content.Server.Vanilla.Audio;
 
 public sealed class ServerGlobalMusicSystem : EntitySystem
