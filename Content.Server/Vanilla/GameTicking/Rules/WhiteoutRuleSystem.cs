@@ -120,22 +120,20 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
-
         var currentTime = _gameTiming.CurTime;
         var query = EntityQueryEnumerator<WhiteoutRuleComponent, GameRuleComponent>();
 
         while (query.MoveNext(out var uid, out var comp, out var rule))
         {
-            if (currentTime < comp.NextUpdate)
-                continue;
+            if (currentTime < comp.NextUpdate) continue;
 
             comp.NextUpdate = currentTime + TimeSpan.FromSeconds(1);
             comp.TimeActive += 1f;
-
             ProcessWhiteout(uid, comp, rule);
         }
     }
 
+    // Сам вайтаут
     private void ProcessWhiteout(EntityUid uid, WhiteoutRuleComponent comp, GameRuleComponent rule)
     {
         switch (_state)
@@ -150,56 +148,65 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
             case WhiteoutState.Active:
             case WhiteoutState.FinalPhase:
-
                 var isFinal = _state == WhiteoutState.FinalPhase;
                 var (temp, strength) = GetWhiteoutParams(comp, isFinal);
-
-                // Заморозка газов на всех гридах карты
                 Freeze(temp, strength, _activeMapId);
 
-                // Ломание лампочек, окон(при финале) и превращение обычных тайлов в снег
-                var currentTime = _gameTiming.CurTime;
-                if (currentTime >= _nextGlassBreak)
+                // Ломания
+                if (_gameTiming.CurTime >= _nextGlassBreak)
                 {
-                    BreakLights();
-                    ChangeTiles();
-                    ExplodeSmes();
-                    _nextGlassBreak = currentTime + TimeSpan.FromSeconds(5);
+                    var entities = _lookup.GetEntitiesInRange(_activeMapUid, 1000f);
+                    foreach (var entity in entities)
+                    {
+                        if (!Exists(entity) || Deleted(entity)) continue;
 
+                        // Лампы 
+                        if (!_processedLights.Contains(entity) &&
+                            TryComp<PoweredLightComponent>(entity, out var light) &&
+                            CheckTileTemperature(entity, 183.15f) &&
+                            RobustRandom.Prob(0.3f))
+                        {
+                            _poweredLight.TryDestroyBulb(entity, light);
+                            _processedLights.Add(entity);
+                        }
+
+                        // Окна
+                        if (isFinal &&
+                            _tagSystem.HasTag(entity, "Window") &&
+                            RobustRandom.Prob(0.8f))
+                        {
+                            var damage = new DamageSpecifier();
+                            damage.DamageDict.Add("Blunt", FixedPoint2.New(130));
+                            _damageable.TryChangeDamage(entity, damage);
+                        }
+                    }
+
+                    // Смэсы
+                    ExplodeSmes();
                     if (isFinal)
                     {
-                        DamageWithTag("Window", 130);
+                        ChangeTiles();
                     }
+                    _nextGlassBreak = _gameTiming.CurTime + TimeSpan.FromSeconds(5);
                 }
 
-                // Переход в финальчик
+                // Переход между фазами
                 if (!isFinal && comp.TimeActive >= comp.WhiteoutPrepareTime + comp.WhiteoutLength)
                 {
                     MakeAtmos(comp.WhiteoutFinalTemp, comp.PlanetMap);
                     _state = WhiteoutState.FinalPhase;
-
                     _music.PlayGlobalMusic(_audio.ResolveSound(comp.WhiteoutFinalMusic));
-
-                    // Объявление
-
                     Announce(comp.WhiteoutFinalAnnouncement, comp.WhiteoutFinalSoundAnnouncement);
                 }
-                // Эвак
                 if (isFinal && comp.TimeActive >= comp.WhiteoutPrepareTime + comp.WhiteoutLength + comp.WhiteoutFinalLength - 60f)
                 {
                     _roundEnd.RequestRoundEnd(TimeSpan.FromMinutes(1), uid, false, "whiteout-evac", "department-CentralCommand");
                 }
-
-                // Конец
                 if (isFinal && comp.TimeActive >= comp.WhiteoutLength + comp.WhiteoutFinalLength)
                 {
                     EndWhiteout(uid, comp, rule, _activeMapId);
                     _state = WhiteoutState.Ended;
                 }
-                break;
-
-            case WhiteoutState.Ended:
-            default:
                 break;
         }
     }

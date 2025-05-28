@@ -14,11 +14,11 @@ public sealed partial class WhiteoutRuleComponent : Component
 
 
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float WhiteoutLength = 900;
+    public float WhiteoutLength = 90;
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float WhiteoutFinalLength = 180f;
+    public float WhiteoutFinalLength = 90f;
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float WhiteoutPrepareTime = 1f;
+    public float WhiteoutPrepareTime = 10f;
 
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float WhiteoutTemp = 123.15f;
