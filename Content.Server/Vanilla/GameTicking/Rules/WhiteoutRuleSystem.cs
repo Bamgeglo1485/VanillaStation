@@ -297,55 +297,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         }
     }
 
-    // Ломание лампочек для красоты, если -90 и ниже
-    private void BreakLights()
-    {
-        var query = _lookup.GetEntitiesInRange(_activeMapUid, 1000f);
-        foreach (var uid in query)
-        {
-            if (!Exists(uid) || Deleted(uid) || _processedLights.Contains(uid))
-                continue;
-
-            if (!TryComp<TransformComponent>(uid, out var xform) || xform.GridUid == null)
-                continue;
-
-            if (!CheckTileTemperature(uid, 183.15f))
-                continue;
-
-            if (TryComp<PoweredLightComponent>(uid, out var light))
-            {
-                if (RobustRandom.Prob(0.3f))
-                {
-                    _poweredLight.TryDestroyBulb(uid, light);
-                    _processedLights.Add(uid);
-                }
-            }
-        }
-    }
-
-    // Нанесение урона если у предмета тэг, ну окнам
-    private void DamageWithTag(string tag, float damageAmount)
-    {
-        var damage = new DamageSpecifier();
-        damage.DamageDict.Add("Blunt", FixedPoint2.New(damageAmount));
-
-        var query = _lookup.GetEntitiesInRange(_activeMapUid, 1000f);
-        foreach (var uid in query)
-        {
-            if (_processedWindows.Contains(uid))
-                continue;
-
-            if (_tagSystem.HasTag(uid, tag))
-            {
-                if (RobustRandom.Prob(0.8f))
-                {
-                    _damageable.TryChangeDamage(uid, damage);
-                    _processedWindows.Add(uid);
-                }
-            }
-        }
-    }
-
     // Взрыв смэсов
     private void ExplodeSmes()
     {
