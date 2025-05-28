@@ -587,8 +587,6 @@ namespace Content.Shared.Preferences
                 name = Name;
             }
 
-            name = name.Trim();
-
             if (configManager.GetCVar(CCVars.RestrictedNames))
             {
                 name = RestrictedNameRegex.Replace(name, string.Empty);
@@ -604,6 +602,8 @@ namespace Content.Shared.Preferences
             {
                 name = GetName(Species, gender);
             }
+
+            name = name.Trim();
 
             string flavortext;
             var maxFlavorTextLength = configManager.GetCVar(CCVars.MaxFlavorTextLength);
