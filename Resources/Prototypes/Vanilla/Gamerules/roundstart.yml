@@ -1,6 +1,8 @@
 - type: entity
   parent: BaseGameRule
   id: Whiteout
+  alias:
+    - whiteout
   components:
   - type: GameRule
     delay:
