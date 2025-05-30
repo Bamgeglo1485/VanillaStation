@@ -16,6 +16,7 @@ using Content.Server.Power.SMES;
 using Content.Server.RoundEnd;
 using Content.Server.Weather;
 using Content.Server.Damage;
+using Content.Server.Resist;
 using Content.Server.Audio;
 
 using Content.Shared.GameTicking.Components;
@@ -170,6 +171,16 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                             _processedLights.Add(entity);
                         }
 
+                        // Шкафчики. Иначе можно в них переждать бурю
+                        if (TryComp<ResistLockerComponent>(entity, out _) &&
+                            CheckTileTemperature(entity, 133.15f) &&
+                            RobustRandom.Prob(0.5f))
+                        {
+                            var damage = new DamageSpecifier();
+                            damage.DamageDict.Add("Blunt", FixedPoint2.New(50));
+                            _damageable.TryChangeDamage(entity, damage);
+                        }
+
                         // Окна
                         if (isFinal &&
                             _tagSystem.HasTag(entity, "Window") &&
@@ -183,10 +194,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
                     // Смэсы
                     ExplodeSmes();
-                    if (isFinal)
-                    {
-                        ChangeTiles();
-                    }
+                    ChangeTiles();
                     _nextGlassBreak = _gameTiming.CurTime + TimeSpan.FromSeconds(5);
                 }
 
