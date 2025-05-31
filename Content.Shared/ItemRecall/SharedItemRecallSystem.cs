@@ -5,6 +5,7 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Popups;
 using Content.Shared.Projectiles;
+using Content.Shared.Nuke;
 using Robust.Shared.GameStates;
 using Robust.Shared.Player;
 
@@ -59,7 +60,13 @@ public abstract partial class SharedItemRecallSystem : EntitySystem
                 _popups.PopupClient(Loc.GetString("item-recall-item-already-marked", ("item", markItem)), args.Performer, args.Performer);
                 return;
             }
-
+            //rayten-start
+            if (HasComp<NukeDiskComponent>(markItem))
+            {
+                _popups.PopupClient(Loc.GetString("item-recall-item-already-blacklist", ("item", markItem)), args.Performer, args.Performer);
+                return;
+            }
+            //rayten-end
             _popups.PopupClient(Loc.GetString("item-recall-item-marked", ("item", markItem.Value)), args.Performer, args.Performer);
             TryMarkItem(ent, markItem.Value);
             return;
