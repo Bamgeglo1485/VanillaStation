@@ -12,13 +12,12 @@ public sealed partial class WhiteoutRuleComponent : Component
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public bool PlanetMap = false;
 
-
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float WhiteoutLength = 90;
+    public float WhiteoutLength = 900;
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float WhiteoutFinalLength = 90f;
+    public float WhiteoutFinalLength = 300f;
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float WhiteoutPrepareTime = 10f;
+    public float WhiteoutPrepareTime = 3000f;
 
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float WhiteoutTemp = 123.15f;

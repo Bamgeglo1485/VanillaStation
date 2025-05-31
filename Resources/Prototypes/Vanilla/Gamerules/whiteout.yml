@@ -4,7 +4,7 @@
   components:
   - type: GameRule
   - type: BasicStationEventScheduler
-    minimumTimeUntilFirstEvent: 60
+    minimumTimeUntilFirstEvent: 3600
     minMaxEventTiming:
       min: 5
       max: 5
