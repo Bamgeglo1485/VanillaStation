@@ -9,7 +9,6 @@ using Content.Server.Tesla.Components;
 using Content.Server.Cargo.Components;
 using Content.Server.Atmos.Components;
 using Content.Server.Light.Components;
-using Content.Server.Vanilla.Audio;
 using Content.Server.Chat.Managers;
 using Content.Server.Chat.Systems;
 using Content.Server.Power.SMES;
@@ -49,7 +48,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     [Dependency] private readonly ITileDefinitionManager _tileDefinitionManager = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly PoweredLightSystem _poweredLight = default!;
-    [Dependency] private readonly ServerGlobalMusicSystem _music = default!;
     [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
@@ -74,9 +72,9 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     private WhiteoutState _state = WhiteoutState.Ended;
     private MapId _activeMapId = MapId.Nullspace;
     private EntityUid _activeMapUid = EntityUid.Invalid;
+    private readonly HashSet<EntityUid> _processedSmes = new();
     private readonly HashSet<EntityUid> _processedLights = new();
     private readonly HashSet<EntityUid> _processedWindows = new();
-    private readonly HashSet<EntityUid> _processedSmes = new();
     private readonly HashSet<EntityUid> _processedHardsuits = new();
     private TimeSpan _nextGlassBreak;
 
@@ -203,7 +201,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                 {
                     MakeAtmos(comp.WhiteoutFinalTemp, comp.PlanetMap);
                     _state = WhiteoutState.FinalPhase;
-                    _music.PlayGlobalMusic(_audio.ResolveSound(comp.WhiteoutFinalMusic));
+                    _audio.PlayGlobal(comp.WhiteoutFinalMusic, Filter.Broadcast(), true);
                     Announce(comp.WhiteoutFinalAnnouncement, comp.WhiteoutFinalSoundAnnouncement);
                 }
                 if (isFinal && comp.TimeActive >= comp.WhiteoutPrepareTime + comp.WhiteoutLength + comp.WhiteoutFinalLength - 60f)
@@ -226,7 +224,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         MakeAtmos(comp.WhiteoutTemp, comp.PlanetMap);
 
-        _music.PlayGlobalMusic(_audio.ResolveSound(comp.WhiteoutMusic));
+        _audio.PlayGlobal(comp.WhiteoutMusic, Filter.Broadcast(), true);
 
         if (!_prototypeManager.TryIndex<WeatherPrototype>(comp.Weather, out var weatherProto))
             return;
