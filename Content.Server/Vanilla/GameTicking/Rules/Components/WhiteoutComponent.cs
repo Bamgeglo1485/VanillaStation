@@ -25,9 +25,9 @@ public sealed partial class WhiteoutRuleComponent : Component
     public float WhiteoutFinalTemp = 23.15f;
 
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float WhiteoutStrength = 0.035f;
+    public float WhiteoutStrength = 0.05f;
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float WhiteoutFinalModifier = 2f;
+    public float WhiteoutFinalModifier = 1.5f;
 
     [DataField]
     public string Weather = "SnowfallHeavy";

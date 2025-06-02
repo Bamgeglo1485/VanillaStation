@@ -76,6 +76,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     private readonly HashSet<EntityUid> _processedLights = new();
     private readonly HashSet<EntityUid> _processedWindows = new();
     private readonly HashSet<EntityUid> _processedHardsuits = new();
+    private readonly HashSet<EntityUid> _processedAddHardsuits = new();
     private TimeSpan _nextGlassBreak;
 
     public override void Initialize()
@@ -95,6 +96,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         _processedLights.Clear();
         _processedWindows.Clear();
         _processedHardsuits.Clear();
+        _processedAddHardsuits.Clear();
         _nextGlassBreak = TimeSpan.Zero;
 
         if (_activeMapId == MapId.Nullspace)
@@ -199,12 +201,13 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                 // Переход между фазами
                 if (!isFinal && comp.TimeActive >= comp.WhiteoutPrepareTime + comp.WhiteoutLength)
                 {
+                    GameTicker.AddGameRule("GameRuleMeteorSwarmLarge");
                     MakeAtmos(comp.WhiteoutFinalTemp, comp.PlanetMap);
                     _state = WhiteoutState.FinalPhase;
                     _audio.PlayGlobal(comp.WhiteoutFinalMusic, Filter.Broadcast(), true);
                     Announce(comp.WhiteoutFinalAnnouncement, comp.WhiteoutFinalSoundAnnouncement);
                 }
-                if (isFinal && comp.TimeActive >= comp.WhiteoutPrepareTime + comp.WhiteoutLength + comp.WhiteoutFinalLength - 60f)
+                if (isFinal && comp.TimeActive >= comp.WhiteoutLength + comp.WhiteoutFinalLength - 60f)
                 {
                     _roundEnd.RequestRoundEnd(TimeSpan.FromMinutes(1), uid, false, "whiteout-evac", "department-CentralCommand");
                 }
@@ -224,14 +227,17 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         MakeAtmos(comp.WhiteoutTemp, comp.PlanetMap);
 
+        GameTicker.AddGameRule("MeteorSwarmWhiteoutScheduler");
+        GameTicker.AddGameRule("GameRuleMeteorSwarmLarge");
+
         _audio.PlayGlobal(comp.WhiteoutMusic, Filter.Broadcast(), true);
 
         if (!_prototypeManager.TryIndex<WeatherPrototype>(comp.Weather, out var weatherProto))
             return;
 
         _weather.SetWeather(mapId, weatherProto, TimeSpan.FromMinutes(30));
-        RemoveHardsuitProtection();
 
+        RemoveHardsuitProtection();
 
         Announce(comp.WhiteoutAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
@@ -243,6 +249,8 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         _weather.SetWeather(mapId, null, TimeSpan.FromMinutes(1));
 
         RemComp<MapAtmosphereComponent>(_activeMapUid);
+
+        AddHardsuitProtection();
 
         Announce(comp.WhiteoutEndAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
@@ -289,6 +297,24 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                 RemComp<TemperatureProtectionComponent>(uid);
                 RemComp<PressureProtectionComponent>(uid);
                 _processedHardsuits.Add(uid);
+            }
+        }
+    }
+
+    // А эт добавление их
+    private void AddHardsuitProtection()
+    {
+        var query = _lookup.GetEntitiesInRange(_activeMapUid, 1000f);
+        foreach (var uid in query)
+        {
+            if (_processedAddHardsuits.Contains(uid))
+                continue;
+
+            if (!HasComp<TemperatureProtectionComponent>(uid) && !HasComp<PressureProtectionComponent>(uid) && HasComp<TransformComponent>(uid) && _tagSystem.HasTag(uid, "Hardsuit"))
+            {
+                AddComp<TemperatureProtectionComponent>(uid);
+                AddComp<PressureProtectionComponent>(uid);
+                _processedAddHardsuits.Add(uid);
             }
         }
     }
