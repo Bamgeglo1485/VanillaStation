@@ -378,7 +378,13 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
             foreach (var (tile, atmosTile) in gridAtmos.Tiles)
             {
-                if (atmosTile.Air == null || atmosTile.Air.Temperature >= temp)
+
+                if (atmosTile.Air == null)
+                    continue;
+
+                bool shouldChange = atmosTile.Air.Temperature < temp || atmosTile.Air.GetMoles(Gas.Frezon) > 0f;
+
+                if (!shouldChange)
                     continue;
 
                 var tileRef = grid.GetTileRef(tile);
