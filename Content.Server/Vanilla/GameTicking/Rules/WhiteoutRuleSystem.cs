@@ -45,7 +45,6 @@ namespace Content.Server.Vanilla.GameTicking.Rules;
 
 public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 {
-    [Dependency] private readonly ITileDefinitionManager _tileDefinitionManager = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly PoweredLightSystem _poweredLight = default!;
     [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
@@ -72,11 +71,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     private WhiteoutState _state = WhiteoutState.Ended;
     private MapId _activeMapId = MapId.Nullspace;
     private EntityUid _activeMapUid = EntityUid.Invalid;
-    private readonly HashSet<EntityUid> _processedSmes = new();
-    private readonly HashSet<EntityUid> _processedLights = new();
-    private readonly HashSet<EntityUid> _processedWindows = new();
-    private readonly HashSet<EntityUid> _processedHardsuits = new();
-    private readonly HashSet<EntityUid> _processedAddHardsuits = new();
     private TimeSpan _nextGlassBreak;
 
     public override void Initialize()
@@ -93,10 +87,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         comp.NextUpdate = _gameTiming.CurTime + TimeSpan.FromSeconds(1);
 
         _state = WhiteoutState.Preparing;
-        _processedLights.Clear();
-        _processedWindows.Clear();
-        _processedHardsuits.Clear();
-        _processedAddHardsuits.Clear();
         _nextGlassBreak = TimeSpan.Zero;
 
         if (_activeMapId == MapId.Nullspace)
@@ -112,12 +102,16 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
             _activeMapUid = _mapManager.GetMapEntityId(_activeMapId);
         }
 
-        RemoveTradeStation();
+        // Удаление компонента трейдпоста у поста для усложнения
+        var query = EntityQueryEnumerator<TradeStationComponent>();
+        while (query.MoveNext(out var tradepost, out _))
+        {
+            RemComp<TradeStationComponent>(tradepost);
+        }
 
         Announce(comp.WhiteoutPrepareAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
 
-    // Ну тут понятно
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
@@ -137,6 +131,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     // Сам вайтаут
     private void ProcessWhiteout(EntityUid uid, WhiteoutRuleComponent comp, GameRuleComponent rule)
     {
+        var now = _gameTiming.CurTime;
         switch (_state)
         {
             case WhiteoutState.Preparing:
@@ -153,72 +148,83 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                 var (temp, strength) = GetWhiteoutParams(comp, isFinal);
                 Freeze(temp, strength, _activeMapId);
 
-                // Ломания
-                if (_gameTiming.CurTime >= _nextGlassBreak)
+                // Повреждение объектов
+                if (now >= _nextGlassBreak)
                 {
-                    var entities = _lookup.GetEntitiesInRange(_activeMapUid, 1000f);
-                    foreach (var entity in entities)
+                    var damage = new DamageSpecifier();
+                    damage.DamageDict.Add("Blunt", FixedPoint2.New(130));
+                    //лампы
+                    var lampQuery = EntityQueryEnumerator<PoweredLightComponent, TransformComponent>();
+                    while (lampQuery.MoveNext(out var lampEnt, out var light, out var xform))
                     {
-                        if (!Exists(entity) || Deleted(entity)) continue;
-
-                        // Лампы 
-                        if (!_processedLights.Contains(entity) &&
-                            TryComp<PoweredLightComponent>(entity, out var light) &&
-                            CheckTileTemperature(entity, 183.15f) &&
-                            RobustRandom.Prob(0.3f))
+                        if (CheckTileTemperature(lampEnt, 183.15f) && RobustRandom.Prob(0.3f) && xform.MapID == _activeMapId)
                         {
-                            _poweredLight.TryDestroyBulb(entity, light);
-                            _processedLights.Add(entity);
+                            _poweredLight.TryDestroyBulb(lampEnt, light);
                         }
-
-                        // Шкафчики. Иначе можно в них переждать бурю
-                        if (TryComp<ResistLockerComponent>(entity, out _) &&
-                            CheckTileTemperature(entity, 133.15f) &&
-                            RobustRandom.Prob(0.5f))
+                    }
+                    //шкафы
+                    var lockerQuery = EntityQueryEnumerator<ResistLockerComponent, TransformComponent>();
+                    while (lockerQuery.MoveNext(out var lockerEnt, out _, out var xform))
+                    {
+                        if (CheckTileTemperature(lockerEnt, 133.15f) && RobustRandom.Prob(0.5f) && xform.MapID == _activeMapId)
                         {
-                            var damage = new DamageSpecifier();
-                            damage.DamageDict.Add("Blunt", FixedPoint2.New(50));
-                            _damageable.TryChangeDamage(entity, damage);
+                            _damageable.TryChangeDamage(lockerEnt, damage);
                         }
-
-                        // Окна
-                        if (isFinal &&
-                            _tagSystem.HasTag(entity, "Window") &&
-                            RobustRandom.Prob(0.8f))
+                    }
+                    //окна
+                    if (isFinal)
+                    {
+                        var windowQuery = EntityQueryEnumerator<TransformComponent>();
+                        while (windowQuery.MoveNext(out var windowEnt, out var xform))
                         {
-                            var damage = new DamageSpecifier();
-                            damage.DamageDict.Add("Blunt", FixedPoint2.New(130));
-                            _damageable.TryChangeDamage(entity, damage);
+                            if (_tagSystem.HasTag(windowEnt, "Window") &&
+                                xform.MapID == _activeMapId &&
+                                RobustRandom.Prob(0.8f))
+                            {
+                                _damageable.TryChangeDamage(windowEnt, damage);
+                            }
                         }
                     }
 
-                    // Смэсы
-                    ExplodeSmes();
-                    ChangeTiles();
-                    _nextGlassBreak = _gameTiming.CurTime + TimeSpan.FromSeconds(5);
+                    _nextGlassBreak = now + TimeSpan.FromSeconds(5);
                 }
 
-                // Переход между фазами
-                if (!isFinal && comp.TimeActive >= comp.WhiteoutPrepareTime + comp.WhiteoutLength)
+                ExplodeSmes();
+                ChangeTiles();
+
+                var totalDuration = comp.WhiteoutLength + comp.WhiteoutFinalLength;
+                var finalPhaseStart = comp.WhiteoutPrepareTime + comp.WhiteoutLength;
+                var finalPhaseEndWarning = totalDuration - 60f;
+
+                if (!isFinal)
                 {
-                    GameTicker.AddGameRule("GameRuleMeteorSwarmLarge");
-                    MakeAtmos(comp.WhiteoutFinalTemp, comp.PlanetMap);
-                    _state = WhiteoutState.FinalPhase;
-                    _audio.PlayGlobal(comp.WhiteoutFinalMusic, Filter.Broadcast(), true);
-                    Announce(comp.WhiteoutFinalAnnouncement, comp.WhiteoutFinalSoundAnnouncement);
+                    if (comp.TimeActive >= finalPhaseStart)
+                    {
+                        GameTicker.AddGameRule("GameRuleMeteorSwarmLarge");
+                        MakeAtmos(comp.WhiteoutFinalTemp, comp.PlanetMap);
+                        _state = WhiteoutState.FinalPhase;
+                        _audio.PlayGlobal(comp.WhiteoutFinalMusic, Filter.Broadcast(), true);
+                        Announce(comp.WhiteoutFinalAnnouncement, comp.WhiteoutFinalSoundAnnouncement);
+                    }
                 }
-                if (isFinal && comp.TimeActive >= comp.WhiteoutLength + comp.WhiteoutFinalLength - 60f)
+                else
                 {
-                    _roundEnd.RequestRoundEnd(TimeSpan.FromMinutes(1), uid, false, "whiteout-evac", "department-CentralCommand");
+                    if (comp.TimeActive >= finalPhaseEndWarning)
+                    {
+                        _roundEnd.RequestRoundEnd(TimeSpan.FromMinutes(1), uid, false, "whiteout-evac", "department-CentralCommand");
+                    }
+
+                    if (comp.TimeActive >= totalDuration)
+                    {
+                        EndWhiteout(uid, comp, rule, _activeMapId);
+                        _state = WhiteoutState.Ended;
+                    }
                 }
-                if (isFinal && comp.TimeActive >= comp.WhiteoutLength + comp.WhiteoutFinalLength)
-                {
-                    EndWhiteout(uid, comp, rule, _activeMapId);
-                    _state = WhiteoutState.Ended;
-                }
+
                 break;
         }
     }
+
 
     // Действия при начале
     private void StartWhiteout(EntityUid uid, WhiteoutRuleComponent comp, MapId mapId)
@@ -237,7 +243,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         _weather.SetWeather(mapId, weatherProto, TimeSpan.FromMinutes(30));
 
-        RemoveHardsuitProtection();
+        ChangeHardsuitProtection(remove:true);
 
         Announce(comp.WhiteoutAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
@@ -250,7 +256,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         RemComp<MapAtmosphereComponent>(_activeMapUid);
 
-        AddHardsuitProtection();
+        ChangeHardsuitProtection(remove:false);
 
         Announce(comp.WhiteoutEndAnnouncement, comp.WhiteoutSoundAnnouncement);
     }
@@ -283,49 +289,25 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         }
     }
 
-    // Убирание резистов скафов для баланса
-    private void RemoveHardsuitProtection()
+    // Убирание или добавление резистов скафов
+    private void ChangeHardsuitProtection(bool remove)
     {
-        var query = _lookup.GetEntitiesInRange(_activeMapUid, 1000f);
-        foreach (var uid in query)
+        var query = EntityQueryEnumerator<TemperatureProtectionComponent, PressureProtectionComponent, TransformComponent>();
+        while (query.MoveNext(out var uid, out _, out _, out _))
         {
-            if (_processedHardsuits.Contains(uid))
-                continue;
-
-            if (HasComp<TemperatureProtectionComponent>(uid) && HasComp<PressureProtectionComponent>(uid) && HasComp<TransformComponent>(uid) && _tagSystem.HasTag(uid, "Hardsuit"))
+            if (_tagSystem.HasTag(uid, "Hardsuit"))
             {
-                RemComp<TemperatureProtectionComponent>(uid);
-                RemComp<PressureProtectionComponent>(uid);
-                _processedHardsuits.Add(uid);
+                if (remove)
+                {
+                    RemComp<TemperatureProtectionComponent>(uid);
+                    RemComp<PressureProtectionComponent>(uid);
+                }
+                else
+                {
+                    AddComp<TemperatureProtectionComponent>(uid);
+                    AddComp<PressureProtectionComponent>(uid);
+                }
             }
-        }
-    }
-
-    // А эт добавление их
-    private void AddHardsuitProtection()
-    {
-        var query = _lookup.GetEntitiesInRange(_activeMapUid, 1000f);
-        foreach (var uid in query)
-        {
-            if (_processedAddHardsuits.Contains(uid))
-                continue;
-
-            if (!HasComp<TemperatureProtectionComponent>(uid) && !HasComp<PressureProtectionComponent>(uid) && HasComp<TransformComponent>(uid) && _tagSystem.HasTag(uid, "Hardsuit"))
-            {
-                AddComp<TemperatureProtectionComponent>(uid);
-                AddComp<PressureProtectionComponent>(uid);
-                _processedAddHardsuits.Add(uid);
-            }
-        }
-    }
-
-    // Удаление компонента трейдпоста у поста для усложнения
-    private void RemoveTradeStation()
-    {
-        var query = EntityQueryEnumerator<TradeStationComponent, MapGridComponent>();
-        while (query.MoveNext(out var uid, out _, out _))
-        {
-            RemComp<TradeStationComponent>(uid);
         }
     }
 
@@ -442,6 +424,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     // Вычисления всякие умные
     private (float Temp, float Strength) GetWhiteoutParams(WhiteoutRuleComponent comp, bool isFinal)
         => isFinal
-            ? (comp.WhiteoutFinalTemp, comp.WhiteoutStrength * (comp.TimeActive / (comp.WhiteoutLength + comp.WhiteoutFinalLength)) * comp.WhiteoutFinalModifier) 
+            ? (comp.WhiteoutFinalTemp, comp.WhiteoutStrength * (comp.TimeActive / (comp.WhiteoutLength + comp.WhiteoutFinalLength)) * comp.WhiteoutFinalModifier)
             : (comp.WhiteoutTemp, comp.WhiteoutStrength * (comp.TimeActive / (comp.WhiteoutLength + comp.WhiteoutFinalLength))); // Сила охлаждение зависит от близости к концу
 }
