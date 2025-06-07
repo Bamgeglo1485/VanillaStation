@@ -1,0 +1,74 @@
+- type: entity
+  id: OmniClocks
+  parent: BaseItem
+  name: омни-часы
+  description: Довольно стильные, обычные часы.
+  components:
+  - type: Sprite
+    sprite: Vanilla/Objects/Devices/spy_clocks.rsi
+    layers:
+    - state: base
+  - type: Clock
+  - type: Item
+    sprite: Objects/Devices/wristwatch.rsi
+    size: Small
+  - type: Clothing
+    sprite: Objects/Devices/wristwatch.rsi
+    slots:
+    - gloves
+  - type: Appearance
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+
+- type: entity
+  id: SpyClocks
+  parent: OmniClocks
+  suffix: Шпионские
+  components:
+  - type: ChameleonClothing
+    slot: [gloves]
+    default: OmniClocks
+  - type: FingerprintMask
+  - type: Fiber
+    fiberMaterial: fibers-chameleon
+  - type: Tag
+    tags: []
+  - type: UserInterface
+    interfaces:
+      enum.ChameleonUiKey.Key:
+        type: ChameleonBoundUserInterface
+
+  - type: ComponentToggler
+    parent: true
+    components:
+    - type: Stealth
+      minVisibility: 0
+      lastVisibility: 0
+  - type: UseDelay
+    delay: 5
+  - type: ItemToggle
+    onUse: false
+  - type: PowerCellDraw
+    drawRate: 24
+  - type: ToggleCellDraw
+  - type: ToggleClothing
+    disableOnUnequip: true
+    action: ActionToggleSpyClocks
+
+  - type: PowerCellSlot
+    cellSlotId: cell_slot
+    fitsInCharger: false
+  - type: ContainerContainer
+    containers:
+      cell_slot: !type:ContainerSlot
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        startingItem: PowerCellMicroreactor
+        disableEject: true
+        whitelist:
+          tags:
+            - Wall

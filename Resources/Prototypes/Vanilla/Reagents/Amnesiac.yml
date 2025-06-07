@@ -1,0 +1,30 @@
+- type: reagent
+  id: AlphaAmnesiac
+  name: reagent-name-alpha-amnesiac
+  group: Toxins
+  desc: reagent-desc-alpha-amnesiac
+  physicalDesc: reagent-physical-desc-amnesiac
+  flavor: bitter
+  color: "#5d5f64"
+  boilingPoint: 190.0
+  meltingPoint: 216.0
+  metabolisms:
+    Narcotic:
+      effects:
+      - !type:HealthChange
+        conditions:
+        damage:
+          types:
+            Poison: 1
+            Asphyxiation: 5
+      - !type:GenericStatusEffect
+        key: SeeingRainbows
+        component: SeeingRainbows
+        type: Add
+        time: 3
+        refresh: false
+      - !type:PopupMessage
+        visualType: LargeCaution
+        messages: ["Голова раскалывается...", "В моём мозгу будто лезвия!!", "Что я тут делаю?", "Где я?", "Кто я?", "Какого хера тут творится!?", "КТО ВЫ!?"]
+        type: Local
+        probability: 1

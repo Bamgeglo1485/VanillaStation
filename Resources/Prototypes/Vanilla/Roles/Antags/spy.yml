@@ -1,0 +1,18 @@
+- type: antag
+  id: Spy
+  name: roles-antag-spy-name
+  antagonist: true
+  setPreference: true
+  objective: roles-antag-spy-objective
+  requirements:
+  - !type:OverallPlaytimeRequirement
+    time: 108000
+
+- type: startingGear
+  id: SpyGear
+  storage:
+    back:
+    - SpyClocks
+    - AccessBreaker
+    - BriefcaseSpy
+    - ClothingNeckTieDetAmnesiac

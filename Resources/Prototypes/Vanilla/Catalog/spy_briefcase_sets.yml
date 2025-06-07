@@ -1,0 +1,68 @@
+- type: thiefBackpackSet
+  id: SpyDisguiseSet
+  name: набор маскировки "Французский удар в спину"
+  description: Стандартный набор который содержит одежду-хамелеон, фальшивый щит разума, хамелеон проектор и карту агента. Этот ПЦК - шпион!
+  sprite:
+    sprite: /Textures/Clothing/OuterClothing/Misc/black_hoodie.rsi
+    state: icon
+  content:
+  - ClothingBackpackChameleonFill
+  - ChameleonProjector
+  - FakeMindShieldImplanter
+  - AgentIDCard
+
+- type: thiefBackpackSet
+  id: SpyNegotiatorSet
+  name: набор запугивания "Дипломатичный переговорщик"
+  description: Содержит пистолет "Кобра", два магазина к нему, зажигательную гранату, две визитки синдиката и два импланта канала связи синдиката. Идеально для запугивания в техах.
+  sprite:
+    sprite: /Textures/Objects/Weapons/Guns/Pistols/cobra.rsi
+    state: base
+  content:
+  - WeaponPistolCobra
+  - MagazinePistolCaselessRifle
+  - MagazinePistolCaselessRifle
+  - SyndicateBusinessCard
+  - SyndicateBusinessCard
+  - RadioImplanter
+  - RadioImplanter
+  - GrenadeIncendiary
+
+- type: thiefBackpackSet
+  id: SpyBureaucratSet
+  name: набор бюрократа "В участок ЦК позвонили"
+  description: Содержит ручку киберсан, печать торговца и синдиката, а также кроваво-красный телефон. Ну же, найди лист цели и отправь капитану приказ о отмене ОПРС фелинидов.
+  sprite:
+    sprite: /Textures/Objects/Misc/stamps.rsi
+    state: stamp-syndicate
+  content:
+  - CyberPen
+  - RubberStampSyndicate
+  - RubberStampTrader
+  - PhoneInstrumentSyndicate
+
+- type: thiefBackpackSet
+  id: SpyKidnapSet
+  name: набор похищения "Стокгольмский Синдром"
+  description: Содержит гипоручку, ноктюрин, наручники, маяк и фултоны. Уж точно не используется, чтобы убегать от СБ.
+  sprite:
+    sprite: /Textures/Objects/Misc/handcuffs.rsi
+    state: handcuff
+  content:
+  - HypopenBox
+  - ChemistryBottleNocturine
+  - Handcuffs
+  - FultonBeacon
+  - Fulton
+
+- type: thiefBackpackSet
+  id: SpyImplantsSet
+  name: набор имплантов "Трансгуманист"
+  description: Содержит имплант ДНК, побег и хранилище.
+  sprite:
+    sprite: /Textures/Objects/Specific/Medical/syndi_implanter.rsi
+    state: implanter1
+  content:
+  - ScramImplanter
+  - StorageImplanter
+  - DnaScramblerImplanter

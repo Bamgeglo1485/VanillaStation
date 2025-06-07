@@ -27,7 +27,7 @@
       startingGear: ThiefGear
       components:
       - type: AddSkillPoints
-        Points: 3 
+        Points: 3
       # - type: Pacified
       mindRoles:
       - MindRoleThief
@@ -79,3 +79,38 @@
         nameFormat: name-format-wizard
       mindRoles:
       - MindRoleWizard
+
+# VANILLA / RAYTEN STARTS
+
+- type: entity
+  parent: BaseGameRule
+  id: Spy
+  components:
+  - type: SpyRule
+  - type: AntagObjectives
+    objectives:
+    - EscapeSpyShuttleObjective
+  - type: AntagRandomObjectives
+    sets:
+    - groups: ThiefObjectiveGroups
+      maxPicks: 10
+    maxDifficulty: 2.5
+  - type: AntagSelection
+    agentName: roles-antag-spy-name
+    selectionTime: IntraPlayerSpawn
+    definitions:
+    - prefRoles: [ Spy ]
+      max: 2
+      playerRatio: 20
+      lateJoinAdditional: true
+      multiAntagSetting: NotExclusive
+      startingGear: SpyGear
+      components:
+      - type: AddSkillPoints
+        Points: 3
+      mindRoles:
+      - MindRoleSpy
+      briefing:
+        sound: "/Audio/Misc/thief_greeting.ogg"
+
+# VANILLA / RAYTEN ENDS

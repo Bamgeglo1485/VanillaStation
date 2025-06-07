@@ -1,0 +1,23 @@
+- type: entity
+  abstract: true
+  parent: BaseObjective
+  id: BaseSpyObjective
+  components:
+  - type: Objective
+    issuer: role-subtype-spy
+  - type: RoleRequirement
+    roles:
+    - SpyRole
+
+- type: entity
+  parent: [BaseSpyObjective, BaseLivingObjective]
+  id: EscapeSpyShuttleObjective
+  name: Доберись на станцию Центрального Командования не раскрытым.
+  description: Плохой агент тот, про которого все знают.
+  components:
+  - type: Objective
+    difficulty: 1.3
+    icon:
+      sprite: Structures/Furniture/chairs.rsi
+      state: shuttle
+  - type: EscapeShuttleCondition

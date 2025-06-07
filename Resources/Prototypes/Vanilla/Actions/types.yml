@@ -12,3 +12,15 @@
     icon:
       sprite: Clothing/Back/Backpacks/backpack.rsi
       state: icon
+
+- type: entity
+  parent: BaseAction
+  id: ActionToggleSpyClocks
+  name: Невидимость
+  description: Переключает проектор маскировки ваших часов. Медленно тратит заряд.
+  components:
+  - type: Action
+    useDelay: 5
+    priority: -9
+  - type: InstantAction
+    event: !type:ToggleActionEvent

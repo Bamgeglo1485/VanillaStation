@@ -1,0 +1,35 @@
+- type: entity
+  id: BriefcaseSpy
+  name: коричневый чемодан
+  description: Пригодится для переноски предметов в руках.
+  parent: ToolboxThief
+  components:
+  - type: Sprite
+    sprite: Objects/Storage/Briefcases/briefcase_brown.rsi
+  - type: Item
+    storedRotation: 90
+  - type: ThiefUndeterminedBackpack
+    spawnedStoragePrototype: BriefcaseBrown
+    possibleSets:
+    - SpyDisguiseSet
+    - SpyNegotiatorSet
+    - SpyBureaucratSet
+    - SpyKidnapSet
+    - SpyImplantsSet
+
+- type: entity
+  name: чёрный галстук
+  description: Стильно, но пахнет дикой химозой.
+  suffix: Амнезиак
+  parent: ClothingNeckTieDet
+  id: ClothingNeckTieDetAmnesiac
+  components:
+  - type: Food
+    requiresSpecialDigestion: false
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 20
+        reagents:
+        - ReagentId: AlphaAmnesiac
+          Quantity: 10
