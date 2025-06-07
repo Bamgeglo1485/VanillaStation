@@ -1,10 +1,11 @@
-using Content.Server.Vanilla.GameTicking.Rules;
+using Content.Server.GameTicking.Rules.Components;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
+using Robust.Shared.Map;
 using Content.Shared.Weather;
 
-namespace Content.Server.GameTicking.Rules.Components;
+namespace Content.Server.Vanilla.GameTicking.Rules.WhiteOut;
 
 [RegisterComponent, Access(typeof(WhiteoutRuleSystem))]
 public sealed partial class WhiteoutRuleComponent : Component
@@ -53,4 +54,29 @@ public sealed partial class WhiteoutRuleComponent : Component
 
     public float TimeActive;
     public TimeSpan NextUpdate;
+    public WhiteoutState CurrentState = WhiteoutState.Ended;
+    public MapId ActiveMapId = MapId.Nullspace;
+    public EntityUid ActiveMapUid = EntityUid.Invalid;
+    public TimeSpan NextGlassBreak;
+
+    /// <summary>
+    /// Вычисляет что-то я хз
+    /// </summary>
+    public (float Temp, float Strength) GetWhiteoutParams(bool isFinal)
+    {
+        var duration = WhiteoutLength + WhiteoutFinalLength;
+        var strengthFactor = WhiteoutStrength * (TimeActive / duration);
+
+        if (isFinal)
+            return (WhiteoutFinalTemp, strengthFactor * WhiteoutFinalModifier);
+        else
+            return (WhiteoutTemp, strengthFactor);
+    }
+}
+public enum WhiteoutState : byte
+{
+    Preparing = 0,
+    Active = 1,
+    FinalPhase = 3,
+    Ended = 4,
 }

@@ -41,7 +41,7 @@ using Robust.Server.Player;
 
 using System.Linq;
 
-namespace Content.Server.Vanilla.GameTicking.Rules;
+namespace Content.Server.Vanilla.GameTicking.Rules.WhiteOut;
 
 public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 {
@@ -49,7 +49,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     [Dependency] private readonly PoweredLightSystem _poweredLight = default!;
     [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly RoundEndSystem _roundEnd = default!;
     [Dependency] private readonly IGameTiming _gameTiming = default!;
@@ -58,20 +57,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     [Dependency] private readonly ExplosionSystem _boom = default!;
     [Dependency] private readonly TagSystem _tagSystem = default!;
     [Dependency] private readonly ChatSystem _chat = default!;
-
-
-    private enum WhiteoutState
-    {
-        Preparing,
-        Active,
-        FinalPhase,
-        Ended
-    }
-
-    private WhiteoutState _state = WhiteoutState.Ended;
-    private MapId _activeMapId = MapId.Nullspace;
-    private EntityUid _activeMapUid = EntityUid.Invalid;
-    private TimeSpan _nextGlassBreak;
 
     public override void Initialize()
     {
@@ -86,20 +71,21 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         comp.TimeActive = 0f;
         comp.NextUpdate = _gameTiming.CurTime + TimeSpan.FromSeconds(1);
 
-        _state = WhiteoutState.Preparing;
-        _nextGlassBreak = TimeSpan.Zero;
+        comp.CurrentState = WhiteoutState.Preparing;
 
-        if (_activeMapId == MapId.Nullspace)
+        comp.NextGlassBreak = TimeSpan.Zero;
+
+        if (comp.ActiveMapId == MapId.Nullspace)
         {
             var xform = Transform(uid);
-            _activeMapId = xform.MapID;
-            if (_activeMapId == MapId.Nullspace)
+            comp.ActiveMapId = xform.MapID;
+            if (comp.ActiveMapId == MapId.Nullspace)
             {
-                _activeMapId = _mapManager.GetAllMapIds().FirstOrDefault(id => id != MapId.Nullspace);
-                if (_activeMapId == MapId.Nullspace)
+                comp.ActiveMapId = _mapManager.GetAllMapIds().FirstOrDefault(id => id != MapId.Nullspace);
+                if (comp.ActiveMapId == MapId.Nullspace)
                     return;
             }
-            _activeMapUid = _mapManager.GetMapEntityId(_activeMapId);
+            comp.ActiveMapUid = _mapManager.GetMapEntityId(comp.ActiveMapId);
         }
 
         // Удаление компонента трейдпоста у поста для усложнения
@@ -109,7 +95,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
             RemComp<TradeStationComponent>(tradepost);
         }
 
-        Announce(comp.WhiteoutPrepareAnnouncement, comp.WhiteoutSoundAnnouncement);
+        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutPrepareAnnouncement), playSound: true, announcementSound: comp.WhiteoutSoundAnnouncement, colorOverride: Color.Red);
     }
 
     public override void Update(float frameTime)
@@ -132,24 +118,24 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     private void ProcessWhiteout(EntityUid uid, WhiteoutRuleComponent comp, GameRuleComponent rule)
     {
         var now = _gameTiming.CurTime;
-        switch (_state)
+        switch (comp.CurrentState)
         {
             case WhiteoutState.Preparing:
                 if (comp.TimeActive >= comp.WhiteoutPrepareTime)
                 {
-                    StartWhiteout(uid, comp, _activeMapId);
-                    _state = WhiteoutState.Active;
+                    StartWhiteout(uid, comp, comp.ActiveMapId);
+                    comp.CurrentState = WhiteoutState.Active;
                 }
                 break;
 
             case WhiteoutState.Active:
             case WhiteoutState.FinalPhase:
-                var isFinal = _state == WhiteoutState.FinalPhase;
-                var (temp, strength) = GetWhiteoutParams(comp, isFinal);
-                Freeze(temp, strength, _activeMapId);
+                var isFinal = comp.CurrentState == WhiteoutState.FinalPhase;
+                var (temp, strength) = comp.GetWhiteoutParams(isFinal);
+                Freeze(temp, strength, comp.ActiveMapId);
 
                 // Повреждение объектов
-                if (now >= _nextGlassBreak)
+                if (now >= comp.NextGlassBreak)
                 {
                     var damage = new DamageSpecifier();
                     damage.DamageDict.Add("Blunt", FixedPoint2.New(130));
@@ -157,7 +143,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                     var lampQuery = EntityQueryEnumerator<PoweredLightComponent, TransformComponent>();
                     while (lampQuery.MoveNext(out var lampEnt, out var light, out var xform))
                     {
-                        if (CheckTileTemperature(lampEnt, 183.15f) && RobustRandom.Prob(0.3f) && xform.MapID == _activeMapId)
+                        if (CheckTileTemperature(lampEnt, 183.15f) && RobustRandom.Prob(0.3f) && xform.MapID == comp.ActiveMapId)
                         {
                             _poweredLight.TryDestroyBulb(lampEnt, light);
                         }
@@ -166,7 +152,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                     var lockerQuery = EntityQueryEnumerator<ResistLockerComponent, TransformComponent>();
                     while (lockerQuery.MoveNext(out var lockerEnt, out _, out var xform))
                     {
-                        if (CheckTileTemperature(lockerEnt, 133.15f) && RobustRandom.Prob(0.5f) && xform.MapID == _activeMapId)
+                        if (CheckTileTemperature(lockerEnt, 133.15f) && RobustRandom.Prob(0.5f) && xform.MapID == comp.ActiveMapId)
                         {
                             _damageable.TryChangeDamage(lockerEnt, damage);
                         }
@@ -178,7 +164,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                         while (windowQuery.MoveNext(out var windowEnt, out var xform))
                         {
                             if (_tagSystem.HasTag(windowEnt, "Window") &&
-                                xform.MapID == _activeMapId &&
+                                xform.MapID == comp.ActiveMapId &&
                                 RobustRandom.Prob(0.8f))
                             {
                                 _damageable.TryChangeDamage(windowEnt, damage);
@@ -186,11 +172,11 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                         }
                     }
 
-                    _nextGlassBreak = now + TimeSpan.FromSeconds(5);
+                    comp.NextGlassBreak = now + TimeSpan.FromSeconds(5);
                 }
 
-                ExplodeSmes();
-                ChangeTiles();
+                ExplodeSmes(comp.ActiveMapUid, comp.ActiveMapId);
+                ChangeTiles(comp.ActiveMapId);
 
                 var totalDuration = comp.WhiteoutLength + comp.WhiteoutFinalLength;
                 var finalPhaseStart = comp.WhiteoutPrepareTime + comp.WhiteoutLength;
@@ -201,10 +187,10 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                     if (comp.TimeActive >= finalPhaseStart)
                     {
                         GameTicker.AddGameRule("GameRuleMeteorSwarmLarge");
-                        MakeAtmos(comp.WhiteoutFinalTemp, comp.PlanetMap);
-                        _state = WhiteoutState.FinalPhase;
+                        MakeAtmos(comp.WhiteoutTemp, comp.PlanetMap, comp.ActiveMapId, comp.ActiveMapUid);
+                        comp.CurrentState = WhiteoutState.FinalPhase;
                         _audio.PlayGlobal(comp.WhiteoutFinalMusic, Filter.Broadcast(), true);
-                        Announce(comp.WhiteoutFinalAnnouncement, comp.WhiteoutFinalSoundAnnouncement);
+                        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutFinalAnnouncement), playSound: true, announcementSound: comp.WhiteoutFinalSoundAnnouncement, colorOverride: Color.Red);
                     }
                 }
                 else
@@ -216,8 +202,8 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
                     if (comp.TimeActive >= totalDuration)
                     {
-                        EndWhiteout(uid, comp, rule, _activeMapId);
-                        _state = WhiteoutState.Ended;
+                        EndWhiteout(uid, comp, rule, comp.ActiveMapId);
+                        comp.CurrentState = WhiteoutState.Ended;
                     }
                 }
 
@@ -231,7 +217,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     {
         comp.TimeActive = 0f;
 
-        MakeAtmos(comp.WhiteoutTemp, comp.PlanetMap);
+        MakeAtmos(comp.WhiteoutTemp, comp.PlanetMap, comp.ActiveMapId, comp.ActiveMapUid);
 
         GameTicker.AddGameRule("MeteorSwarmWhiteoutScheduler");
         GameTicker.AddGameRule("GameRuleMeteorSwarmLarge");
@@ -243,9 +229,9 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         _weather.SetWeather(mapId, weatherProto, TimeSpan.FromMinutes(30));
 
-        ChangeHardsuitProtection(remove:true);
+        ChangeHardsuitProtection(remove: true);
 
-        Announce(comp.WhiteoutAnnouncement, comp.WhiteoutSoundAnnouncement);
+        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutAnnouncement), playSound: true, announcementSound: comp.WhiteoutSoundAnnouncement, colorOverride: Color.Red);
     }
 
     // Действия при конце
@@ -254,11 +240,10 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         GameTicker.EndGameRule(uid, rule);
         _weather.SetWeather(mapId, null, TimeSpan.FromMinutes(1));
 
-        RemComp<MapAtmosphereComponent>(_activeMapUid);
+        RemComp<MapAtmosphereComponent>(comp.ActiveMapUid);
 
-        ChangeHardsuitProtection(remove:false);
-
-        Announce(comp.WhiteoutEndAnnouncement, comp.WhiteoutSoundAnnouncement);
+        ChangeHardsuitProtection(remove: false);
+        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutEndAnnouncement), playSound: true, announcementSound: comp.WhiteoutSoundAnnouncement, colorOverride: Color.Red);
     }
 
     // Заморозка газов
@@ -312,19 +297,16 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     }
 
     // Взрыв смэсов
-    private void ExplodeSmes()
+    private void ExplodeSmes(EntityUid ActiveMapUid, MapId ActiveMapId)
     {
-        if (_activeMapUid == null || !Exists(_activeMapUid))
+        if (!Exists(ActiveMapUid))
             return;
 
         var query = EntityQueryEnumerator<SmesComponent, TransformComponent>();
-
-        while (query.MoveNext(out var uid, out var smes, out var transform))
+        while (query.MoveNext(out var uid, out _, out var xform))
         {
-            if (!CheckTileTemperature(uid, 133.15f))
-                    continue;
-
-            _boom.QueueExplosion( uid, "Cryo", 200, 10, 200 );
+            if (xform.MapID == ActiveMapId && CheckTileTemperature(uid, 133.15f))
+                _boom.QueueExplosion( uid, "Cryo", 200, 10, 200 );
         }
     }
 
@@ -347,15 +329,17 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     }
 
     // Смена тайлов на снежочек
-    private void ChangeTiles(float temp = 122f)
+    private void ChangeTiles(MapId ActiveMapId)
     {
+        float temp = 122f;
+
         if (!_prototypeManager.TryIndex<ContentTileDefinition>("FloorSnowPlating", out var iceTile))
             return;
 
         var query = EntityQueryEnumerator<GridAtmosphereComponent, MapGridComponent>();
         while (query.MoveNext(out var gridUid, out var gridAtmos, out var grid))
         {
-            if (Transform(gridUid).MapID != _activeMapId)
+            if (Transform(gridUid).MapID != ActiveMapId)
                 continue;
 
             foreach (var (tile, atmosTile) in gridAtmos.Tiles)
@@ -386,14 +370,14 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     }
 
     // Создание атмосферы при начале бури, реалистик и +сложность
-    private void MakeAtmos(float temp, bool planet)
+    private void MakeAtmos(float temp, bool planet, MapId ActiveMapId, EntityUid ActiveMapUid)
     {
-        if (!_mapManager.MapExists(_activeMapId))
+        if (!_mapManager.MapExists(ActiveMapId))
             return;
 
         var moles = new float[Atmospherics.AdjustedNumberOfGases];
 
-        if (planet == true)
+        if (planet)
         {
             moles[(int)Gas.Oxygen] = 43.649558f;
             moles[(int)Gas.Nitrogen] = 164.20624f;
@@ -407,23 +391,10 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         var mixture = new GasMixture(moles, temp);
 
-        if (Exists(_activeMapUid))
+        if (Exists(ActiveMapUid))
         {
-            var mapAtmos = EnsureComp<MapAtmosphereComponent>(_activeMapUid);
-            _atmosphere.SetMapAtmosphere(_activeMapUid, false, mixture);
+            var mapAtmos = EnsureComp<MapAtmosphereComponent>(ActiveMapUid);
+            _atmosphere.SetMapAtmosphere(ActiveMapUid, false, mixture);
         }
     }
-
-    // Объявление
-    private void Announce(string message, SoundSpecifier sound)
-    {
-        _audio.PlayGlobal(sound, Filter.Broadcast(), true);
-        _chat.DispatchGlobalAnnouncement(Loc.GetString(message), playSound: false, colorOverride: Color.Red);
-    }
-
-    // Вычисления всякие умные
-    private (float Temp, float Strength) GetWhiteoutParams(WhiteoutRuleComponent comp, bool isFinal)
-        => isFinal
-            ? (comp.WhiteoutFinalTemp, comp.WhiteoutStrength * (comp.TimeActive / (comp.WhiteoutLength + comp.WhiteoutFinalLength)) * comp.WhiteoutFinalModifier)
-            : (comp.WhiteoutTemp, comp.WhiteoutStrength * (comp.TimeActive / (comp.WhiteoutLength + comp.WhiteoutFinalLength))); // Сила охлаждение зависит от близости к концу
 }
