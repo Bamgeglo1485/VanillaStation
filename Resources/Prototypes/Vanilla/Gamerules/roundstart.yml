@@ -9,11 +9,13 @@
   - type: WhiteoutRule
   - type: SetJammerOnSpawn
     duration: 120
+  - type: SurvivorRule
 
 - type: entity
   parent: BaseGameRule
   id: WhiteoutMomental
   components:
+  - type: SurvivorRule
   - type: WhiteoutRule
     whiteoutPrepareTime: 60
   - type: SetJammerOnSpawn
@@ -23,6 +25,7 @@
   parent: Whiteout
   id: WhiteoutPlanetMap
   components:
+  - type: SurvivorRule
   - type: WhiteoutRule
     planetMap: true
     whiteoutPrepareAnnouncement: whiteout-planet-prepare-announcement

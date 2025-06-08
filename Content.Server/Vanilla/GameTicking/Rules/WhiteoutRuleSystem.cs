@@ -121,6 +121,9 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         switch (comp.CurrentState)
         {
             case WhiteoutState.Preparing:
+
+                Freeze(comp.WhiteoutPrepareTemp, comp.WhiteoutPrepareStrength, comp.ActiveMapId);
+
                 if (comp.TimeActive >= comp.WhiteoutPrepareTime)
                 {
                     StartWhiteout(uid, comp, comp.ActiveMapId);
@@ -195,7 +198,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                         comp.CurrentState = WhiteoutState.FinalPhase;
                         _audio.PlayGlobal(comp.WhiteoutFinalMusic, Filter.Broadcast(), true);
                         _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutFinalAnnouncement), colorOverride: Color.Red);
-                        _audio.PlayGlobal(comp.WhiteoutFinalSoundAnnouncement, Filter.Broadcast(), true);
+                        _audio.PlayGlobal(comp.WhiteoutAlarmSound, Filter.Broadcast(), true);
                     }
                 }
                 else
@@ -236,7 +239,8 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         ChangeHardsuitProtection(remove: true);
 
-        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutAnnouncement), playSound: true, announcementSound: comp.WhiteoutSoundAnnouncement, colorOverride: Color.Red);
+        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutAnnouncement), colorOverride: Color.Red);
+        _audio.PlayGlobal(comp.WhiteoutAlarmSound, Filter.Broadcast(), true);
     }
 
     // Действия при конце

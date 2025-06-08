@@ -21,10 +21,14 @@ public sealed partial class WhiteoutRuleComponent : Component
     public float WhiteoutPrepareTime = 3000f;
 
     [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public float WhiteoutPrepareTemp = 253.15f;
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float WhiteoutTemp = 123.15f;
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float WhiteoutFinalTemp = 23.15f;
 
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public float WhiteoutPrepareStrength = 0.005f;
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float WhiteoutStrength = 0.05f;
     [DataField, ViewVariables(VVAccess.ReadWrite)]
@@ -45,7 +49,7 @@ public sealed partial class WhiteoutRuleComponent : Component
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public SoundSpecifier WhiteoutSoundAnnouncement = new SoundPathSpecifier("/Audio/Vanilla/StationEvents/announcement.ogg");
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public SoundSpecifier WhiteoutFinalSoundAnnouncement = new SoundPathSpecifier("/Audio/Vanilla/StationEvents/whiteout_siren.ogg");
+    public SoundSpecifier WhiteoutAlarmSound = new SoundPathSpecifier("/Audio/Vanilla/StationEvents/whiteout_siren.ogg");
 
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public SoundSpecifier WhiteoutMusic = new SoundPathSpecifier("/Audio/Vanilla/StationEvents/whiteout.ogg");
