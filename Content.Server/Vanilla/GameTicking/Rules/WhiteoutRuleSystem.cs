@@ -181,7 +181,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                     //окна
                     if (isFinal)
                     {
-                        var windows = new List<EntityUid>();
                         var windowQuery = EntityQueryEnumerator<TransformComponent>();
                         while (windowQuery.MoveNext(out var windowEnt, out var xform))
                         {
@@ -189,13 +188,8 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                                 xform.MapID == comp.ActiveMapId &&
                                 RobustRandom.Prob(0.8f))
                             {
-                                windows.Add(windowEnt);
+                               _damageable.TryChangeDamage(windowEnt, damage);
                             }
-                        }
-
-                        foreach (var window in windows)
-                        {
-                            _damageable.TryChangeDamage(window, damage);
                         }
                     }
 
@@ -231,7 +225,6 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                     }
                 }
                 break;
-
         }
     }
 
@@ -253,7 +246,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         _weather.SetWeather(mapId, weatherProto, TimeSpan.FromMinutes(30));
 
-        ChangeHardsuitProtection(remove: true);
+        RemoveHardsuitProtection();
 
         _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutAnnouncement), colorOverride: Color.Red);
         _audio.PlayGlobal(comp.WhiteoutAlarmSound, Filter.Broadcast(), true);
@@ -267,7 +260,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         RemComp<MapAtmosphereComponent>(comp.ActiveMapUid);
 
-        ChangeHardsuitProtection(remove: false);
+        AddHardsuitProtection();
         _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutEndAnnouncement), playSound: true, announcementSound: comp.WhiteoutSoundAnnouncement, colorOverride: Color.Red);
     }
 
@@ -300,23 +293,27 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     }
 
     // Убирание или добавление резистов скафов
-    private void ChangeHardsuitProtection(bool remove)
+    private void AddHardsuitProtection()
+    {
+        var query = EntityQueryEnumerator<TagComponent>();
+        while (query.MoveNext(out var uid, out _))
+        {
+            if (_tagSystem.HasTag(uid, "Hardsuit"))
+            {
+                AddComp<TemperatureProtectionComponent>(uid);
+                AddComp<PressureProtectionComponent>(uid);
+            }
+        }
+    }
+    private void RemoveHardsuitProtection()
     {
         var query = EntityQueryEnumerator<TemperatureProtectionComponent, PressureProtectionComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out _, out _, out _))
         {
             if (_tagSystem.HasTag(uid, "Hardsuit"))
             {
-                if (remove)
-                {
-                    RemComp<TemperatureProtectionComponent>(uid);
-                    RemComp<PressureProtectionComponent>(uid);
-                }
-                else
-                {
-                    AddComp<TemperatureProtectionComponent>(uid);
-                    AddComp<PressureProtectionComponent>(uid);
-                }
+                RemComp<TemperatureProtectionComponent>(uid);
+                RemComp<PressureProtectionComponent>(uid);
             }
         }
     }
