@@ -133,6 +133,8 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                 var isFinal = comp.CurrentState == WhiteoutState.FinalPhase;
                 var (temp, strength) = comp.GetWhiteoutParams(isFinal);
                 Freeze(temp, strength, comp.ActiveMapId);
+                ExplodeSmes(comp.ActiveMapUid, comp.ActiveMapId);
+                ChangeTiles(comp.ActiveMapId);
 
                 // Повреждение объектов
                 if (now >= comp.NextGlassBreak)
@@ -160,6 +162,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                     //окна
                     if (isFinal)
                     {
+                        var windows = new List<EntityUid>();
                         var windowQuery = EntityQueryEnumerator<TransformComponent>();
                         while (windowQuery.MoveNext(out var windowEnt, out var xform))
                         {
@@ -167,30 +170,32 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                                 xform.MapID == comp.ActiveMapId &&
                                 RobustRandom.Prob(0.8f))
                             {
-                                _damageable.TryChangeDamage(windowEnt, damage);
+                                windows.Add(windowEnt);
                             }
+                        }
+
+                        foreach (var window in windows)
+                        {
+                            _damageable.TryChangeDamage(window, damage);
                         }
                     }
 
                     comp.NextGlassBreak = now + TimeSpan.FromSeconds(5);
                 }
 
-                ExplodeSmes(comp.ActiveMapUid, comp.ActiveMapId);
-                ChangeTiles(comp.ActiveMapId);
-
                 var totalDuration = comp.WhiteoutLength + comp.WhiteoutFinalLength;
-                var finalPhaseStart = comp.WhiteoutPrepareTime + comp.WhiteoutLength;
                 var finalPhaseEndWarning = totalDuration - 60f;
 
                 if (!isFinal)
                 {
-                    if (comp.TimeActive >= finalPhaseStart)
+                    if (comp.TimeActive >= comp.WhiteoutLength)
                     {
                         GameTicker.AddGameRule("GameRuleMeteorSwarmLarge");
-                        MakeAtmos(comp.WhiteoutTemp, comp.PlanetMap, comp.ActiveMapId, comp.ActiveMapUid);
+                        MakeAtmos(comp.WhiteoutFinalTemp, comp.PlanetMap, comp.ActiveMapId, comp.ActiveMapUid);
                         comp.CurrentState = WhiteoutState.FinalPhase;
                         _audio.PlayGlobal(comp.WhiteoutFinalMusic, Filter.Broadcast(), true);
-                        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutFinalAnnouncement), playSound: true, announcementSound: comp.WhiteoutFinalSoundAnnouncement, colorOverride: Color.Red);
+                        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutFinalAnnouncement), colorOverride: Color.Red);
+                        _audio.PlayGlobal(comp.WhiteoutFinalSoundAnnouncement, Filter.Broadcast(), true);
                     }
                 }
                 else
@@ -206,8 +211,8 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                         comp.CurrentState = WhiteoutState.Ended;
                     }
                 }
-
                 break;
+
         }
     }
 
