@@ -1,0 +1,99 @@
+- type: startingGear
+  id: BlueTeamGearDefault
+  equipment:
+    head: ClothingHeadHatBluesoftUnrem
+    jumpsuit: ClothingUniformJumpsuitCasualBlueUnrem
+    back: ClothingMilitaryBackpack
+    eyes: ClothingEyesGlassesSunglasses
+    gloves: ClothingHandsMercGlovesCombat
+    outerClothing: ClothingOuterArmorBasicSlim
+    shoes: ClothingShoesBootsCombat
+    belt: ClothingBeltMilitaryWebbing
+    neck: ClothingNeckNanoTrasenPin
+    id: PassengerPDAUnrem
+  storage:
+    belt:
+    - MagazineRifle
+    - MagazineRifle
+    - MagazinePistol
+    - MagazinePistol
+    - CombatKnife
+    back:
+    - MagazineBoxRifle
+    - MedkitCombatFilled
+    - CumulativeEFP
+    - GrenadeStinger
+    - MagazineBoxPistol
+    - WeaponPistolMk58
+  inhand:
+  - WeaponRifleLecter
+
+- type: startingGear
+  id: RedTeamGearDefault
+  equipment:
+    head: ClothingHeadHatRedsoftUnrem
+    jumpsuit: ClothingUniformJumpsuitCasualRedUnrem
+    back: ClothingMilitaryBackpack
+    eyes: ClothingEyesGlassesSunglasses
+    gloves: ClothingHandsMercGlovesCombat
+    outerClothing: ClothingOuterArmorBasicSlim
+    shoes: ClothingShoesBootsCombat
+    belt: ClothingBeltMilitaryWebbing
+    neck: ClothingNeckUSSPPin
+    id: PassengerPDAUnrem
+  storage:
+    belt:
+    - MagazineRifle
+    - MagazineRifle
+    - MagazinePistol
+    - MagazinePistol
+    - CombatKnife
+    back:
+    - MagazineBoxRifle
+    - MedkitCombatFilled
+    - CumulativeEFP
+    - GrenadeStinger
+    - MagazineBoxPistol
+    - WeaponPistolMk58
+  inhand:
+  - WeaponRifleLecter
+
+## UNREM ВЕРСИИ
+
+- type: entity
+  parent: PassengerPDA
+  id: PassengerPDAUnrem
+  categories: [ HideSpawnMenu ]
+  name: КПК Наёмника
+  description: Почему он серый?
+  components:
+  - type: Unremoveable
+
+- type: entity
+  parent: ClothingHeadHatRedsoft
+  id: ClothingHeadHatRedsoftUnrem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Unremoveable
+
+- type: entity
+  parent: ClothingHeadHatBluesoft
+  id: ClothingHeadHatBluesoftUnrem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Unremoveable
+
+- type: entity
+  parent: ClothingUniformJumpsuitCasualRed
+  id: ClothingUniformJumpsuitCasualRedUnrem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Unremoveable
+
+- type: entity
+  parent: ClothingUniformJumpsuitCasualBlue
+  id: ClothingUniformJumpsuitCasualBlueUnrem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Unremoveable
+
