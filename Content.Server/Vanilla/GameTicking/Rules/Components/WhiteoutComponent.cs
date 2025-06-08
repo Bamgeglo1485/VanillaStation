@@ -40,6 +40,8 @@ public sealed partial class WhiteoutRuleComponent : Component
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public LocId WhiteoutPrepareAnnouncement = "whiteout-prepare-announcement";
     [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public LocId WhiteoutPrestartAnnouncement = "whiteout-prestart-announcement";
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
     public LocId WhiteoutAnnouncement = "whiteout-announcement";
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public LocId WhiteoutFinalAnnouncement = "whiteout-announcement-final";
@@ -54,6 +56,8 @@ public sealed partial class WhiteoutRuleComponent : Component
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public SoundSpecifier WhiteoutMusic = new SoundPathSpecifier("/Audio/Vanilla/StationEvents/whiteout.ogg");
     [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public SoundSpecifier WhiteoutPrestartMusic = new SoundPathSpecifier("/Audio/Vanilla/StationEvents/whiteout_prestart.ogg");
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
     public SoundSpecifier WhiteoutFinalMusic = new SoundPathSpecifier("/Audio/Vanilla/StationEvents/whiteout_final.ogg");
 
     public float TimeActive;
@@ -62,6 +66,7 @@ public sealed partial class WhiteoutRuleComponent : Component
     public MapId ActiveMapId = MapId.Nullspace;
     public EntityUid ActiveMapUid = EntityUid.Invalid;
     public TimeSpan NextGlassBreak;
+    public bool PrestartPlayed = false;
 
     /// <summary>
     /// Вычисляет что-то я хз

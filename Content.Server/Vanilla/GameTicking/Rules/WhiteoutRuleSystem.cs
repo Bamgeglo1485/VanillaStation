@@ -75,6 +75,8 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         comp.NextGlassBreak = TimeSpan.Zero;
 
+        comp.PrestartPlayed = false;
+
         if (comp.ActiveMapId == MapId.Nullspace)
         {
             var xform = Transform(uid);
@@ -122,13 +124,27 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         {
             case WhiteoutState.Preparing:
 
-                Freeze(comp.WhiteoutPrepareTemp, comp.WhiteoutPrepareStrength, comp.ActiveMapId);
-
                 if (comp.TimeActive >= comp.WhiteoutPrepareTime)
                 {
                     StartWhiteout(uid, comp, comp.ActiveMapId);
                     comp.CurrentState = WhiteoutState.Active;
                 }
+                else
+                {
+                    var isPhaseTwo = comp.TimeActive >= comp.WhiteoutPrepareTime / 2;
+                    var prepareTemp = isPhaseTwo ? comp.WhiteoutPrepareTemp * 2f : comp.WhiteoutPrepareTemp;
+                    var prepareStrength = isPhaseTwo ? comp.WhiteoutPrepareStrength * 2f : comp.WhiteoutPrepareStrength;
+
+                    Freeze(prepareTemp, prepareStrength, comp.ActiveMapId);
+
+                    if (comp.TimeActive >= comp.WhiteoutPrepareTime - 240f & !comp.PrestartPlayed)
+                    {
+                        comp.PrestartPlayed = true;
+                        _audio.PlayGlobal(comp.WhiteoutPrestartMusic, Filter.Broadcast(), true);
+                        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutPrestartAnnouncement), colorOverride: Color.Red);
+                    }
+                }
+
                 break;
 
             case WhiteoutState.Active:
@@ -197,8 +213,8 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                         MakeAtmos(comp.WhiteoutFinalTemp, comp.PlanetMap, comp.ActiveMapId, comp.ActiveMapUid);
                         comp.CurrentState = WhiteoutState.FinalPhase;
                         _audio.PlayGlobal(comp.WhiteoutFinalMusic, Filter.Broadcast(), true);
-                        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutFinalAnnouncement), colorOverride: Color.Red);
                         _audio.PlayGlobal(comp.WhiteoutAlarmSound, Filter.Broadcast(), true);
+                        _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutFinalAnnouncement), colorOverride: Color.Red);
                     }
                 }
                 else
