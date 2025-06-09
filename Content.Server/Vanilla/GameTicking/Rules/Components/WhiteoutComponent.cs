@@ -34,6 +34,9 @@ public sealed partial class WhiteoutRuleComponent : Component
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float WhiteoutFinalModifier = 1.5f;
 
+
+    [DataField]
+    public string PrestartWeather = "SnowfallMedium";
     [DataField]
     public string Weather = "SnowfallHeavy";
 

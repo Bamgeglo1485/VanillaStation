@@ -1,0 +1,15 @@
+- type: construction
+  name: костёр
+  id: BonfireCraft
+  graph: BonfireGraph
+  startNode: start
+  targetNode: finishbonfire
+  category: construction-category-structures
+  description: Греет и освещает. Можно пополнить с помощью древесины.
+  icon: { sprite: /Textures/Structures/Decoration/bonfire.rsi, state: bonfire }
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: false
+  canBuildInImpassable: false
+  conditions:
+    - !type:TileNotBlocked
