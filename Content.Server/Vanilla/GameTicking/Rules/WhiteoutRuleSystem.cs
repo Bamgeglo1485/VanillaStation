@@ -128,7 +128,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
                 if (comp.TimeActive >= comp.WhiteoutPrepareTime)
                 {
-                    StartWhiteout(uid, comp, comp.ActiveMapId);
+                    StartWhiteout(uid, comp);
                     comp.CurrentState = WhiteoutState.Active;
                 }
                 else
@@ -144,6 +144,8 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                         comp.PrestartPlayed = true;
                         _audio.PlayGlobal(comp.WhiteoutPrestartMusic, Filter.Broadcast(), true);
                         _chat.DispatchGlobalAnnouncement(Loc.GetString(comp.WhiteoutPrestartAnnouncement), colorOverride: Color.Red);
+
+                        SetWeather(comp.ActiveMapUid, comp.ActiveMapId, comp.PrestartWeather);
                     }
                 }
 
@@ -183,6 +185,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                     //окна
                     if (isFinal)
                     {
+                        var windows = new List<EntityUid>();
                         var windowQuery = EntityQueryEnumerator<TransformComponent>();
                         while (windowQuery.MoveNext(out var windowEnt, out var xform))
                         {
@@ -190,8 +193,13 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                                 xform.MapID == comp.ActiveMapId &&
                                 RobustRandom.Prob(0.8f))
                             {
-                               _damageable.TryChangeDamage(windowEnt, damage);
+                                windows.Add(windowEnt);
                             }
+                        }
+
+                        foreach (var window in windows)
+                        {
+                            _damageable.TryChangeDamage(window, damage);
                         }
                     }
 
@@ -222,7 +230,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
                     if (comp.TimeActive >= totalDuration)
                     {
-                        EndWhiteout(uid, comp, rule, comp.ActiveMapId);
+                        EndWhiteout(uid, comp, rule);
                         comp.CurrentState = WhiteoutState.Ended;
                     }
                 }
@@ -232,7 +240,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
 
     // Действия при начале
-    private void StartWhiteout(EntityUid uid, WhiteoutRuleComponent comp, MapId mapId)
+    private void StartWhiteout(EntityUid uid, WhiteoutRuleComponent comp)
     {
         comp.TimeActive = 0f;
 
@@ -243,10 +251,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 
         _audio.PlayGlobal(comp.WhiteoutMusic, Filter.Broadcast(), true);
 
-        if (!_prototypeManager.TryIndex<WeatherPrototype>(comp.Weather, out var weatherProto))
-            return;
-
-        _weather.SetWeather(mapId, weatherProto, TimeSpan.FromMinutes(30));
+        SetWeather(comp.ActiveMapUid, comp.ActiveMapId, comp.Weather);
 
         ChangeHardsuitProtection(true);
 
@@ -255,10 +260,10 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     }
 
     // Действия при конце
-    private void EndWhiteout(EntityUid uid, WhiteoutRuleComponent comp, GameRuleComponent rule, MapId mapId)
+    private void EndWhiteout(EntityUid uid, WhiteoutRuleComponent comp, GameRuleComponent rule)
     {
         GameTicker.EndGameRule(uid, rule);
-        _weather.SetWeather(mapId, null, TimeSpan.FromMinutes(1));
+        SetWeather(comp.ActiveMapUid, comp.ActiveMapId, "null");
 
         RemComp<MapAtmosphereComponent>(comp.ActiveMapUid);
 
@@ -294,6 +299,22 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         }
     }
 
+    private void SetWeather(EntityUid ActiveMapUid, MapId ActiveMapId, string weatherType)
+    {
+
+        if (weatherType == "null")
+        {
+            _weather.SetWeather(ActiveMapId, null, TimeSpan.FromMinutes(60));
+        }
+
+        if (!_prototypeManager.TryIndex<WeatherPrototype>(weatherType, out var weatherProto))
+            return;
+
+        var weatherComp = EntityManager.EnsureComponent<WeatherComponent>(ActiveMapUid);
+
+        _weather.SetWeather(ActiveMapId, weatherProto, TimeSpan.FromMinutes(60));
+    }
+
     // Убирание или добавление резистов скафов
     private void ChangeHardsuitProtection(bool remove)
     {
@@ -310,7 +331,9 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
                 else
                 {
                     AddComp<TemperatureProtectionComponent>(uid);
-                    AddComp<PressureProtectionComponent>(uid);
+                    var pressureProtection = AddComp<PressureProtectionComponent>(uid);
+                    pressureProtection.LowPressureMultiplier = 1000f;
+                    pressureProtection.HighPressureMultiplier = 0.3f;
                 }
             }
         }
