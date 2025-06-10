@@ -37,8 +37,6 @@
 - type: latheRecipe
   id: HeatLamp
   result: HeatLamp
-  categories:
-  - Parts
   completetime: 10
   materials:
     Steel: 1200
