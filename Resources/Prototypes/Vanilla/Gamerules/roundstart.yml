@@ -35,7 +35,7 @@
   name: whiteout-londoners-title
   showInVote: false
   description: whiteout-londoners-description
-  minPlayers: 20
+  minPlayers: 15
   alias:
     - Londoners
     - WhiteoutRevolutionary
