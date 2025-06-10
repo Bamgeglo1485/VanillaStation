@@ -16,7 +16,6 @@
     size: Normal
   - type: Clothing
     sprite: Vanilla/Objects/Devices/heatlamp.rsi
-    state: on-equipped-NECK
     equippedPrefix: off
     quickEquip: false
     equipSound:
