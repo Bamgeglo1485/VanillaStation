@@ -22,7 +22,7 @@
   name: whiteout-title
   showInVote: false
   description: whiteout-description
-  minPlayers: 20
+  minPlayers: 10
   alias:
     - whiteout
   rules:
