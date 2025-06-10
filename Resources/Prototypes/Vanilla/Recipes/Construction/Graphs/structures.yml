@@ -7,49 +7,49 @@
         - to: finishbonfire
           steps:
             - tag: Torch
-              name: Факел
+              name: construction-graph-tag-torch
               icon:
                 sprite: Objects/Misc/torch.rsi
                 state: torch_unlit
               doAfter: 1
             - tag: Torch
-              name: Факел
+              name: construction-graph-tag-torch
               icon:
                 sprite: Objects/Misc/torch.rsi
                 state: torch_unlit
               doAfter: 1
             - tag: Torch
-              name: Факел
+              name: construction-graph-tag-torch
               icon:
                 sprite: Objects/Misc/torch.rsi
                 state: torch_unlit
               doAfter: 1
             - tag: Torch
-              name: Факел
+              name: construction-graph-tag-torch
               icon:
                 sprite: Objects/Misc/torch.rsi
                 state: torch_unlit
               doAfter: 1
             - tag: Torch
-              name: Факел
+              name: construction-graph-tag-torch
               icon:
                 sprite: Objects/Misc/torch.rsi
                 state: torch_unlit
               doAfter: 1
             - tag: Torch
-              name: Факел
+              name: construction-graph-tag-torch
               icon:
                 sprite: Objects/Misc/torch.rsi
                 state: torch_unlit
               doAfter: 1
             - tag: Torch
-              name: Факел
+              name: construction-graph-tag-torch
               icon:
                 sprite: Objects/Misc/torch.rsi
                 state: torch_unlit
               doAfter: 1
             - tag: Torch
-              name: Факел
+              name: construction-graph-tag-torch
               icon:
                 sprite: Objects/Misc/torch.rsi
                 state: torch_unlit
