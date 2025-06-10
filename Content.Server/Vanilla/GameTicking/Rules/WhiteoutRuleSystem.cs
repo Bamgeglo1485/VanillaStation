@@ -9,6 +9,7 @@ using Content.Server.GameTicking.Rules;
 using Content.Server.Tesla.Components;
 using Content.Server.Cargo.Components;
 using Content.Server.Atmos.Components;
+using Content.Server.Station.Systems;
 using Content.Server.Light.Components;
 using Content.Server.Chat.Managers;
 using Content.Server.Chat.Systems;
@@ -49,6 +50,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
 {
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly PoweredLightSystem _poweredLight = default!;
+    [Dependency] private readonly StationSystem _stationSystem = default!;
     [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
@@ -70,7 +72,7 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
     {
         base.Started(uid, comp, rule, args);
 
-        // Сброс pначений
+        // Сброс значений
         comp.TimeActive = 0f;
         comp.NextUpdate = _gameTiming.CurTime + TimeSpan.FromSeconds(1);
         comp.CurrentState = WhiteoutState.Preparing;
@@ -78,10 +80,21 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         comp.PrestartPlayed = false;
 
         // Установление значении карты
+        var stationQuery = EntityQueryEnumerator<StationDataComponent>();
+        while (stationQuery.MoveNext(out var stationUid, out var stationData))
+        {
 
-        comp.ActiveMapId = _mapManager.GetAllMapIds().FirstOrDefault(id => id != MapId.Nullspace);
-        if (comp.ActiveMapId == MapId.Nullspace)
-            return;
+            var gridUid = _stationSystem.GetLargestGrid(stationData);
+            if (gridUid == null)
+                continue;
+
+            var gridTrans = Transform(gridUid.Value); // хаха грид транс
+            if (gridTrans.MapID == MapId.Nullspace)
+                continue;
+
+            comp.ActiveMapId = gridTrans.MapID;
+            break;
+        }
 
         // UID карты
         comp.ActiveMapUid = _mapManager.GetMapEntityId(comp.ActiveMapId);
