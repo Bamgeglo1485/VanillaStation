@@ -345,6 +345,9 @@ public sealed class WhiteoutRuleSystem : GameRuleSystem<WhiteoutRuleComponent>
         var query = EntityQueryEnumerator<PressureProtectionComponent, TemperatureProtectionComponent>();
         while (query.MoveNext(out var uid, out _, out var huy))
         {
+            if (!_tagSystem.HasTag(uid, "Hardsuit"))
+                return;
+
             if (remove)
             {
                 RemComp<TemperatureProtectionComponent>(uid);
