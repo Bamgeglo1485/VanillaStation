@@ -32,7 +32,7 @@ public sealed partial class WhiteoutRuleComponent : Component
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float WhiteoutStrength = 0.030f;
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float WhiteoutFinalModifier = 1.3f;
+    public float WhiteoutFinalModifier = 1.7f;
 
 
     [DataField]
