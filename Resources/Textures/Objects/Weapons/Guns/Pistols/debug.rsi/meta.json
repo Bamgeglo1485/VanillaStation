@@ -1,17 +1,19 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "swept",
+  "copyright": "swept, resprite by bamgeglo",
   "size": {
     "x": 32,
     "y": 32
   },
   "states": [
     {
-      "name": "icon"
+        "name": "icon",
+        "delays": [ [ 0.1, 0.1, 0.1, 0.1 ] ]
     },
     {
-      "name": "base"
+        "name": "base",
+        "delays": [ [ 0.1, 0.1, 0.1, 0.1 ] ]
     },
     {
       "name": "mag-0"
