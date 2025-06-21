@@ -1,8 +1,8 @@
 - type: entity
   parent: BaseItem
   id: HandWarmer
-  name: одноразовая ручная грелка
-  description: Одноразовая химическая грелка для экстренных ситуаций.
+  name: ручная грелка
+  description: Многоразовая химическая грелка для экстренных ситуаций.
   components:
   - type: Sprite
     sprite: Vanilla/Objects/Tools/HandWarmer.rsi
@@ -22,7 +22,7 @@
     netsync: false
   - type: Appearance
   - type: ExpendableLight
-    spentName: использованная одноразовая грелка для рук
+    spentName: использованная грелка для рук
     spentDesc: Уже бесполезна, но его можно восстановить в микроволновке.
     glowDuration: 120
     fadeOutDuration: 15
