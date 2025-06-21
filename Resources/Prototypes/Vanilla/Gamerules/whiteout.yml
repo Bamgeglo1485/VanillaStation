@@ -15,6 +15,9 @@
   id: Londoners
   components:
   - type: GameRule
+    delay:
+      min:  610
+      max:  610
     minPlayers: 10
   - type: AntagSelection
     agentName: roles-antag-londoner-name
@@ -26,7 +29,7 @@
       briefing:
         text: londoner-role-greeting
         color: "#609cf0"
-        sound: "/Audio/Ambience/Antag/headrev_start.ogg"
+        sound: "/Audio/Vanilla/Ambience/Antag/Londoner.ogg"
       whitelist:
         components:
         - CanBeLondoner
