@@ -14,6 +14,7 @@
         visible: false
   - type: Item
     size: Small
+    heldPrefix: icon
   - type: PointLight
     enabled: false
     radius: 0
@@ -23,7 +24,7 @@
   - type: Appearance
   - type: ExpendableLight
     spentName: использованная грелка для рук
-    spentDesc: Уже бесполезна, но его можно восстановить в микроволновке.
+    spentDesc: Уже бесполезна, но её можно восстановить в микроволновке.
     glowDuration: 120
     fadeOutDuration: 15
     iconStateOn: activated
