@@ -39,28 +39,3 @@
     heatMaxTemp: 313.15
     bodyHeatStrength: 3500
     onlyWeared: true
-
-- type: entity
-  parent: HeatLamp
-  id: OldHeatLamp
-  name: древняя тепловая лампа
-  description: Тепловая лампа, которая когда то служила при строительстве станций, но её конструкция довольно устарела, так как выбрасывала пар в атмосферу.
-  components:
-  - type: Sprite
-    sprite: Vanilla/Objects/Devices/old_heatlamp.rsi
-  - type: Clothing
-    sprite: Vanilla/Objects/Devices/old_heatlamp.rsi
-  - type: PointLight
-    enabled: false
-    radius: 12
-    energy: 2
-    color: "#FFC458"
-    netsync: false
-  - type: StaticPrice
-    price: 3200
-  - type: Warmer
-    gasType: WaterVapor
-    moleRatio: 0.025
-    tileHeatStrength: 1.5
-    heatMaxTemp: 313.15
-    bodyHeatStrength: 3000
