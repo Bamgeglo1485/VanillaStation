@@ -1,0 +1,47 @@
+- type: entity
+  name: доминатор
+  parent: BaseWeaponBattery
+  id: WeaponDominator
+  description: Высокотехнологичное оружие созданное правоохранительной организацией Sibyl System, предназначенное специально для борьбы с преступностью.
+  components:
+  - type: Dominator
+  - type: Speech
+  - type: AccessReader
+    access: [["Security"], ["Captain"]]
+  - type: Sprite
+    sprite: Vanilla/Objects/Weapons/Guns/Battery/Dominator.rsi
+    layers:
+      - state: base
+        map: ["enum.GunVisualLayers.Base"]
+      - state: unlit-safe
+        shader: unshaded
+      - state: unlit-lethal
+        visible: false
+        shader: unshaded
+      - state: mag-unshaded-4
+        map: ["enum.GunVisualLayers.MagUnshaded"]
+        shader: unshaded
+  - type: MagazineVisuals
+    magState: mag
+    steps: 5
+    zeroVisible: false
+  - type: Appearance
+  - type: Clothing
+    sprite: Vanilla/Objects/Weapons/Guns/Battery/Dominator.rsi
+  - type: Gun
+    fireRate: 0.5
+    soundGunshot:
+      path: /Audio/Vanilla/Weapons/Guns/Gunshots/dominator.ogg
+  - type: HitscanBatteryAmmoProvider
+    proto: Pulse
+    fireCost: 150
+  - type: Item
+    size: Small
+    shape:
+    - 0,0,1,0
+    - 0,1,0,1
+    sprite: Vanilla/Objects/Weapons/Guns/Battery/Dominator.rsi
+    heldPrefix: energy
+  - type: Battery
+    maxCharge: 3000
+    startingCharge: 3000
