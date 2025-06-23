@@ -14,7 +14,6 @@
         visible: false
   - type: Item
     size: Small
-    heldPrefix: icon
   - type: PointLight
     enabled: false
     radius: 0

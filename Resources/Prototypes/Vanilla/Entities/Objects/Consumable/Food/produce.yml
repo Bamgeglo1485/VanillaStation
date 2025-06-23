@@ -28,7 +28,6 @@
         visible: false
         shader: unshaded
   - type: Item
-    heldPrefix: produce
   - type: Produce
     seedId: warmChili
   - type: Tag
