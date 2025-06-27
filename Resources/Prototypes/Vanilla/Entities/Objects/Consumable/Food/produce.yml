@@ -28,6 +28,8 @@
         visible: false
         shader: unshaded
   - type: Item
+    sprite: Vanilla/Objects/Specific/Hydroponics/warmchili.rsi
+    heldPrefix: unlit
   - type: Produce
     seedId: warmChili
   - type: Tag

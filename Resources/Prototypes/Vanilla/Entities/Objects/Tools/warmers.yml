@@ -13,7 +13,9 @@
         state: activated
         visible: false
   - type: Item
+    sprite: Vanilla/Objects/Tools/HandWarmer.rsi
     size: Small
+    heldPrefix: unlit
   - type: PointLight
     enabled: false
     radius: 0
