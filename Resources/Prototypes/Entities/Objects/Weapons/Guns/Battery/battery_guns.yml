@@ -632,7 +632,7 @@
   - type: Item
     size: Normal  # Intentionally larger than other pistols
   - type: Sprite
-    sprite: Vanilla/Objects/Weapons/Guns/Battery/advancedlasergun.rsi # Rayten-Resprites
+    sprite: Vanilla/Objects/Weapons/Guns/Battery/advancedlasergun.rsi # Rayten-Resprited
     layers:
     - state: base
       map: ["enum.GunVisualLayers.Base"]
@@ -640,7 +640,8 @@
       map: ["enum.GunVisualLayers.MagUnshaded"]
       shader: unshaded
   - type: Clothing
-    sprite: Vanilla/Objects/Weapons/Guns/Battery/advancedlasergun.rsi # Rayten-Resprites
+    sprite: Vanilla/Objects/Weapons/Guns/Battery/advancedlasergun.rsi # Rayten-Resprited
+  - type: Gun
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser_cannon.ogg
   - type: HitscanBatteryAmmoProvider
