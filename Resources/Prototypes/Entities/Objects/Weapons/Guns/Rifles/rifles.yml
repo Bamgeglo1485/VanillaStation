@@ -199,11 +199,11 @@
   components:
   - type: GunIgnoreSkill
   - type: Sprite
-    sprite: Vanilla/Objects/Fun/Foam/foam_rifle.rsi # Rayten-Resprites
+    sprite: Objects/Fun/Foam/foam_rifle.rsi
   - type: Clothing
-    sprite: Vanilla/Objects/Fun/Foam/foam_rifle.rsi # Rayten-Resprites
+    sprite: Objects/Fun/Foam/foam_rifle.rsi
   - type: Item
-    sprite: Vanilla/Objects/Fun/Foam/foam_rifle_inhand_64x.rsi # Rayten-Resprites
+    sprite: Objects/Fun/Foam/foam_rifle_inhand_64x.rsi
   - type: BallisticAmmoProvider
     whitelist:
       tags:
