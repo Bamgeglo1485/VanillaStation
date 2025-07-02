@@ -14,26 +14,28 @@ public sealed class PressureExplosionSystem : EntitySystem
     [Dependency] private readonly ExplosionSystem _boom = default!;
     [Dependency] private readonly NodeContainerSystem _nodeContainer = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+
     private float CheckInterval = 10f;
     private float NextCheckTime = 0f;
+
     public override void Update(float frameTime)
     {
         var currentTime = (float)_timing.CurTime.TotalSeconds;
-        var query = EntityQueryEnumerator<PressureExplosionComponent, NodeContainerComponent>();
 
+        if (_nextCheckTime == 0f)
+        {
+            _nextCheckTime = currentTime + CheckInterval;
+            return;
+        }
+
+        if (currentTime < _nextCheckTime)
+            return;
+
+        _nextCheckTime = currentTime + CheckInterval;
+
+        var query = EntityQueryEnumerator<PressureExplosionComponent, NodeContainerComponent>();
         while (query.MoveNext(out var uid, out var comp, out var nodeContainer))
         {
-            if (NextCheckTime == 0f)
-            {
-                NextCheckTime = currentTime + CheckInterval;
-                return;
-            }
-
-            if (currentTime < NextCheckTime)
-                return;
-
-            comp.NextCheckTime = currentTime + comp.CheckInterval;
-
             if (!Transform(uid).Anchored)
                 continue;
 
@@ -57,4 +59,5 @@ public sealed class PressureExplosionSystem : EntitySystem
             }
         }
     }
+}
 }
