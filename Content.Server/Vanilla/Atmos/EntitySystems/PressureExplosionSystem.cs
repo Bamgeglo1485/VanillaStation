@@ -15,8 +15,8 @@ public sealed class PressureExplosionSystem : EntitySystem
     [Dependency] private readonly NodeContainerSystem _nodeContainer = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
 
-    private float CheckInterval = 10f;
-    private float NextCheckTime = 0f;
+    private float checkInterval = 10f;
+    private float nextCheckTime = 0f;
 
     public override void Update(float frameTime)
     {
@@ -24,14 +24,14 @@ public sealed class PressureExplosionSystem : EntitySystem
 
         if (nextCheckTime == 0f)
         {
-            nextCheckTime = currentTime + CheckInterval;
+            nextCheckTime = currentTime + checkInterval;
             return;
         }
 
         if (currentTime < nextCheckTime)
             return;
 
-        nextCheckTime = currentTime + CheckInterval;
+        nextCheckTime = currentTime + checkInterval;
 
         var query = EntityQueryEnumerator<PressureExplosionComponent, NodeContainerComponent>();
         while (query.MoveNext(out var uid, out var comp, out var nodeContainer))
