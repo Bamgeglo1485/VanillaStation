@@ -15,8 +15,4 @@ public sealed partial class PressureExplosionComponent : Component
     [DataField("explosionlMultiplier")]
     public float ExplosionMultiplier = 1f;
 
-    [DataField("checkInterval")]
-    public float CheckInterval = 10f;
-
-    public float NextCheckTime { get; set; } = 0f;
 }
