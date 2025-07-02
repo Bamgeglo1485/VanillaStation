@@ -29,8 +29,8 @@ public sealed class PressureExplosionSystem : EntitySystem
                 return;
             }
 
-            if (currentTime < comp.NextCheckTime)
-                continue;
+            if (currentTime < NextCheckTime)
+                return;
 
             comp.NextCheckTime = currentTime + comp.CheckInterval;
 
