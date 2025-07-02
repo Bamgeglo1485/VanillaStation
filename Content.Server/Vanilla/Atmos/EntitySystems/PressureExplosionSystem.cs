@@ -22,10 +22,10 @@ public sealed class PressureExplosionSystem : EntitySystem
 
         while (query.MoveNext(out var uid, out var comp, out var nodeContainer))
         {
-            if (comp.NextCheckTime == 0f)
+            if (NextCheckTime == 0f)
             {
-                comp.NextCheckTime = currentTime + comp.CheckInterval;
-                continue;
+                NextCheckTime = currentTime + CheckInterval;
+                return;
             }
 
             if (currentTime < comp.NextCheckTime)
