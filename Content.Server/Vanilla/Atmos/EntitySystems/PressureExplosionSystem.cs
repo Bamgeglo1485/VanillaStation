@@ -22,16 +22,16 @@ public sealed class PressureExplosionSystem : EntitySystem
     {
         var currentTime = (float)_timing.CurTime.TotalSeconds;
 
-        if (_nextCheckTime == 0f)
+        if (nextCheckTime == 0f)
         {
-            _nextCheckTime = currentTime + CheckInterval;
+            nextCheckTime = currentTime + CheckInterval;
             return;
         }
 
-        if (currentTime < _nextCheckTime)
+        if (currentTime < nextCheckTime)
             return;
 
-        _nextCheckTime = currentTime + CheckInterval;
+        nextCheckTime = currentTime + CheckInterval;
 
         var query = EntityQueryEnumerator<PressureExplosionComponent, NodeContainerComponent>();
         while (query.MoveNext(out var uid, out var comp, out var nodeContainer))
