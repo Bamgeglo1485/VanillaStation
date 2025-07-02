@@ -14,7 +14,8 @@ public sealed class PressureExplosionSystem : EntitySystem
     [Dependency] private readonly ExplosionSystem _boom = default!;
     [Dependency] private readonly NodeContainerSystem _nodeContainer = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
-
+    private float CheckInterval = 10f;
+    private float NextCheckTime = 0f;
     public override void Update(float frameTime)
     {
         var currentTime = (float)_timing.CurTime.TotalSeconds;
