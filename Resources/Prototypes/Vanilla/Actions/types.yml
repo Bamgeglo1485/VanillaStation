@@ -1,7 +1,7 @@
 - type: entity
   id: ActionOpenAssStorage
   name: Открыть секретное хранилище
-  description: Отркыть или закрыть секретное хранилище в вашем организме.
+  description: Открыть или закрыть секретное хранилище в вашем организме.
   components:
   - type: InstantAction
     event: !type:OpenAssStorageEvent
@@ -12,3 +12,38 @@
     icon:
       sprite: Clothing/Back/Backpacks/backpack.rsi
       state: icon
+
+- type: entity
+  id: ActionSplodeItem
+  name: Взорвать предмет
+  description: Позволяет заряжать неуглеродные вещества кинетической энергией, вызывая кабууум!
+  components:
+  - type: Action
+    useDelay: 1
+    itemIconStyle: BigAction
+    priority: -20
+    icon:
+      sprite: Vanilla/Actions/Splode.rsi
+      state: ItemSplode
+    raiseOnAction: true
+  - type: InstantAction
+    event: !type:SplodeMarkingEvent
+
+- type: entity
+  id: ActionSelfSplode
+  name: Взорваться
+  description: Позволяет зарядить свой скелет, вызвав сильный взрыв. Работает только если у вас достаточно режущего или колющего урона.
+  parent: BaseSuicideAction
+  components:
+  - type: Action
+    useDelay: 10
+    itemIconStyle: BigAction
+    priority: -20
+    icon:
+      sprite: Vanilla/Actions/Splode.rsi
+      state: SelfCharge
+    raiseOnAction: true
+  - type: InstantAction
+    event: !type:SelfSplodingEvent
+  - type: SpeakOnAction
+    sentence: action-speech-self-splode

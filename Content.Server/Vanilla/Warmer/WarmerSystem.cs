@@ -92,7 +92,7 @@ public sealed class WarmerSystem : EntitySystem
             }
         }
 
-        if (!TryComp<TransformComponent>(uid, out var xform) || xform.ParentUid == null)
+        if (!TryComp<TransformComponent>(uid, out var xform))
             return;
 
         var parent = xform.ParentUid;
