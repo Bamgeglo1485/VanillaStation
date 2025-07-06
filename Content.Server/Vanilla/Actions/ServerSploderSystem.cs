@@ -174,7 +174,7 @@ public sealed class SploderSystem : EntitySystem
         var splodeComp = EnsureComp<SplodingComponent>(activeItem.Value);
         splodeComp.StartTime = _gameTiming.CurTime; 
         splodeComp.Timer += splodeComp.StartTime;
-        splodeComp.Modifier = modifier;
+        splodeComp.Modifier = modifier * args.Strength;
 
     }
 
@@ -218,6 +218,7 @@ public sealed class SploderSystem : EntitySystem
         splodeComp.ExplosionType = "DemolitionCharge";
         splodeComp.Gib = true;
         splodeComp.SplodeSound = new SoundPathSpecifier("/Audio/Vanilla/Effects/Actions/SelfSplodeCharge.ogg");
+        splodeComp.Modifier = args.Strength
 
     }
 }

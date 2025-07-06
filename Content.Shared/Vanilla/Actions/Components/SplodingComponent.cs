@@ -2,13 +2,6 @@ using Robust.Shared.Audio;
 
 namespace Content.Shared.Vanilla.Actions.Components;
 
-public enum SplodingState
-{
-    Standing,    // Ready/initial state
-    Charging,    // Currently charging up
-    Exploding    // In process of explosion
-}
-
 [RegisterComponent]
 public sealed partial class SplodingComponent : Component
 {
@@ -19,7 +12,7 @@ public sealed partial class SplodingComponent : Component
     public bool Gib = false;
 
     [DataField]
-    public string ExplosionType = "FireBomb";
+    public string ExplosionType = "FireKeepTiles";
 
     [DataField]
     public float ExplodeIntensity = 30f;
@@ -46,4 +39,11 @@ public sealed partial class SplodingComponent : Component
     public TimeSpan StartTime;
 
     public TimeSpan NextUpdate;
+}
+
+public enum SplodingState
+{
+    Standing,
+    Charging,
+    Exploding
 }
