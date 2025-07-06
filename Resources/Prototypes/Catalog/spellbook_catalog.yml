@@ -372,29 +372,3 @@
   conditions:
   - !type:ListingLimitedStockCondition
     stock: 1
-
-- type: listing
-  id: SpellbookItemSplode
-  name: ыээ
-  description: уук
-  productAction: ActionSplodeItem
-  cost:
-    WizCoin: 1
-  categories:
-  - SpellbookUtility
-  conditions:
-  - !type:ListingLimitedStockCondition
-    stock: 1
-
-- type: listing
-  id: SpellbookItemSelfSplode
-  name: ыээыы
-  description: уукыы
-  productAction: ActionSelfSplode
-  cost:
-    WizCoin: 1
-  categories:
-  - SpellbookUtility
-  conditions:
-  - !type:ListingLimitedStockCondition
-    stock: 1

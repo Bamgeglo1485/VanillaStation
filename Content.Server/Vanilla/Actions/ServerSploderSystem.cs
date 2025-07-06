@@ -1,47 +1,51 @@
-using Robust.Shared.Prototypes;
-using Content.Shared.Popups;
-using Content.Shared.Hands.EntitySystems;
-using Content.Shared.Hands.Components;
-using Robust.Shared.Random;
-using Content.Shared.Throwing;
-using Robust.Shared.Timing;
-using Robust.Shared.Physics.Events;
-using Robust.Shared.Physics.Components;
-using Content.Shared.FixedPoint;
-using Content.Shared.Effects;
-using Robust.Shared.Player;
 using Content.Shared.Vanilla.Actions.Components;
 using Content.Shared.Vanilla.Actions.Events;
-using Content.Server.Explosion.EntitySystems;
-using Robust.Server.GameObjects;
+using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Damage.Prototypes;
+using Content.Shared.Hands.Components;
+using Content.Shared.Mobs.Components;
+using Content.Shared.FixedPoint;
+using Content.Shared.Jittering;
+using Content.Shared.Throwing;
+using Content.Shared.Effects;
+using Content.Shared.Popups;
 using Content.Shared.Damage;
 using Content.Shared.Item;
-using Content.Shared.Damage.Prototypes;
-using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs;
-using Content.Shared.Jittering;
+
+using Robust.Shared.Physics.Components;
+using Robust.Shared.Physics.Events;
 using Robust.Shared.Audio.Systems;
+using Robust.Server.GameObjects;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
+using Robust.Shared.Timing;
+using Robust.Shared.Player;
 using Robust.Shared.Audio;
+
+using Content.Server.Explosion.EntitySystems;
+
 
 namespace Content.Server.Vanilla.Actions;
 
 public sealed class SploderSystem : EntitySystem
 {
-    [Dependency] private readonly SharedHandsSystem _handsSystem = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
+    [Dependency] private readonly SharedHandsSystem _handsSystem = default!;
+    [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
     [Dependency] private readonly SharedPointLightSystem _light = default!;
-    [Dependency] private readonly ExplosionSystem _boom = default!;
+    [Dependency] private readonly SharedJitteringSystem _jitter = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
-    [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
-    [Dependency] private readonly SharedJitteringSystem _jitter = default!;
+    [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private readonly IGameTiming _gameTiming = default!;
+    [Dependency] private readonly ExplosionSystem _boom = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
+        SubscribeLocalEvent<SplodingComponent, ThrowDoHitEvent>(OnItemHit);
         SubscribeLocalEvent<SplodeMarkingEvent>(OnSplodeMarkingEvent); 
         SubscribeLocalEvent<SelfSplodingEvent>(OnSelfSploding);
     }
@@ -51,9 +55,9 @@ public sealed class SploderSystem : EntitySystem
         base.Update(frameTime);
 
         var currentTime = _gameTiming.CurTime;
-        var query = EntityQueryEnumerator<SplodingComponent, TransformComponent>();
+        var query = EntityQueryEnumerator<SplodingComponent>();
 
-        while (query.MoveNext(out var uid, out var comp, out var xform))
+        while (query.MoveNext(out var uid, out var comp))
         {
             switch (comp.State)
             {
@@ -85,17 +89,16 @@ public sealed class SploderSystem : EntitySystem
 
                     comp.NextUpdate = currentTime + comp.UpdateInterval;
 
-                    var progress = Math.Clamp(
+                    comp.Progress = Math.Clamp(
                         (float)(currentTime - comp.StartTime).TotalSeconds /
                         (float)(comp.Timer - comp.StartTime).TotalSeconds,
-                        0f, 1f
-                    );
+                        0f, 1f);
 
                     EnsureComp<PointLightComponent>(uid);
                     _light.SetEnabled(uid, true);
                     _light.SetColor(uid, Color.Orange);
-                    _light.SetRadius(uid, MathHelper.Lerp(1f, 4f, progress));
-                    _light.SetEnergy(uid, MathHelper.Lerp(0.1f, 7f, progress));
+                    _light.SetRadius(uid, MathHelper.Lerp(1f, 4f, comp.Progress));
+                    _light.SetEnergy(uid, MathHelper.Lerp(0.1f, 7f, comp.Progress));
 
                     _color.RaiseEffect(Color.Orange, new List<EntityUid>() { uid }, Filter.Pvs(uid, entityManager: EntityManager));
 
@@ -103,30 +106,44 @@ public sealed class SploderSystem : EntitySystem
 
                 case SplodingState.Exploding:
 
-                    _boom.QueueExplosion(
-                        uid,
-                        comp.ExplosionType,
-                        comp.ExplodeIntensity * comp.Modifier,
-                        comp.ExplodeDropoff * comp.Modifier,
-                        comp.ExplodeMaxIntensity * comp.Modifier);
-
-                    if (comp.Gib)
-                    {
-                        var damageSpec = new DamageSpecifier
-                        {
-                            DamageDict = new()
-                            {
-                                ["Blunt"] = FixedPoint2.New(1000)
-                            }
-                        };
-                        _damageable.TryChangeDamage(uid, damageSpec, true);
-                    }
-
-                    QueueDel(uid);
+                    Explode(uid, comp);
 
                     break;
+
             }
         }
+    }
+
+    private void Explode(EntityUid uid, SplodingComponent comp)
+    {
+
+        _boom.QueueExplosion(
+            uid,
+            comp.ExplosionType,
+            comp.ExplodeIntensity * comp.Modifier * comp.Progress,
+            comp.ExplodeDropoff * comp.Modifier,
+            comp.ExplodeMaxIntensity * comp.Modifier * comp.Progress);
+
+        if (comp.Gib)
+        {
+            var damageSpec = new DamageSpecifier
+            {
+                DamageDict = new()
+                {
+                    ["Blunt"] = FixedPoint2.New(1000)
+                }
+            };
+
+            _damageable.TryChangeDamage(uid, damageSpec, true);
+        }
+
+        QueueDel(uid);
+
+    }
+
+    private void OnItemHit(EntityUid uid, SplodingComponent comp, ref ThrowDoHitEvent args)
+    {
+        Explode(uid, comp);
     }
 
     private void OnSplodeMarkingEvent(SplodeMarkingEvent args)
@@ -175,6 +192,7 @@ public sealed class SploderSystem : EntitySystem
         splodeComp.StartTime = _gameTiming.CurTime; 
         splodeComp.Timer += splodeComp.StartTime;
         splodeComp.Modifier = modifier * args.Strength;
+        splodeComp.ExplosionType = args.ExplosionType;
 
     }
 
@@ -215,10 +233,10 @@ public sealed class SploderSystem : EntitySystem
         splodeComp.ExplodeIntensity = 600;
         splodeComp.ExplodeMaxIntensity = 600;
         splodeComp.ExplodeDropoff = 2;
-        splodeComp.ExplosionType = "DemolitionCharge";
+        splodeComp.ExplosionType = "Default";
         splodeComp.Gib = true;
         splodeComp.SplodeSound = new SoundPathSpecifier("/Audio/Vanilla/Effects/Actions/SelfSplodeCharge.ogg");
-        splodeComp.Modifier = args.Strength
+        splodeComp.Modifier = args.Strength;
 
     }
 }

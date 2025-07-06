@@ -15,10 +15,10 @@ public sealed partial class SplodingComponent : Component
     public string ExplosionType = "FireKeepTiles";
 
     [DataField]
-    public float ExplodeIntensity = 30f;
+    public float ExplodeIntensity = 40f;
 
     [DataField]
-    public float ExplodeMaxIntensity = 30f;
+    public float ExplodeMaxIntensity = 40f;
 
     [DataField]
     public float ExplodeDropoff = 3f;
@@ -27,13 +27,16 @@ public sealed partial class SplodingComponent : Component
     public float Modifier = 1f;
 
     [DataField]
+    public float Progress = 0f;
+
+    [DataField]
     public SoundSpecifier? SplodeSound = new SoundPathSpecifier("/Audio/Vanilla/Effects/Actions/SplodeCharge.ogg");
 
     [DataField]
     public TimeSpan UpdateInterval = TimeSpan.FromSeconds(0.5);
 
     [DataField]
-    public TimeSpan Timer = TimeSpan.FromSeconds(2);
+    public TimeSpan Timer = TimeSpan.FromSeconds(4);
 
     [DataField]
     public TimeSpan StartTime;
