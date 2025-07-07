@@ -24,7 +24,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Audio;
 
 using Content.Server.Explosion.EntitySystems;
-
+using Content.Server.Botany.Components;
+using Content.Server.Body.Components;
 
 namespace Content.Server.Vanilla.Actions;
 
@@ -167,9 +168,9 @@ public sealed class SploderSystem : EntitySystem
             return;
         }
 
-        if (HasComp<SplodingComponent>(activeItem))
+        if (HasComp<BloodstreamComponent>(activeItem) || HasComp<ProduceComponent>(activeItem))
         {
-            _popup.PopupEntity("Этот предмет уже заряжен", uid, uid);
+            _popup.PopupEntity("Вы не можете взрывать органику", uid, uid);
             return;
         }
 

@@ -6,7 +6,6 @@ using Robust.Shared.Player;
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Server.Mind;
-using Content.Server.Objectives.Components;
 using Content.Shared.Objectives.Components;
 using Content.Server.Vanilla.GameTicking.Rules.WhiteOut;
 
@@ -14,8 +13,6 @@ namespace Content.Server.Objectives.Systems;
 
 public sealed class EscapeLondonersConditionSystem : EntitySystem
 {
-    [Dependency] private readonly SharedMindSystem _mind = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
 
     public override void Initialize()
     {
