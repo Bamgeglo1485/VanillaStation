@@ -105,7 +105,7 @@
     sprite: Clothing/Shoes/Specific/cult.rsi
 
 - type: entity
-  parent: [ ClothingShoesBase, BaseJanitorContraband ]
+  parent: [ ClothingShoesBase, JanitorContraband ]
   id: ClothingShoesGaloshes
   name: galoshes
   description: Rubber boots.
@@ -122,7 +122,7 @@
     maxContactWalkSlowdown: 0.9
 
 - type: entity
-  parent: [ClothingShoesBaseButcherable, BaseMajorContraband]
+  parent: [ClothingShoesBaseButcherable, ThirdContraband]
   id: ClothingShoesSpaceNinja
   name: space ninja shoes
   description: A pair of nano-enhanced boots with built-in magnetic suction cups.
@@ -183,6 +183,11 @@
   suffix: Chameleon
   description: Stylish black shoes.
   components:
+    - type: Competitive #Rayten
+      difficult: 1
+      actualName: Ботинки-Хамеллион
+      hiddenDesc: hidden-desc-Chameleon
+      enemyTechnology: true
     - type: Tag
       tags: [] # ignore "WhitelistChameleon" tag
     - type: Sprite
@@ -239,32 +244,11 @@
   description: Stylish black shoes.
   components:
   - type: NoSlip
-# Corvax-HiddenDesc-Start
-  - type: HiddenDescription
-    entries:
-    - label: corvax-hidden-desc-Chameleon-syndicate
-      whitelistMind:
-        mindRoles:
-        - TraitorRole
-        - NukeopsRole
-    - label: corvax-hidden-desc-NoSlip-syndicate
-      whitelistMind:
-        mindRoles:
-        - TraitorRole
-        - NukeopsRole
-    - label: corvax-hidden-desc-Chameleon-research
-      jobRequired:
-        - ResearchAssistant
-        - ResearchDirector
-        - Scientist
-        - Borg
-    - label: corvax-hidden-desc-NoSlip-research
-      jobRequired:
-        - ResearchAssistant
-        - ResearchDirector
-        - Scientist
-        - Borg
-# Corvax-HiddenDesc-End
+  - type: Competitive #Rayten
+    difficult: 3
+    actualName: Нескользящая обувь
+    hiddenDesc: hidden-desc-ClothingShoesChameleonNoSlips
+    enemyTechnology: true
 
 - type: entity
   parent: ClothingShoesClown

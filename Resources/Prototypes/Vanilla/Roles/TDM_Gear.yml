@@ -4,13 +4,11 @@
   parent: BlueTeamGearDefault
   equipment:
     shoes: ClothingShoesBootsSpeedUnrem
-    belt: ClothingBeltBandolier
-    outerClothing: ClothingOuterFlannelBlue
-  storage:
-    back:
-    - BoxLethalshot
-    - MedicatedSuture
-    - BruteAutoInjector
+    outerClothing: ClothingOuterArmorBasicSlim
+    belt: ClothingBeltBandolierFilled
+    pocket1: MedicatedSuture
+    pocket2: StimpackMini
+    back: BaseBallBat
   inhand:
   - WeaponShotgunDoubleBarreled
 
@@ -19,13 +17,11 @@
   parent: RedTeamGearDefault
   equipment:
     shoes: ClothingShoesBootsSpeedUnrem
-    belt: ClothingBeltBandolier
-    outerClothing: ClothingOuterFlannelRed
-  storage:
-    back:
-    - BoxLethalshot
-    - MedicatedSuture
-    - BruteAutoInjector
+    outerClothing: ClothingOuterArmorBasicSlim
+    belt: ClothingBeltBandolierFilled
+    pocket1: MedicatedSuture
+    pocket2: StimpackMini
+    back: BaseBallBat
   inhand:
   - WeaponShotgunDoubleBarreled
 
@@ -94,15 +90,11 @@
   id: RedGuyMedic
   parent: RedTeamGearDefault
   equipment:
-    outerClothing: ClothingOuterCoatAMG
     eyes: ClothingEyesHudMedical
   storage:
     back:
     - MedicatedSuture
     - MedicatedSuture
-    - BruteAutoInjector
-    - BruteAutoInjector
-    - BruteAutoInjector
     - Stimpack
     - PuncturaseBeakerSmall
   inhand:
@@ -113,15 +105,11 @@
   id: BlueGuyMedic
   parent: BlueTeamGearDefault
   equipment:
-    outerClothing: ClothingOuterCoatAMG
     eyes: ClothingEyesHudMedical
   storage:
     back:
     - MedicatedSuture
     - MedicatedSuture
-    - BruteAutoInjector
-    - BruteAutoInjector
-    - BruteAutoInjector
     - Stimpack
     - PuncturaseBeakerSmall
   inhand:
@@ -161,15 +149,13 @@
   parent: RedTeamGearDefault
   storage:
     belt:
-    - MedicatedSuture
     - MagazineBoxCaselessRifle
     - MagazinePistolCaselessRifle
     - MagazinePistolCaselessRifle
-    - BruteAutoInjector
-    - SmokeGrenade
     back:
+    - SmokeGrenade
+    - BruteAutoInjector
     - MedicatedSuture
-    - MagazineBoxAntiMateriel
   inhand:
     - WeaponPistolCobra
 
@@ -178,15 +164,13 @@
   parent: BlueTeamGearDefault
   storage:
     belt:
-    - MedicatedSuture
     - MagazineBoxCaselessRifle
     - MagazinePistolCaselessRifle
     - MagazinePistolCaselessRifle
-    - BruteAutoInjector
-    - SmokeGrenade
     back:
+    - SmokeGrenade
+    - BruteAutoInjector
     - MedicatedSuture
-    - MagazineBoxAntiMateriel
   inhand:
     - WeaponPistolCobra
 
@@ -198,14 +182,11 @@
     belt: ClothingBeltChiefEngineer
     shoes: ClothingShoesBootsMagAdv
     pocket1: HandTeleporter
+    pocket2: Wrench
   storage:
     belt:
-    - Wrench
-    - Screwdriver
     - TDMRCD
-    - RCDAmmo
     back:
-    - SmokeGrenade
     - MedicatedSuture
     - BruteAutoInjector
   inhand:
@@ -218,14 +199,11 @@
     belt: ClothingBeltChiefEngineer
     shoes: ClothingShoesBootsMagAdv
     pocket1: HandTeleporter
+    pocket2: Wrench
   storage:
     belt:
-    - Wrench
-    - Screwdriver
     - TDMRCD
-    - RCDAmmo
     back:
-    - SmokeGrenade
     - MedicatedSuture
     - BruteAutoInjector
   inhand:
@@ -434,6 +412,12 @@
   description: Красотка.
   categories: [ HideSpawnMenu ]
   components:
+  - type: Gun
+    fireRate: 9
+    selectedMode: FullAuto
+    availableModes:
+    - FullAuto
+    soundGunshot: /Audio/Weapons/Guns/Gunshots/gun_sentry.ogg
   - type: TDMMarker
     team: true
     summon: true
@@ -450,7 +434,7 @@
         acts: [ "Destruction" ]
     - trigger:
         !type:DamageTrigger
-        damage: 595
+        damage: 395
       behaviors:
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
@@ -463,6 +447,12 @@
   description: Красотка.
   categories: [ HideSpawnMenu ]
   components:
+  - type: Gun
+    fireRate: 9
+    selectedMode: FullAuto
+    availableModes:
+    - FullAuto
+    soundGunshot: /Audio/Weapons/Guns/Gunshots/gun_sentry.ogg
   - type: TDMMarker
     team: false
     summon: true
@@ -479,7 +469,7 @@
         acts: [ "Destruction" ]
     - trigger:
         !type:DamageTrigger
-        damage: 595
+        damage: 395
       behaviors:
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
@@ -495,7 +485,20 @@
   - type: RCD
     availablePrototypes:
     - WallSolid
-    - Plating
     - Window
     - ReinforcedWindow
+
+- type: entity
+  parent: ClothingBeltBandolier
+  id: ClothingBeltBandolierFilled
+  name: Патронташ
+  description: ЗАРЯЖАЙ
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: BallisticAmmoProvider
+    proto: ShellShotgun
+    whitelist:
+      tags:
+        - ShellShotgun
+    capacity: 28
 

@@ -117,9 +117,14 @@
 - type: entity
   name: soap
   id: SoapSyndie
-  parent: [Soap, BaseSyndicateContraband]
+  parent: [Soap, FirstSyndicateContraband]
   description: An untrustworthy bar of soap. Smells of fear.
   components:
+  - type: Competitive #Rayten
+    difficult: 1
+    actualName: Мыло Синдиката
+    hiddenDesc: hidden-desc-SoapSyndie
+    enemyTechnology: true
   - type: Sprite
     layers:
     - state: syndie-4

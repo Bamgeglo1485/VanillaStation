@@ -15,7 +15,7 @@
   - type: Item
     size: Huge
   - type: Clothing
-    sprite: Objects/Weapons/Guns/Snipers/bolt_gun_wood.rsi
+    sprite: Vanilla/Objects/Weapons/Guns/Snipers/bolt_gun_wood.rsi # Rayten-Resprites
     quickEquip: false
     slots:
     - Back
@@ -24,7 +24,7 @@
   - type: Gun
     fireRate: 1
     selectedMode: SemiAuto
-    projectileSpeed: 75
+    projectileSpeed: 50
     availableModes:
     - SemiAuto
     soundGunshot:
@@ -44,26 +44,26 @@
 
 - type: entity
   name: Kardashev-Mosin
-  parent: [BaseWeaponSniper, BaseGunWieldable, BaseMajorContraband]
+  parent: [BaseWeaponSniper, BaseGunWieldable, SecondContraband]
   id: WeaponSniperMosin
   description: A true relic, the Kardashev-Mosin has served in nearly every armed conflict since its creation 670 years ago. The bolt-action design of the rifle remains virtually identical to its original design, whether used for hunting, sniping, or endless trench warfare. Loads 10 rounds of .30 rifle.
   components:
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Snipers/bolt_gun_wood.rsi
+    sprite: Vanilla/Objects/Weapons/Guns/Snipers/bolt_gun_wood.rsi # Rayten-Resprites
   - type: GunRequiresWield
   - type: StaticPrice
     price: 500
 
 - type: entity
   name: Hristov
-  parent: [BaseWeaponSniper, BaseGunWieldable, BaseSyndicateContraband]
+  parent: [BaseWeaponSniper, BaseGunWieldable, ThirdSyndicateContraband]
   id: WeaponSniperHristov
   description: A portable anti-materiel rifle. Fires armor piercing 14.5mm shells. Uses .60 anti-materiel ammo.
   components:
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Snipers/heavy_sniper.rsi
+    sprite: Vanilla/Objects/Weapons/Guns/Snipers/heavy_sniper.rsi # Rayten-Resprites
   - type: Clothing
-    sprite: Objects/Weapons/Guns/Snipers/heavy_sniper.rsi
+    sprite: Vanilla/Objects/Weapons/Guns/Snipers/heavy_sniper.rsi # Rayten-Resprites
   - type: GunRequiresWield
   - type: Gun
     fireRate: 0.4
@@ -84,13 +84,13 @@
   - type: CursorOffsetRequiresWield
   - type: EyeCursorOffset
     maxOffset: 10
-    pvsIncrease: 0.3
+    pvsIncrease: 0.9
   - type: StaticPrice
     price: 3500
 
 - type: entity
   name: musket
-  parent: [ BaseWeaponSniper, BaseGunWieldable, BaseMajorContraband ]
+  parent: [ BaseWeaponSniper, BaseGunWieldable, SecondContraband ]
   id: Musket
   description: This should've been in a museum long before you were born. Uses .60 anti-materiel ammo.
   components:
@@ -98,10 +98,10 @@
   - type: Item
     size: Large
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Snipers/musket.rsi
+    sprite: Vanilla/Objects/Weapons/Guns/Snipers/musket.rsi
     state: base
   - type: Clothing
-    sprite: Objects/Weapons/Guns/Snipers/musket.rsi
+    sprite: Vanilla/Objects/Weapons/Guns/Snipers/musket.rsi
   - type: Gun
     selectedMode: SemiAuto
     availableModes:
@@ -129,7 +129,7 @@
 
 - type: entity
   name: flintlock pistol
-  parent: [BaseWeaponSniper, BaseMajorContraband]
+  parent: [BaseWeaponSniper, SecondContraband]
   id: WeaponPistolFlintlock
   description: A pirate's companion. Yarrr! Uses .45 magnum ammo.
   components:
@@ -143,9 +143,9 @@
     - 0,1,0,1
     storedRotation: 0
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Snipers/flintlock.rsi
+    sprite: Vanilla/Objects/Weapons/Guns/Snipers/flintlock.rsi
   - type: Clothing
-    sprite: Objects/Weapons/Guns/Snipers/flintlock.rsi
+    sprite: Vanilla/Objects/Weapons/Guns/Snipers/flintlock.rsi
   - type: UseDelayOnShoot
   - type: UseDelay
     delay: 8 #it's a flintlock

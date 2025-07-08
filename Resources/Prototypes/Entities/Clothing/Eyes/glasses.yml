@@ -53,7 +53,7 @@
         Blunt: 10
 
 - type: entity
-  parent: [ClothingEyesBase, BaseEngineeringContraband]
+  parent: [ClothingEyesBase, FirstEngineeringContraband]
   id: ClothingEyesGlassesMeson
   name: engineering goggles #less confusion
   description: Green-tinted goggles using a proprietary polymer that provides protection from eye damage of all types.
@@ -65,6 +65,10 @@
   - type: EyeProtection
   - type: IdentityBlocker
     coverage: EYES
+  - type: Tag
+    tags:
+    - CorgiWearable
+    - WhitelistChameleon
 
 - type: entity
   parent: ClothingEyesBase
@@ -140,6 +144,7 @@
   - type: Tag
     tags:
     - HamsterWearable
+    - CorgiWearable
     - WhitelistChameleon
   - type: IdentityBlocker
     coverage: EYES
@@ -156,11 +161,12 @@
   - type: Tag
     tags:
     - Sunglasses
+    - CorgiWearable
     - HamsterWearable
     - WhitelistChameleon
 
 - type: entity
-  parent: [ClothingEyesBase, ShowSecurityIcons, BaseSecurityContraband]
+  parent: [ClothingEyesBase, ShowSecurityIcons, FirstSecurityContraband]
   id: ClothingEyesGlassesSecurity
   name: security glasses
   description: Upgraded sunglasses that provide flash immunity and a security HUD.
@@ -178,6 +184,7 @@
   - type: Tag
     tags:
     - HamsterWearable
+    - CorgiWearable
     - WhitelistChameleon
   - type: GuideHelp
     guides:
@@ -187,7 +194,7 @@
     coverage: EYES
 
 - type: entity
-  parent: [ClothingEyesBase, BaseCommandContraband]
+  parent: [ClothingEyesBase, FirstCommandContraband]
   id: ClothingEyesGlassesCommand
   name: administration glasses
   description: Upgraded sunglasses that provide flash immunity and show ID card status.
@@ -202,6 +209,7 @@
   - type: Tag
     tags:
     - HamsterWearable
+    - CorgiWearable
     - WhitelistChameleon
   - type: IdentityBlocker
     coverage: EYES
@@ -255,9 +263,13 @@
     - type: SolutionScanner
     - type: IdentityBlocker
       coverage: EYES
+    - type: Tag
+      tags:
+      - CorgiWearable
+      - WhitelistChameleon
 
 - type: entity
-  parent: [ClothingEyesBase, BaseMajorContraband]
+  parent: [ClothingEyesBase, ThirdContraband]
   id: ClothingEyesVisorNinja
   name: ninja visor
   description: An advanced visor protecting a ninja's eyes from flashing lights.

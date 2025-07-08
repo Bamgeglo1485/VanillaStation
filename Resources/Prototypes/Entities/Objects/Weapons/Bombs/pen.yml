@@ -5,6 +5,11 @@
   description: A dark ink pen.
   id: PenExploding
   components:
+  - type: Competitive #Rayten
+    difficult: 2
+    actualName: Взрывная ручка
+    hiddenDesc: hidden-desc-PenExploding
+    enemyTechnology: true
   - type: OnUseTimerTrigger
     delay: 4
     examinable: false
@@ -39,7 +44,7 @@
 # Corvax-HiddenDesc-End
 
 - type: entity
-  parent: [BaseItem, BaseSyndicateContraband]
+  parent: [BaseItem, ThirdSyndicateContraband]
   id: PenExplodingBox
   name: exploding pen box
   description: A small box containing an exploding pen. Packaging disintegrates when opened, leaving no evidence behind.

@@ -1,6 +1,6 @@
 - type: entity
   name: доминатор
-  parent: BaseWeaponBattery
+  parent: [BaseWeaponBattery, SecondSecurityContraband]
   id: WeaponDominator
   description: Высокотехнологичное оружие созданное правоохранительной организацией Sibyl System, предназначенное специально для борьбы с преступностью.
   components:
@@ -8,6 +8,8 @@
   - type: Speech
   - type: AccessReader
     access: [["Security"], ["Captain"]]
+  - type: VoiceEmitter
+    voice: Willow
   - type: Sprite
     sprite: Vanilla/Objects/Weapons/Guns/Battery/Dominator.rsi
     layers:
