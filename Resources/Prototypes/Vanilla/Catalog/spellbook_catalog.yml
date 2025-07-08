@@ -15,7 +15,6 @@
 - type: listing
   id: SpellbookSploderUpgrade
   productAction: ActionSelfSplode
-  productUpgradeId: ActionSplodeItem
   name: Улучшение взрывного касания
   description: Усиливает взрывы, а также даёт возможность взорвать свой скелет.
   cost:
