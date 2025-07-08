@@ -7,6 +7,7 @@ using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Server.Mind;
 using Content.Shared.Objectives.Components;
+using Content.Server.Vanilla.GameTicking.Rules.WhiteOut;
 
 namespace Content.Server.Objectives.Systems;
 
