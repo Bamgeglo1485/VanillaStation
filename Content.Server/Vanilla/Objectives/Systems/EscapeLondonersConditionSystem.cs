@@ -6,8 +6,7 @@ using Robust.Shared.Player;
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Server.Mind;
-using Content.Shared.Objectives.Components;
-using Content.Server.Vanilla.GameTicking.Rules.WhiteOut;
+using Content.Server.Objectives.Components;
 
 namespace Content.Server.Objectives.Systems;
 
