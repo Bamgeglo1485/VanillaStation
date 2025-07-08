@@ -6,7 +6,7 @@ using Robust.Shared.Player;
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Server.Mind;
-using Content.Server.Objectives;
+using Content.Shared.Objectives.Components;
 
 namespace Content.Server.Objectives.Systems;
 
