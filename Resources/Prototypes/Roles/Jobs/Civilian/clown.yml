@@ -15,21 +15,6 @@
   special:
   - !type:AddComponentSpecial
     components:
-    - type: Skill
-      RangeWeaponLevel: 0
-      MeleeWeaponLevel: 0
-      MedicineLevel: 1
-      ChemistryLevel: 0
-      EngineeringLevel: 1
-      BuildingLevel: 1
-      ResearchLevel: 0
-      Atmosphere: false
-      Piloting: false
-      MusInstruments: true
-      Botany: false
-      Bureaucracy: false
-    - type: AddSkillPoints
-      Points: 1
     - type: Clumsy
       gunShootFailDamage:
         types: #literally just picked semi random valus. i tested this once and tweaked it.
@@ -37,6 +22,9 @@
           Piercing: 4
         groups:
           Burn: 3
+      catchingFailDamage:
+        types:
+          Blunt: 1
     - type: SleepEmitSound
       snore: /Audio/Voice/Misc/silly_snore.ogg
       interval: 10

@@ -1,0 +1,149 @@
+- type: BackgroundGroup
+  id: ClosetSkeletonBackgroundGroup
+  backgrounds:
+  - ClosetSkeletonBrainlessBackground
+  - ClosetSkeletonKnightBackground
+  - ClosetSkeletonJesterBackground
+  - ClosetSkeletonEvilBackground
+  - ClosetSkeletonCurseBackground
+  # - ClosetSkeletonSaboteurBackground
+
+- type: Background
+  id: ClosetSkeletonBrainlessBackground
+  name: Безмозглый гений
+  description: background-closetskeleton-desc-Brainless
+  specialDesc:
+    - Вы не антагонист
+  skills:
+    Research: 3
+    Engineering: 3
+    Chemistry: 3
+  easySkills:
+  - Botany
+  - Bureaucracy
+  - Atmosphere
+  specials:
+  - !type:ChangeMindSpecial
+    mindRoles:
+    - MindRoleGhostRoleNeutral
+
+- type: Background
+  id: ClosetSkeletonJesterBackground
+  name: Проклятый Шут
+  description: background-closetskeleton-desc-jester
+  sponsorOnly: true
+  specialDesc:
+    - Вы антагонист
+    - Вы не обладаете интеллектом
+    - Вы умеете призывать пироги
+    - Шутовской наряд
+  easySkills:
+  - MusInstruments
+  specials:
+  - !type:ChangeMindSpecial
+    mindRoles:
+    - MindRoleGhostRoleSoloAntagonist
+  - !type:AddActionSpecial
+    action: ActionSpawnPie
+  - !type:EquipSpecial
+    removeSlotID:
+    - shoes
+    - jumpsuit
+    loadout:
+    - SkeletonJester
+  - !type:AddComponentsSpecial
+    components:
+    - type: DangerMob
+    - type: Pacified
+    - type: AngrySkeleton
+    - type: ReplacementAccent
+      accent: genericAggressive
+
+- type: Background
+  id: ClosetSkeletonKnightBackground
+  name: Рыцарские кости
+  description: background-closetskeleton-desc-Knight
+  specialDesc:
+    - Вы не антагонист
+    - У вас есть клеймор и броня
+  skills:
+    Medicine: 2
+    MeleeWeapon: 3
+  easySkills:
+  - Botany
+  - MusInstruments
+  specials:
+  - !type:EquipSpecial
+    removeSlotID:
+    - shoes
+    loadout:
+    - SkeletonKnight
+
+- type: Background
+  id: ClosetSkeletonEvilBackground
+  name: Злоба и Ненависть
+  description: background-closetskeleton-desc-Evil
+  specialDesc:
+    - Вы антагонист
+    - Вы не обладаете интеллектом
+  skills:
+    MeleeWeapon: 3
+    Medicine: 2
+    Crime: 1
+  specials:
+  - !type:ChangeMindSpecial
+    mindRoles:
+    - MindRoleGhostRoleSoloAntagonist
+  - !type:AddComponentsSpecial
+    components:
+    - type: DangerMob
+    - type: AngrySkeleton
+    - type: ReplacementAccent
+      accent: genericAggressive
+
+- type: Background
+  id: ClosetSkeletonCurseBackground
+  name: Проклятие
+  description: background-closetskeleton-desc-SkeletonCurse
+  specialDesc:
+    - Вы носитель проклятия, которое делает вас скелетом, если вас кто-то убьет - проклятие перенесётся на него, а ваша душа упокоится
+    - Вы антагонист
+    - Вы не обладаете интеллектом
+    - Вы Пацифист
+  skills:
+    MeleeWeapon: 3
+    Medicine: 2
+    Crime: 1
+  specials:
+  - !type:ChangeMindSpecial
+    mindRoles:
+    - MindRoleGhostRoleSoloAntagonist
+  - !type:AddComponentsSpecial
+    components:
+    - type: DangerMob
+    - type: AngrySkeleton
+    - type: SkeletonCurse
+    - type: Pacified
+    - type: ReplacementAccent
+      accent: genericAggressive
+
+- type: Background
+  id: ClosetSkeletonSaboteurBackground
+  name: Саботёр
+  description: background-closetskeleton-desc-Saboteur
+  specialDesc:
+    - Вы антагонист
+  skills:
+    RangeWeapon: 3
+    MeleeWeapon: 1
+    Engineering: 1
+  easySkills:
+  - Piloting
+  specials:
+  - !type:AddComponentsSpecial
+    components:
+    - type: DangerMob
+    - type: AngrySkeleton
+  - !type:ChangeMindSpecial
+    mindRoles:
+    - MindRoleGhostRoleSoloAntagonist

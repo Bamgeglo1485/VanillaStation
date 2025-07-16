@@ -13,6 +13,7 @@ namespace Content.Server.Objectives.Systems;
 
 public sealed class EscapeLondonersConditionSystem : EntitySystem
 {
+    [Dependency] private readonly IMapManager _mapManager = default!;
 
     public override void Initialize()
     {

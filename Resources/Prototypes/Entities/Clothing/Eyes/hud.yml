@@ -7,6 +7,7 @@
   - type: ShowMindShieldIcons
   - type: ShowCriminalRecordIcons
   - type: ShowContrabandDetails
+  - type: ShowCriminalLevelIcons
 
 - type: entity
   id: ShowMedicalIcons
@@ -45,7 +46,7 @@
   - type: Tag
     tags:
     - HudMedical
-    - CorgiWearable
+    - PetWearable
     - WhitelistChameleon
 
 - type: entity
@@ -61,7 +62,7 @@
   - type: Tag
     tags:
     - HudSecurity
-    - CorgiWearable
+    - PetWearable
     - WhitelistChameleon
 
 - type: entity
@@ -77,7 +78,7 @@
   - type: ShowJobIcons
   - type: Tag
     tags:
-    - CorgiWearable
+    - PetWearable
     - WhitelistChameleon
 
 - type: entity
@@ -96,7 +97,7 @@
   - type: SolutionScanner
   - type: Tag
     tags:
-    - CorgiWearable
+    - PetWearable
     - WhitelistChameleon
 
 - type: entity
@@ -222,11 +223,11 @@
   - type: ShowSyndicateIcons
   - type: Tag
     tags:
-    - CorgiWearable
+    - PetWearable
     - WhitelistChameleon
 
 - type: entity
-  parent: [ClothingEyesBase, ShowSecurityIcons, ThirdSyndicateContraband]
+  parent: [ClothingEyesBase, ShowSecurityIcons, ThirdSyndicateContraband, ShowMedicalIcons]
   id: ClothingEyesHudSyndicateAgent
   name: syndicate medical visor
   description: The Syndicate Corpsman's professional heads-up display, designed for quick diagnosis of their team's status.
@@ -236,10 +237,9 @@
   - type: Clothing
     sprite: Clothing/Eyes/Hud/syndagent.rsi
   - type: ShowSyndicateIcons
-  - type: ShowHealthBars
   - type: Tag
     tags:
-    - CorgiWearable
+    - PetWearable
     - WhitelistChameleon
 
 - type: entity
@@ -259,7 +259,7 @@
     sprite: Clothing/Eyes/Hud/medpatch.rsi
   - type: Tag
     tags:
-    - CorgiWearable
+    - PetWearable
     - WhitelistChameleon
     - HudMedical
 
@@ -280,7 +280,7 @@
     sprite: Clothing/Eyes/Hud/secpatch.rsi
   - type: Tag
     tags:
-    - CorgiWearable
+    - PetWearable
     - WhitelistChameleon
     - HudSecurity
 
