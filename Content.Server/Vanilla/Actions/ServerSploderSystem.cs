@@ -4,6 +4,7 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.Hands.Components;
 using Content.Shared.Mobs.Components;
+using Content.Shared.Body.Components;
 using Content.Shared.FixedPoint;
 using Content.Shared.Jittering;
 using Content.Shared.Throwing;
@@ -25,7 +26,6 @@ using Robust.Shared.Audio;
 
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Botany.Components;
-using Content.Server.Body.Components;
 
 namespace Content.Server.Vanilla.Actions;
 
