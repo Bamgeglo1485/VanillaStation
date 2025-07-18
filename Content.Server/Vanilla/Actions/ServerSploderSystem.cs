@@ -86,7 +86,7 @@ public sealed class SploderSystem : EntitySystem
                     }
 
                     if (currentTime < comp.NextUpdate)
-                        return;
+                        continue;
 
                     comp.NextUpdate = currentTime + comp.UpdateInterval;
 
