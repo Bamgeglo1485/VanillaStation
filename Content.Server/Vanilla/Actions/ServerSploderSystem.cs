@@ -82,7 +82,7 @@ public sealed class SploderSystem : EntitySystem
                     {
 
                         comp.State = SplodingState.Exploding;
-                        return;
+                        continue;
                     }
 
                     if (currentTime < comp.NextUpdate)
