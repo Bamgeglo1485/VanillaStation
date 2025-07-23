@@ -1,0 +1,131 @@
+- type: entity
+  name: мимик
+  description: Ужасное порождение редспейса, представляющее из себя массу из арматур и бетона.
+  parent: BaseMob
+  id: SubjectMimic
+  suffix: Apeiron
+  components:
+  - type: Sprite
+    sprite: /Uploaded/Apeiron/Subjects.rsi
+    layers:
+    - state: mimic
+  - type: Hands
+  - type: Stamina
+    critThreshold: 1000
+  - type: MeleeWeapon
+    attackRate: 0.4
+    soundHit:
+      collection: AlienClaw
+    angle: 30
+    animation: WeaponArcClaw
+    damage:
+      types:
+        Slash: 20
+        Blunt: 30
+  - type: MeleeThrowOnHit
+    distance: 8
+  - type: Damageable
+    damageContainer: BiologicalMetaphysical
+    damageModifierSet: Skeleton
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 600
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: ZombieImmune
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.35
+        density: 130
+        restitution: 0.0
+        mask:
+          - MobMask
+        layer:
+          - MobLayer
+  - type: Body
+    prototype: Mimic
+  - type: Loadout
+    prototypes: [ Mimic ]
+  - type: CombatMode
+
+- type: entity
+  parent: BaseItem
+  id: MimicArm
+  name: рука мимика
+  components:
+  - type: MeleeWeapon
+    soundHit:
+      collection: AlienClaw
+    angle: 30
+    animation: WeaponArcClaw
+    attackRate: 0.4
+    damage:
+      types:
+        Slash: 20
+        Blunt: 30
+  - type: Sprite
+    sprite: /Uploaded/Apeiron/Subjects.rsi
+    state: mimic_arm
+  - type: ChameleonProjector
+    whitelist:
+      components:
+      - Anchorable
+      - Item
+      tags:
+      - Bot
+    blacklist:
+      components:
+      - ChameleonDisguise
+      - Pda
+    disguiseProto: ChameleonDisguise
+  - type: MeleeThrowOnHit
+    distance: 8
+  - type: Unremoveable
+
+- type: body
+  id: Mimic
+  name: мимик
+  root: torso
+  slots:
+    head:
+      part: HeadSkeleton
+      connections:
+      - torso
+    torso:
+      part: TorsoSkeleton
+      connections:
+      - right arm
+      - right leg
+      - left leg
+    right arm:
+      part: RightArmSkeleton
+      connections:
+      - right hand
+    right hand:
+      part: RightHandSkeleton
+    right leg:
+      part: RightLegSkeleton
+      connections:
+      - right foot
+    left leg:
+      part: LeftLegSkeleton
+      connections:
+      - left foot
+    right foot:
+      part: RightFootSkeleton
+    left foot:
+      part: LeftFootSkeleton
+
+- type: startingGear
+  id: Mimic
+  inhand:
+  - MimicArm
