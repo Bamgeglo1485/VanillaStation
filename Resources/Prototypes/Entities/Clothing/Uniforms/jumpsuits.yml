@@ -648,7 +648,7 @@
 
 - type: entity
   parent: [ClothingUniformBase, FirstSecurityContraband]
-  id: ClothingUniforms/JumpsuitecurityTrooper
+  id: ClothingUniformSecurityTrooper
   name: trooper uniform
   description: A formal uniform issued to the Nanotrasen Troopers, usually it comes with a car.
   components:
