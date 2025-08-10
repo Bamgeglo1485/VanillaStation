@@ -46,9 +46,9 @@
     - Trigger
   - type: Explosive
     explosionType: FireKeepTiles
-    totalIntensity: 1200000
+    totalIntensity: 12000000
     intensitySlope: 5
-    maxIntensity: 3000000
+    maxIntensity: 30000000
     canCreateVacuum: true
   - type: ExplodeOnTrigger
     keysIn:
@@ -63,7 +63,7 @@
     ports:
       - Trigger
   - type: EmitSoundOnTrigger
-    sound: /Audio/Vanilla/Effects/TTTIntercom/warhead.ogg
+    sound: /Audio/Vanilla/Effects/warhead.ogg
   - type: Sprite
     layers:
     - state: green
