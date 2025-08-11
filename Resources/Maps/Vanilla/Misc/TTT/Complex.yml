@@ -13405,15 +13405,6 @@ entities:
     - type: Transform
       pos: 10.5,7.5
       parent: 1
-- proto: IntercomTTT
-  entities:
-  - uid: 3875
-    components:
-    - type: Transform
-      pos: 37.5,23.5
-      parent: 1
-    - type: RadioSpeaker
-      enabled: False
 - proto: IntercomTTTReceiver
   entities:
   - uid: 3872
