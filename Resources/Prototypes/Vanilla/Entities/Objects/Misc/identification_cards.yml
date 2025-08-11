@@ -21,8 +21,8 @@
     - NuclearOperative
 
 - type: entity
-  parent: TTTDetectiveID
-  id: TTTTraitorID
+  parent: TTTInnocentID
+  id: TTTDetectiveID
   components:
   - type: Access
     tags:
