@@ -53,6 +53,8 @@
   name: зелёный портал
   description: Нет пути назад.
   components:
+  - type: Portal
+    canTeleportToOtherMaps: true
   - type: PointLight
     color: Green
     radius: 6
@@ -176,3 +178,5 @@
   - type: TriggerOnSpawn
   - type: EmitSoundOnTrigger
     sound: /Audio/Vanilla/Effects/randomPortalOmega.ogg
+  - type: Portal
+    canTeleportToOtherMaps: true

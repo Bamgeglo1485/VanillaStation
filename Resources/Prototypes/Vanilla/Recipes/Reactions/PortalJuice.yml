@@ -8,7 +8,7 @@
     SpaceMountainWind:
       amount: 7
   products:
-    PortalJuice: 1
+    PortalJuice: 2
 
 - type: reaction
   id: OmegaPortalJuiceReaction
@@ -20,4 +20,4 @@
     PortalJuice:
       amount: 1
   products:
-    OmegaPortalJuice: 5
+    OmegaPortalJuice: 7
