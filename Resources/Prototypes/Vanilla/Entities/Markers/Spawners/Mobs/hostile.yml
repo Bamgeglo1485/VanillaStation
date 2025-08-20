@@ -1,0 +1,57 @@
+- type: entity
+  parent: MarkerBase
+  id: SpawnGoliath
+  name: спавнер голиафа
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - state: goliath
+      sprite: Mobs/Aliens/Asteroid/goliath.rsi
+  - type: ConditionalSpawner
+    prototypes:
+    - MobGoliath
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnWatcher
+  name: спавнер наблюдателя
+  suffix: Обычный
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - state: base
+      sprite: Mobs/Aliens/Lavaland/watcher.rsi
+  - type: ConditionalSpawner
+    prototypes:
+    - MobWatcherLavaland
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnWatcherIcewing
+  name: спавнер наблюдателя
+  suffix: Ледокрыл
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - state: base
+      sprite: Mobs/Aliens/Lavaland/watcher.rsi
+  - type: ConditionalSpawner
+    prototypes:
+    - MobWatcherIcewing
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnCatShadow
+  name: спавнер теневого кота
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - state: cat
+      sprite: Mobs/Pets/cat.rsi
+  - type: ConditionalSpawner
+    prototypes:
+    - MobCatShadow
