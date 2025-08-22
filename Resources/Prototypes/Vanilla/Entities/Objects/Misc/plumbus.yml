@@ -44,17 +44,3 @@
   - type: Tag
     tags:
     - Plumbus
-
-- type: entity
-  name: спавнер плюмбуса
-  id: PlumbusSpawner
-  parent: MarkerBase
-  components:
-    - type: Sprite
-      layers:
-        - state: red
-        - sprite: Vanilla/Objects/Misc/plumbus.rsi
-          state: base
-    - type: RandomSpawner
-      prototypes:
-        - Plumbus

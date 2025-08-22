@@ -55,3 +55,59 @@
   - type: ConditionalSpawner
     prototypes:
     - MobCatShadow
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnerLeviathing
+  name: спавнер левиазверя
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - state: leviathing
+      sprite: Mobs/Aliens/Argocyte/argocyte_large.rsi
+  - type: ConditionalSpawner
+    prototypes:
+    - MobArgocyteLeviathing
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnerCrawler
+  name: спавнер ползун
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - state: сrawler
+      sprite: Mobs/Aliens/Argocyte/argocyte.rsi
+  - type: ConditionalSpawner
+    prototypes:
+    - MobArgocyteCrawler
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnerHarvester
+  name: спавнер ползун
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - state: harvester
+      sprite: Mobs/Aliens/Argocyte/argocyte.rsi
+  - type: ConditionalSpawner
+    prototypes:
+    - MobArgocyteHarvester
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnerBasilisk
+  name: спавнер василиска
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - state: basilisk
+      sprite: Mobs/Aliens/Asteroid/basilisk.rsi
+  - type: ConditionalSpawner
+    prototypes:
+    - MobBasilisk

@@ -152,7 +152,7 @@ public sealed class RandomPortalSystem : EntitySystem
 
     private void DimensionalTeleport(Entity<RandomPortalComponent> portal, TransformComponent transform, MapId mapId)
     {
-        if (_random.Prob(0.3f))
+        if (_random.Prob(0.15f))
             CreateDungeonMap(portal);
         else
             CreatePlanet(portal);
@@ -217,45 +217,35 @@ public sealed class RandomPortalSystem : EntitySystem
         Gas[] primaryGases;
         Gas[] secondaryGases;
 
-        if (_random.Prob(0.6f))
+        float temperature;
+
+        if (biomeProto.ID == "PortalLava")
         {
-            primaryGases = new Gas[]
-            {
-            Gas.Oxygen,
-            Gas.Nitrogen,
-            Gas.CarbonDioxide,
-            Gas.Plasma,
-            Gas.Tritium,
-            Gas.Ammonia,
-            Gas.NitrousOxide
-            };
+            primaryGases = new[] { Gas.Plasma, Gas.Tritium, Gas.CarbonDioxide };
+            temperature = _random.NextFloat(800f, 700f);
+        }
+        else if (biomeProto.ID == "PortalSnow")
+        {
+            primaryGases = new[] { Gas.Oxygen, Gas.Nitrogen, Gas.WaterVapor };
+            temperature = _random.NextFloat(230f, 273f); 
+        }
+        else if (_random.Prob(0.6f))
+        {
+            primaryGases = new[] { Gas.Oxygen, Gas.Nitrogen, Gas.CarbonDioxide, Gas.Plasma, Gas.Tritium, Gas.Ammonia, Gas.NitrousOxide };
+            temperature = _random.Prob(0.6f) ? _random.NextFloat(72f, 400f) : _random.NextFloat(273f, 333f);
         }
         else
         {
-            primaryGases = new Gas[]
-            {
-            Gas.Oxygen,
-            Gas.WaterVapor,
-            Gas.Nitrogen
-            };
+            primaryGases = new[] { Gas.Oxygen, Gas.WaterVapor, Gas.Nitrogen };
+            temperature = _random.Prob(0.6f) ? _random.NextFloat(72f, 400f) : _random.NextFloat(273f, 333f);
         }
 
-        var mixture = new GasMixture(2500)
-        {
-            Temperature = _random.Prob(0.6f)
-                ? _random.NextFloat(72f, 400f)  
-                : _random.NextFloat(273f, 333f) 
-        };
+        var mixture = new GasMixture(2500) { Temperature = temperature };
 
-        var selectedGases = primaryGases
-            .OrderBy(_ => _random.Next())
-            .Take(2)
-            .ToList();
+        var selectedGases = primaryGases.OrderBy(_ => _random.Next()).Take(2).ToList();
 
         foreach (var gas in selectedGases)
-        {
             mixture.AdjustMoles(gas, _random.NextFloat(40f, 150f));
-        }
 
         if (primaryGases.Length > 2 && _random.Prob(0.3f))
         {
