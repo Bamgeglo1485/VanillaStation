@@ -96,7 +96,7 @@ public sealed class RandomPortalSystem : EntitySystem
         var query = EntityQueryEnumerator<StationDataComponent>();
         while (query.MoveNext(out var stationUid, out var stationData))
         {
-            var gridUid = _stationSystem.GetLargestGrid(stationData);
+            var gridUid = _stationSystem.GetLargestGrid((stationUid, stationData));
             if (gridUid == null)
                 continue;
 
