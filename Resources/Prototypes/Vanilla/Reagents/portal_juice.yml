@@ -1,8 +1,8 @@
 - type: reagent
   id: PortalJuice
-  name: кустарная портальная жидкость
-  desc: Или же квантовая транспортная жидкость, довольно токсична.
-  physicalDesc: нестабильное кислотное
+  name: reagent-name-portal-juice
+  desc: reagent-desc-portal-juice
+  physicalDesc: reagent-physical-desc-unstable-acid
   flavor: acid
   color: "#00ff37"
   meltingPoint: 69
@@ -30,9 +30,9 @@
 
 - type: reagent
   id: OmegaPortalJuice
-  name: омега портальная жидкость
-  desc: Более экономная жидкость, которую невозможно произвести синтетически.
-  physicalDesc: квантово-стабильное
+  name: reagent-name-omega-portal-juice
+  desc: reagent-desc-omega-portal-juice
+  physicalDesc: reagent-physical-desc-stable-quantum
   flavor: acid
   color: "#fffb1f"
   meltingPoint: 69
@@ -60,9 +60,9 @@
 
 - type: reagent
   id: TurbulentNectar
-  name: турбулетный нектар
-  desc: Очень эффективное моющее средство, а также элемент для омега портальной жидкости.
-  physicalDesc: квантово-пузырчатое
+  name: reagent-name-turbulent-nectar
+  desc: reagent-desc-turbulent-nectar
+  physicalDesc: reagent-physical-desc-bubble-quantum
   flavor: bitter
   color: "#cc98ce"
   meltingPoint: 69
@@ -79,9 +79,9 @@
 
 - type: reagent
   id: QuantumFlux
-  name: квантовый флюкс
-  desc: Токсичное вещество с абсолютно антинаучным названием, а также элемент для омега портальной жидкости.
-  physicalDesc: квантово-пузырчатое
+  name: reagent-name-quantum-flux
+  desc: reagent-name-desc-flux
+  physicalDesc: reagent-physical-desc-unstable-quantum
   flavor: acid
   color: "#e02222"
   meltingPoint: 69
