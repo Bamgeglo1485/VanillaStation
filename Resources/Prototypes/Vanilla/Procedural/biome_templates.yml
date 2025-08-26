@@ -239,35 +239,6 @@
         cellularReturnType: Distance2
       entities:
         - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasalt
-        - WallRockBasaltArtifactFragment
-        - WallRockBasaltUranium
-        - WallRockBasaltCoal
-        - WallRockBasaltSalt
-        - WallRockBasaltSilver
-        - WallRockBasaltPlasma
-        - WallRockBasaltQuartz
-        - WallRockBasaltGold
-        - WallRockBasaltIron
     - !type:BiomeDummyLayer
       id: Loot
     # Fill basalt
@@ -282,7 +253,7 @@
         seed: 0
         noiseType: OpenSimplex2
         fractalType: FBm
-        frequency: 1
+        frequency: 0.7
         octaves: 6
         cellularDistanceFunction: Euclidean
         cellularReturnType: Distance2
@@ -297,6 +268,7 @@
         - SpawnMobXenoRavager
         - SalvageMobSpawner
         - SpawnMobHellspawn
+
     - !type:BiomeEntityLayer
       allowedTiles:
         - FloorBasalt
@@ -315,6 +287,9 @@
         - LootSpawnerMaterialsHighValueConstruction
         - LootSpawnerArmory
         - VGRoidInteriorRoomMarker
+        - PlasmaOre
+        - UraniumOre
+        - LootSpawnerArmory
 
 # Snow
 - type: biomeTemplate
@@ -467,11 +442,22 @@
         cellularDistanceFunction: Euclidean
         cellularReturnType: Distance2
       entities:
-        - PlumbusSpawner
-        - PlumbusSpawner
         - VGRoidInteriorRoomMarker
         - AnomalyIce
-        - HeatLampSpawner
+    - !type:BiomeEntityLayer
+      allowedTiles:
+        - FloorSnow
+      threshold: 0.75
+      noise:
+        seed: 100
+        noiseType: OpenSimplex2
+        fractalType: FBm
+        frequency: 1
+        octaves: 6
+        cellularDistanceFunction: Euclidean
+        cellularReturnType: Distance2
+      entities:
+        - PlumbusSpawner
         - HeatLampSpawner
     - !type:BiomeTileLayer
       threshold: -0.7
@@ -483,7 +469,7 @@
     - !type:BiomeEntityLayer
       allowedTiles:
         - FloorSnow
-      threshold: 0.7
+      threshold: 1
       noise:
         seed: 0
         noiseType: OpenSimplex2
