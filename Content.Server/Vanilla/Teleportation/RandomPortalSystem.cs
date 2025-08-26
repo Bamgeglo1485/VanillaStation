@@ -1,52 +1,56 @@
+using Content.Server.Atmos.EntitySystems;
 using Content.Server.Administration.Logs;
-using Content.Shared.Database;
-using Content.Shared.Interaction.Events;
-using Content.Shared.Popups;
+using Content.Server.Station.Components;
+using Content.Server.Atmos.Components;
+using Content.Server.Station.Systems;
+using Content.Server.Procedural;
+using Content.Server.Parallax;
+
 using Content.Shared.Teleportation.Components;
 using Content.Shared.Teleportation.Systems;
-using Robust.Server.Audio;
-using Robust.Server.GameObjects;
-using Robust.Shared.Map;
+using Content.Shared.Station.Components;
+using Content.Shared.Interaction.Events;
+using Content.Shared.Atmos.Components;
+using Content.Shared.Atmos.Prototypes;
+using Content.Shared.Parallax.Biomes;
+using Content.Shared.Procedural;
+using Content.Shared.Parallax;
+using Content.Shared.Database;
+using Content.Shared.Gravity;
+using Content.Shared.Popups;
+using Content.Shared.Atmos;
+
+using Robust.Shared.Physics.Components;
+using Robust.Shared.Physics.Systems;
+using Robust.Shared.Map.Components;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
-using Robust.Shared.Map.Components;
-using Robust.Shared.Physics.Systems;
-using System.Linq;
-using System.Numerics;
-using Robust.Shared.GameObjects;
-using Content.Server.Station.Components;
-using Robust.Shared.Physics.Components;
-using Content.Server.Procedural;
-using Content.Shared.Gravity;
-using Content.Shared.Procedural;
 using Robust.Shared.Timing;
-using Content.Server.Atmos.EntitySystems;
-using Content.Server.Parallax;
-using Content.Shared.Atmos;
-using Content.Shared.Parallax.Biomes;
-using Content.Shared.Atmos.Components;
-using Content.Shared.Parallax;
-using Content.Server.Atmos.Components;
 using Robust.Shared.Map;
-using Content.Shared.Atmos.Prototypes;
+
+using Robust.Server.GameObjects;
+using Robust.Server.Audio;
+
 using System.Collections.Generic;
-using Content.Server.Station.Systems;
-using Content.Server.Station.Components;
+using System.Numerics;
+using System.Linq;
+
 
 namespace Content.Server.Teleportation;
 
 public sealed class RandomPortalSystem : EntitySystem
 {
-    [Dependency] private readonly LinkedEntitySystem _link = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
+    [Dependency] private readonly AtmosphereSystem _atmosphereSystem = default!;
     [Dependency] private readonly IPrototypeManager _prototype = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly DungeonSystem _dungeonSystem = default!;
+    [Dependency] private readonly StationSystem _stationSystem = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
-    [Dependency] private readonly DungeonSystem _dungeonSystem = default!;
+    [Dependency] private readonly LinkedEntitySystem _link = default!;
     [Dependency] private readonly BiomeSystem _biomeSystem = default!;
-    [Dependency] private readonly AtmosphereSystem _atmosphereSystem = default!;
-    [Dependency] private readonly StationSystem _stationSystem = default!;
+    [Dependency] private readonly IMapManager _mapManager = default!;
+    [Dependency] private readonly IRobustRandom _random = default!;
 
     public override void Initialize()
     {
