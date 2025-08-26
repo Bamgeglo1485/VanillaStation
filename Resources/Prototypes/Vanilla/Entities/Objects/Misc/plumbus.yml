@@ -35,7 +35,7 @@
     useSound:
       path: /Audio/Items/wirebrushing.ogg
   - type: Item
-    size: Medium
+    size: Normal
   - type: Extractable
     juiceSolution:
       reagents:

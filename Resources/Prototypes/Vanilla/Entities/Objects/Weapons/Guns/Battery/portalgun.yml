@@ -29,7 +29,6 @@
     fireCost: 5
   - type: PortalGun
   - type: Gun
-    useDelay: 0.5
   - type: SolutionContainerManager
     solutions:
       portal:
@@ -73,6 +72,12 @@
           ScrapSteel:
             min: 1
             max: 2
+  - type: Item
+    size: Small
+    shape:
+    - 0,0,1,0
+    - 0,1,0,1
+    storedOffset: 0,-4
 
 - type: entity
   parent: PortalGunBase
