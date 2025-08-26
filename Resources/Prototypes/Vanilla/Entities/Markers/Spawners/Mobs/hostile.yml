@@ -79,7 +79,7 @@
     layers:
     - state: green
     - state: сrawler
-      sprite: Mobs/Aliens/Argocyte/argocyte.rsi
+      sprite: Mobs/Aliens/Argocyte/argocyte_common.rsi
   - type: ConditionalSpawner
     prototypes:
     - MobArgocyteCrawler
@@ -93,7 +93,7 @@
     layers:
     - state: green
     - state: harvester
-      sprite: Mobs/Aliens/Argocyte/argocyte.rsi
+      sprite: Mobs/Aliens/Argocyte/argocyte_common.rsi
   - type: ConditionalSpawner
     prototypes:
     - MobArgocyteHarvester
