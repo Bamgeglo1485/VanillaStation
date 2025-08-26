@@ -201,7 +201,6 @@
     proto: ProjectilePortalGun
     fireCost: 1
   - type: Gun
-    useDelay: 0.5
   - type: Damageable
   - type: DamageOnLand
     damage:

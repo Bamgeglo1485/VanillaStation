@@ -80,7 +80,7 @@
 - type: reagent
   id: QuantumFlux
   name: reagent-name-quantum-flux
-  desc: reagent-name-desc-flux
+  desc: reagent-desc-quantum-flux
   physicalDesc: reagent-physical-desc-unstable-quantum
   flavor: acid
   color: "#e02222"
