@@ -110,6 +110,8 @@
     netsync: false
   - type: RandomPortal
     secondPortalPrototype: RandomPortalExitOmega
+  - type: LinkedEntity
+    deleteOnEmptyLinks: false
   - type: TimedDespawn
     lifetime: 4
   - type: TriggerOnSpawn

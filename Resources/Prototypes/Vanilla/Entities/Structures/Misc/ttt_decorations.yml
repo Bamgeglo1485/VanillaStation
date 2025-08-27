@@ -12,6 +12,7 @@
     state: signaller
   - type: WirelessNetworkConnection
     range: 150
+  - type: DeviceLinkSource
   - type: DeviceNetwork
     deviceNetId: Wireless
     receiveFrequencyId: BasicDevice
