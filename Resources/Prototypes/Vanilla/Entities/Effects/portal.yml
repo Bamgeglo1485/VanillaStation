@@ -22,6 +22,7 @@
     sound: /Audio/Vanilla/Effects/randomPortal.ogg
   - type: Portal
     canTeleportToOtherMaps: true
+  - type: LinkedEntity
   - type: Fixtures
     fixtures:
       portalFixture:
