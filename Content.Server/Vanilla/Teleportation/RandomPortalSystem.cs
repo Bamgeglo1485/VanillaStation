@@ -54,10 +54,10 @@ public sealed class RandomPortalSystem : EntitySystem
 
     public override void Initialize()
     {
-        SubscribeLocalEvent<RandomPortalComponent, ComponentInit>(OnComponentInit);
+        SubscribeLocalEvent<RandomPortalComponent, MapInitEvent>(OnMapInit);
     }
 
-    private void OnComponentInit(Entity<RandomPortalComponent> entity, ref ComponentInit args)
+    private void OnMapInit(Entity<RandomPortalComponent> entity, ref MapInitEvent args)
     {
         var transform = Transform(entity);
         var mapId = transform.MapID;
@@ -162,7 +162,7 @@ public sealed class RandomPortalSystem : EntitySystem
             CreatePlanet(portal);
     }
 
-    private async void CreateDungeonMap(Entity<RandomPortalComponent> portal)
+    private void CreateDungeonMap(Entity<RandomPortalComponent> portal)
     {
         if (portal.Comp.AllowedDungeons.Count == 0)
             return;
@@ -189,7 +189,7 @@ public sealed class RandomPortalSystem : EntitySystem
         }
 
         var dungeonProto = _prototype.Index<DungeonConfigPrototype>(_random.Pick(portal.Comp.AllowedDungeons));
-        await _dungeonSystem.GenerateDungeonAsync(dungeonProto, gridUid, gridComp, Vector2i.Zero, _random.Next());
+        _dungeonSystem.GenerateDungeonAsync(dungeonProto, gridUid, gridComp, Vector2i.Zero, _random.Next());
 
         if (_mapManager.MapExists(mapId) && TryFindSuitableTile(gridUid, gridComp, out var coords))
             SpawnAndLinkPortal(portal, coords);
