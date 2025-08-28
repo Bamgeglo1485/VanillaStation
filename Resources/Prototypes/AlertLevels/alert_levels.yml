@@ -77,3 +77,15 @@
       emergencyLightColor: DarkViolet
       forceEnableEmergencyLights: true
       shuttleTime: 1200
+# RAYTEN-STARTS
+    apollyon:
+      announcement: alert-level-apollyon-announcement
+      announcementdisable: alert-level-apollyon-announcement-disable # vanilla-station
+      sound: /Audio/Misc/notice1.ogg
+      color: Black
+      emergencyLightColor: Red
+      forceEnableEmergencyLights: true
+      shuttleTime: 600
+      subcode: true # vanilla-station
+
+# RAYTENDS

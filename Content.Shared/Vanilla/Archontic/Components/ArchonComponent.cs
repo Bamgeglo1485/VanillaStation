@@ -8,16 +8,22 @@ public sealed partial class ArchonComponent : Component
 {
 
     /// <summary>
-    /// Система будет сама генерировать класс и подбирать на этой основе компоненты, а не наоборот.
-    /// </summary>
-    [DataField]
-    public bool AutoGenerateClass = false;
-
-    /// <summary>
     /// Класс архона, его опасность и возможность сбежать. Enum ArchonClass
     /// </summary>
     [DataField]
     public ArchonClass Class = ArchonClass.Safe;
+
+    /// <summary>
+    /// Уровень опасности для класса Кетер
+    /// </summary>
+    [DataField]
+    public int DangerLimit = 3;
+
+    /// <summary>
+    /// Уровень опасности для класса Евклид
+    /// </summary>
+    [DataField]
+    public int EscapeLimit = 3;
 
     /// <summary>
     /// Уничтожаемость объекта, эффекты после смерти. Enum ArchonDestructibility
