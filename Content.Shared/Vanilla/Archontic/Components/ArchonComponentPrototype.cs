@@ -20,8 +20,8 @@ public sealed partial class ArchonComponentPrototype : IPrototype
     /// <summary>
     /// Тэг для разделения компонентов
     /// </summary>
-    [DataField(required: true)]
-    public string Tag = "Generic";
+    [DataField]
+    public string Tag = "Generic"
 
     /// <summary>
     /// Уровень опасности архона, 3 это кетер, скорее всего позже перемещу границы в компонент
@@ -34,6 +34,28 @@ public sealed partial class ArchonComponentPrototype : IPrototype
     /// </summary>
     [DataField]
     public int Escape = 0;
+
+    /// <summary>
+    /// Компонент с определённым шансом
+    /// </summary>
+    [DataField]
+    public ComponentRegistry ChancedComponents = new();
+
+    [DataField]
+    public float ChancedComponentChance = 0.3f;
+
+    /// <summary>
+    /// Не добавляет обычные Components если срабатывает шанс
+    /// </summary>
+    [DataField]
+    public bool ChancedComponentReplaceMain = true;
+
+    [DataField]
+    public int ChancedDanger = 0;
+
+    [DataField]
+    public int ChancedEscape = 0;
+
 }
 
 

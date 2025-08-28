@@ -14,16 +14,28 @@ public sealed partial class ArchonComponent : Component
     public ArchonClass Class = ArchonClass.Safe;
 
     /// <summary>
-    /// Уровень опасности для класса Кетер
+    /// Уровень опасности
     /// </summary>
     [DataField]
-    public int DangerLimit = 3;
+    public int Danger = 0;
+
+    /// <summary>
+    /// Уровень опасности
+    /// </summary>
+    [DataField]
+    public int Escape = 0;
+
+    /// <summary>
+    /// Уровень опасности для класса Кетер
+    /// </summary>
+    [ViewVariables]
+    public int DangerLimit = 5;
 
     /// <summary>
     /// Уровень опасности для класса Евклид
     /// </summary>
-    [DataField]
-    public int EscapeLimit = 3;
+    [ViewVariables]
+    public int EscapeLimit = 5;
 
     /// <summary>
     /// Уничтожаемость объекта, эффекты после смерти. Enum ArchonDestructibility
@@ -35,10 +47,10 @@ public sealed partial class ArchonComponent : Component
     /// Диапазон количества добавляемых компонентов
     /// </summary>
     [DataField]
-    public int MinComponents = 3;
+    public int MinComponents = 2;
 
     [DataField]
-    public int MaxComponents = 1;
+    public int MaxComponents = 3;
 
     /// <summary>
     /// Диапазон количества триггеров компонентов. Типо OnTrigger и TriggerOn
