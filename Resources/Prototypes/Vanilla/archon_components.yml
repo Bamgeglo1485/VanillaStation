@@ -1,0 +1,68 @@
+- type: archonComponent
+  id: RadiationSmall
+  danger: 2
+  escape: 0
+  components:
+    - type: RadiationSource
+
+- type: archonComponent
+  id: RadiationBig
+  danger: 3
+  escape: 0
+  components:
+    - type: RadiationSource
+      intensity: 4
+
+- type: archonComponent
+  id: RandomWalkSmall
+  danger: 0
+  escape: 1
+  components:
+    - type: RandomWalk
+
+- type: archonComponent
+  id: RandomWalkBig
+  danger: 0
+  escape: 2
+  components:
+    - type: RandomWalk
+      maxStepCooldown: 1
+      minStepCooldown: 1
+      maxSpeed: 60
+      minSpeed: 25
+
+- type: archonComponent
+  id: ChasingWalkHumanoid
+  danger: 0
+  escape: 1
+  components:
+    - type: ChasingWalk
+      chasingComponent: HumanoidAppearance
+
+- type: archonComponent
+  id: ChasingWalkFood
+  danger: 0
+  escape: 1
+  components:
+    - type: ChasingWalk
+      chasingComponent: Food
+
+- type: archonComponent
+  id: ChasingWalkTraitor
+  danger: 0
+  escape: 1
+  components:
+    - type: ChasingWalk
+      chasingComponent: TraitorRole
+
+- type: archonComponent
+  id: ChaoticJump
+  danger: 0
+  escape: 3
+  components:
+    - type: ChaoticJump
+      collisionMask: 0
+      rangeMax: 2
+      rangeMin: 0
+      jumpMaxInterval: 180
+      jumpMinInterval: 90
