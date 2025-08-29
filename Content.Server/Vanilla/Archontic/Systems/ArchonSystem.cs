@@ -1,7 +1,12 @@
 using Content.Shared.Archontic.Components;
+using Content.Shared.Damage;
+using Content.Shared.Weapons.Melee;
+using Content.Shared.Movement.Components;
+using Content.Shared.Movement.Systems;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using System.Collections.Generic;
 
 namespace Content.Server.Archontic.Systems;
 
@@ -9,6 +14,7 @@ public sealed partial class ArchonSystem : EntitySystem
 {
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly MovementSpeedModifierSystem _movement = default!;
 
     public override void Initialize()
     {
@@ -16,85 +22,111 @@ public sealed partial class ArchonSystem : EntitySystem
         SubscribeLocalEvent<ArchonComponent, MapInitEvent>(OnMapInit);
     }
 
+    /// <summary>
+    /// Базовые действия при появлении Архонта
+    /// </summary>
     private void OnMapInit(Entity<ArchonComponent> ent, ref MapInitEvent args)
     {
+        var comp = ent.Comp;
+
+        if (comp.GenerateComponents == false)
+            return;
+
+        var dataComp = EntityManager.EnsureComponent<ArchonDataComponent>(ent);
+
+        if (_random.Prob(comp.CanBeHumanoidChance))
+        {
+            SetComponents(ent, dataComp, "AI", 1, 1);
+            SetComponents(ent, dataComp, "Damage", 0, 1);
+            SetComponents(ent, dataComp, "Movement", 0, 1); // щиткод да и всё равно
+
+            SetRandomDamage(ent, dataComp);
+            SetRandomMovementSpeed(ent, dataComp);
+        }
+
         GenerateArchon(ent);
     }
 
     /// <summary>
-    /// Метод генерирует сам архонт, добавляет компоненты, определяет живучесть и класс
+    /// Генерирует сам архонт
     /// </summary>
     private void GenerateArchon(Entity<ArchonComponent> ent)
     {
         var comp = ent.Comp;
+        var dataComp = EntityManager.EnsureComponent<ArchonDataComponent>(ent);
 
-        // TODO Создание гуманоида или изменение физики
+        if (comp.RandomType)
+            SetRandomArchonType(ent, dataComp);
 
-        // Добавление компонентов
-        AddComponents(ent, "Generic", comp.MinComponents, comp.MaxComponents);
-
-        // TODO живучесть
-
-        // Устанавливает класс объекта
-        SetArchonClass(ent);
+        SetComponents(ent, dataComp, "Generic", comp.MinComponents, comp.MaxComponents);
+        SetArchonClass(ent, dataComp);
     }
 
     /// <summary>
-    /// Ищет прототипы по тегу и добавляет их компоненты
+    /// Добавляет компоненты, которые соответствуют типам архонта
     /// </summary>
-    private void AddComponents(Entity<ArchonComponent> ent, string tag, int minCount, int maxCount)
+    private void SetComponents(Entity<ArchonComponent> ent, ArchonDataComponent dataComp, string tag, int minCount, int maxCount)
     {
-        var validPrototypes = GetArchonPrototypesByTag(tag);
+        var validPrototypes = GetArchonPrototypes(ent, dataComp, tag);
         if (validPrototypes.Count == 0)
             return;
 
         var count = _random.Next(minCount, maxCount + 1);
-
         for (var i = 0; i < count; i++)
         {
-            var randomProto = _random.Pick(validPrototypes);
-            var usedChanced = false;
+            var proto = _random.Pick(validPrototypes);
+            var chance = proto.ChancedComponents.Count > 0 && _random.Prob(proto.ChancedComponentChance);
 
-            // Проверяем шанс компонентов
-            if (_random.Prob(randomProto.ChancedComponentChance) && randomProto.ChancedComponents.Count > 0)
+            if (chance)
             {
-                usedChanced = true;
-
-                foreach (var (_, component) in randomProto.ChancedComponents)
+                foreach (var (compType, component) in proto.ChancedComponents)
                 {
-                    EntityManager.AddComponent(ent, component);
+                    EntityManager.AddComponent(ent, component, overwrite: true);
                 }
 
-                ent.Comp.Danger += randomProto.ChancedDanger;
-                ent.Comp.Escape += randomProto.ChancedEscape;
+                dataComp.Danger += proto.ChancedDanger;
+                dataComp.Escape += proto.ChancedEscape;
 
-                if (randomProto.ChancedComponentReplaceMain)
+                if (proto.ChancedComponentReplaceMain)
                     continue;
             }
 
-            if (!usedChanced || !randomProto.ChancedComponentReplaceMain)
+            if (!chance || !proto.ChancedComponentReplaceMain)
             {
-                foreach (var (_, component) in randomProto.Components)
+                foreach (var (compType, component) in proto.Components)
                 {
-                    EntityManager.AddComponent(ent, component);
+                    EntityManager.AddComponent(ent, component, overwrite: true);
                 }
 
-                ent.Comp.Danger += randomProto.Danger;
-                ent.Comp.Escape += randomProto.Escape;
+                dataComp.Danger += proto.Danger;
+                dataComp.Escape += proto.Escape;
             }
         }
     }
 
     /// <summary>
-    /// Возвращает все прототипы компонентов с указанным тегом.
+    /// Получает компоненты, который соответствуют типам архонта
     /// </summary>
-    private List<ArchonComponentPrototype> GetArchonPrototypesByTag(string tag)
+    private List<ArchonComponentPrototype> GetArchonPrototypes(Entity<ArchonComponent> ent, ArchonDataComponent dataComp, string tag)
     {
         var prototypes = new List<ArchonComponentPrototype>();
 
         foreach (var proto in _prototypeManager.EnumeratePrototypes<ArchonComponentPrototype>())
         {
-            if (proto.Tag.Equals(tag, StringComparison.OrdinalIgnoreCase))
+            if (!proto.Tag.Equals(tag, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var hasMatch = false;
+            foreach (var archonType in dataComp.Types)
+            {
+                if (proto.Types.Contains(archonType))
+                {
+                    hasMatch = true;
+                    break;
+                }
+            }
+
+            if (hasMatch || dataComp.Types.Count == 0)
             {
                 prototypes.Add(proto);
             }
@@ -104,29 +136,116 @@ public sealed partial class ArchonSystem : EntitySystem
     }
 
     /// <summary>
-    /// Определяет класс архонта на основе опасности и способности к побегу.
+    /// Устанавливает класс Архонта на основе уровня опасности и сбегаемости
     /// </summary>
-    private void SetArchonClass(Entity<ArchonComponent> ent)
+    private void SetArchonClass(Entity<ArchonComponent> ent, ArchonDataComponent dataComp)
     {
-        var danger = ent.Comp.Danger;
-        var escape = ent.Comp.Escape;
+        var danger = dataComp.Danger;
+        var escape = dataComp.Escape;
 
-        // Логика определения класса
-        if (danger >= ent.Comp.DangerLimit && escape >= ent.Comp.EscapeLimit)
+        if (danger >= dataComp.DangerLimit && escape >= dataComp.EscapeLimit)
         {
-            ent.Comp.Class = ArchonClass.Thaumiel;
+            dataComp.Class = ArchonClass.Thaumiel;
         }
-        else if (escape >= ent.Comp.EscapeLimit)
+        else if (escape >= dataComp.EscapeLimit)
         {
-            ent.Comp.Class = ArchonClass.Keter;
+            dataComp.Class = ArchonClass.Keter;
         }
-        else if (danger >= ent.Comp.DangerLimit)
+        else if (danger >= dataComp.DangerLimit)
         {
-            ent.Comp.Class = ArchonClass.Euclid;
+            dataComp.Class = ArchonClass.Euclid;
         }
         else
         {
-            ent.Comp.Class = ArchonClass.Safe;
+            dataComp.Class = ArchonClass.Safe;
         }
+    }
+
+    /// <summary>
+    /// Устанавливает случайные типы Архонта
+    /// </summary>
+    private void SetRandomArchonType(Entity<ArchonComponent> ent, ArchonDataComponent dataComp)
+    {
+        var comp = ent.Comp;
+
+        var types = new List<ArchonType>();
+        var archonTypes = System.Enum.GetValues(typeof(ArchonType));
+        for (var i = 0; i < archonTypes.Length; i++)
+        {
+            types.Add((ArchonType)archonTypes.GetValue(i)!);
+        }
+
+        var typeCount = _random.Next(comp.MinTypes, comp.MaxTypes + 1);
+
+        dataComp.Types = new List<ArchonType>();
+
+        for (var i = 0; i < typeCount; i++)
+        {
+            if (types.Count == 0)
+                break;
+
+            var random= _random.Next(types.Count);
+            var randomType = types[random];
+
+            dataComp.Types.Add(randomType);
+            types.RemoveAt(random);
+        }
+    }
+
+    /// <summary>
+    /// Даёт архонту случайный урон, скорость удара, которая зависит от показателя опасности
+    /// </summary>
+    private void SetRandomDamage(Entity<ArchonComponent> ent, ArchonDataComponent dataComp)
+    {
+        float modifier;
+
+        if (dataComp.Danger != 0)
+        {
+            modifier = dataComp.Danger / dataComp.DangerLimit;
+            modifier = MathHelper.Clamp(modifier, 0.3f, 2.0f);
+        }
+        else
+            modifier = 0.3f;
+
+        var meleeComponent = new MeleeWeaponComponent
+
+        {
+            Damage = new DamageSpecifier(),
+            AttackRate = _random.NextFloat(0.8f, 1.5f) * modifier,
+            Range = _random.NextFloat(1.0f, 2.0f) * modifier
+        };
+
+        // Добавил урон радиацией, асфиксией и кровотечением, ибо почему бы нет, достаточно аномально
+        var damageTypes = new[] { "Blunt", "Slash", "Piercing", "Radiation", "Burn", "Caustic", "Cold", "Asphyxiation", "Bloodloss",  }; 
+        var damageType = _random.Pick(damageTypes);
+
+        meleeComponent.Damage.DamageDict[damageType] = (int)(_random.Next(5, 25) * modifier);
+
+        EntityManager.AddComponent(ent, meleeComponent, overwrite: true);
+    }
+
+    /// <summary>
+    /// Даёт архонту случайную скорость, которая зависит от показателя сбегаемости
+    /// </summary>
+    private void SetRandomMovementSpeed(Entity<ArchonComponent> ent, ArchonDataComponent dataComp)
+    {
+        float modifier;
+
+        if (dataComp.Escape != 0)
+        {
+            modifier = dataComp.Escape / dataComp.EscapeLimit;
+            modifier = MathHelper.Clamp(modifier, 0.5f, 2.0f);
+        }
+        else
+            modifier = 0.5f;
+
+        _movement.ChangeBaseSpeed(
+            ent,
+            baseWalkSpeed: _random.NextFloat(1.5f, 2.0f) * modifier,
+            baseSprintSpeed: _random.NextFloat(2.0f, 10.0f) * modifier, 
+            acceleration: _random.NextFloat(2.0f, 4.0f)
+        );
+
+        _movement.RefreshMovementSpeedModifiers(ent);
     }
 }

@@ -7,41 +7,20 @@ namespace Content.Shared.Archontic.Components;
 public sealed partial class ArchonComponent : Component
 {
 
+    [DataField]
+    public bool RandomType = true;
+
+    [DataField]
+    public bool GenerateComponents = true;
+
     /// <summary>
-    /// Класс архона, его опасность и возможность сбежать. Enum ArchonClass
+    /// Диапазон количества типов
     /// </summary>
     [DataField]
-    public ArchonClass Class = ArchonClass.Safe;
+    public int MinTypes = 1;
 
-    /// <summary>
-    /// Уровень опасности
-    /// </summary>
     [DataField]
-    public int Danger = 0;
-
-    /// <summary>
-    /// Уровень опасности
-    /// </summary>
-    [DataField]
-    public int Escape = 0;
-
-    /// <summary>
-    /// Уровень опасности для класса Кетер
-    /// </summary>
-    [ViewVariables]
-    public int DangerLimit = 5;
-
-    /// <summary>
-    /// Уровень опасности для класса Евклид
-    /// </summary>
-    [ViewVariables]
-    public int EscapeLimit = 5;
-
-    /// <summary>
-    /// Уничтожаемость объекта, эффекты после смерти. Enum ArchonDestructibility
-    /// </summary>
-    [DataField]
-    public ArchonDestructibility Destructibility;
+    public int MaxTypes = 2;
 
     /// <summary>
     /// Диапазон количества добавляемых компонентов
@@ -73,20 +52,4 @@ public sealed partial class ArchonComponent : Component
     [DataField]
     public float PhysicsChangeChance = 0.15f;
 
-}
-
-public enum ArchonClass : byte
-{
-    Safe, // Если объект можно безопасно содержать, и оно не будет пытаться вырваться или приносить вред.
-    Euclid, // Если объект не будет сбегать с коробки, но будет приносить пассивный вред или потенциальный.
-    Keter, // Если объект может сбежать, но не обязательно приносить вред.
-    Thaumiel // Если объект и приносит вред, и сбегает.
-}
-
-public enum ArchonDestructibility : byte
-{
-    Normal, // Прочность от 10 до 200, если разумный стамина 100-200
-    Hard, // От 300 до 700, стамина 400-800
-    Invincible, // от 5000 до 10000
-    DeathEffect // После уничтожения имеет эффект, типо бабах, перерождение ввиде чего то, оставление предмета с каким то эффектом
 }

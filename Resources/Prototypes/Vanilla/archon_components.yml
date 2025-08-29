@@ -6,16 +6,28 @@
 
 - type: archonComponent
   id: RadiationSmall
+  types:
+    - Hylic
   danger: 2
   chancedDanger: 3
   components:
     - type: RadiationSource
+    - type: Armor
+      modifiers:
+        coefficients:
+          Radiation: 0
   chancedComponents:
     - type: RadiationSource
       intensity: 4
+    - type: Armor
+      modifiers:
+        coefficients:
+          Radiation: 0
 
 - type: archonComponent
   id: RandomWalk
+  types:
+    - Luminary
   escape: 1
   chancedEscape: 2
   components:
@@ -29,6 +41,8 @@
 
 - type: archonComponent
   id: ChaoticJump
+  types:
+    - Pneumatic
   escape: 2
   chancedEscape: 3
   components:
@@ -48,6 +62,8 @@
 
 - type: archonComponent
   id: Stealth
+  types:
+    - Hylic
   escape: 1
   chancedEscape: 2
   components:
@@ -67,6 +83,8 @@
 
 - type: archonComponent
   id: Slippery
+  types:
+    - Archon
   escape: 1
   chancedEscape: 2
   danger: 1
@@ -87,3 +105,139 @@
       intersectRatio: 0.2
     - type: CollisionWake
       enabled: false
+
+- type: archonComponent
+  id: Parrot
+  types:
+    - Luminary
+  components:
+    - type: Speech
+    - type: Vocal
+    - type: ActiveListener
+    - type: Vocalizer
+    - type: RadioVocalizer
+    - type: ParrotListener
+    - type: ParrotMemory
+
+- type: archonComponent
+  id: Moveable
+  types:
+    - Luminary
+  escape: 3
+  danger: 1
+  components:
+    - type: DangerMob
+    - type: InputMover
+    - type: MobMover
+    - type: HTN
+      rootTask:
+        task: IdleCompound
+    - type: NpcFactionMember
+      factions:
+      - SimpleNeutral
+    - type: CombatMode
+  chancedComponents:
+  - type: GhostRole
+    makeSentient: true
+    name: ghost-role-information-archon-neutral-name
+    description: ghost-role-information-archon-neutral-description
+    rules: ghost-role-information-freeagent-rules
+    raffle:
+      settings: short
+
+# AI
+
+- type: archonComponent
+  id: HTNAggessive
+  tag: AI
+  types:
+    - Luminary
+  escape: 3
+  danger: 4
+  components:
+    - type: DangerMob
+    - type: InputMover
+    - type: MobMover
+    - type: HTN
+      rootTask:
+        task: SimpleHostileCompound
+      blackboard:
+        NavSmash: !type:Bool
+          true
+    - type: NpcFactionMember
+      factions:
+      - AllHostile
+    - type: CombatMode
+  chancedComponents:
+  - type: GhostRole
+    makeSentient: true
+    name: ghost-role-information-archon-angry-name
+    description: ghost-role-information-archon-angry-description
+    rules: ghost-role-information-antagonist-rules
+    raffle:
+      settings: short
+
+- type: archonComponent
+  id: HTNNeutral
+  tag: AI
+  types:
+    - Luminary
+  escape: 3
+  danger: 2
+  components:
+    - type: DangerMob
+    - type: InputMover
+    - type: MobMover
+    - type: HTN
+      rootTask:
+        task: IdleCompound
+    - type: NpcFactionMember
+      factions:
+      - SimpleNeutral
+    - type: CombatMode
+    - type: InteractionPopup
+      successChance: 0.2
+      interactSuccessString: petting-success-soft-floofy
+      interactFailureString: petting-failure-bat
+      interactSuccessSpawn: EffectHearts
+  chancedComponents:
+  - type: GhostRole
+    makeSentient: true
+    name: ghost-role-information-archon-neutral-name
+    description: ghost-role-information-archon-neutral-description
+    rules: ghost-role-information-freeagent-rules
+    raffle:
+      settings: short
+
+- type: archonComponent
+  id: HTNPassive
+  tag: AI
+  types:
+    - Luminary
+  escape: 3
+  danger: 2
+  components:
+    - type: DangerMob
+    - type: InputMover
+    - type: MobMover
+    - type: HTN
+      rootTask:
+        task: IdleCompound
+    - type: NpcFactionMember
+      factions:
+      - Passive
+    - type: InteractionPopup
+      successChance: 0.2
+      interactSuccessString: petting-success-soft-floofy
+      interactFailureString: petting-failure-bat
+      interactSuccessSpawn: EffectHearts
+  chancedComponents:
+  - type: GhostRole
+    makeSentient: true
+    name: ghost-role-information-archon-passive-name
+    description: ghost-role-information-archon-passive-description
+    rules: ghost-role-information-nonantagonist-rules
+    raffle:
+      settings: short
+
+# Damage

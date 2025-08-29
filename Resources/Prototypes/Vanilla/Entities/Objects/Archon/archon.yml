@@ -1,0 +1,38 @@
+- type: entity
+  parent: BaseItem
+  id: ArchonItemRandom
+  name: тест
+  description: тест
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Hydroponics/apple.rsi
+    state: produce
+  - type: Archon
+    canBeHumanoidChance: 0.05
+
+- type: entity
+  parent: [SimpleSpaceMobBase, MobCombat]
+  id: ArchonHumanoidRandom
+  name: тест
+  description: тест
+  components:
+  - type: Archon
+    canBeHumanoidChance: 1
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: Mobs/Aliens/Carps/space.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: alive
+  - type: Physics
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.40
+          density: 80
+          mask:
+            - FlyingMobMask
+          layer:
+            - FlyingMobLayer

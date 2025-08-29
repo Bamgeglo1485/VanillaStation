@@ -21,7 +21,13 @@ public sealed partial class ArchonComponentPrototype : IPrototype
     /// Тэг для разделения компонентов
     /// </summary>
     [DataField]
-    public string Tag = "Generic"
+    public string Tag = "Generic";
+
+    /// <summary>
+    /// Тип архонта для меньшей хаотичности. Enum ArchonType
+    /// </summary>
+    [DataField]
+    public List<ArchonType> Types = new();
 
     /// <summary>
     /// Уровень опасности архона, 3 это кетер, скорее всего позже перемещу границы в компонент
