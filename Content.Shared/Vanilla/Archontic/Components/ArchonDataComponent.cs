@@ -20,6 +20,24 @@ public sealed partial class ArchonDataComponent : Component
     public List<ArchonType> Types = new();
 
     /// <summary>
+    /// Гуманоидный ли объект
+    /// </summary>
+    [ViewVariables]
+    public bool Humanoid = false;
+
+    /// <summary>
+    /// Уничтожаемость архона. Enum ArchonDestructibility
+    /// </summary>
+    [DataField]
+    public ArchonDestructibility Destructibility = new ();
+
+    /// <summary>
+    /// Список добавленных компонентов
+    /// </summary>
+    [DataField]
+    public List<string> AddedComponents = new();
+
+    /// <summary>
     /// Уровень опасности
     /// </summary>
     [DataField]
@@ -34,14 +52,26 @@ public sealed partial class ArchonDataComponent : Component
     /// <summary>
     /// Уровень опасности для класса Кетер
     /// </summary>
-    [ViewVariables]
+    [DataField]
     public int DangerLimit = 5;
 
     /// <summary>
     /// Уровень опасности для класса Евклид
     /// </summary>
-    [ViewVariables]
+    [DataField]
     public int EscapeLimit = 5;
+
+    /// <summary>
+    /// Ну логика объяснена в основном компоненте
+    /// </summary>
+    [DataField]
+    public float RandomDangerMin;
+    [DataField]
+    public float RandomDangerMax;
+    [DataField]
+    public float RandomEscapeMin;
+    [DataField]
+    public float RandomEscapeMax;
 
 }
 
@@ -52,7 +82,6 @@ public enum ArchonClass : byte
     Keter, // Если объект может сбежать, но не обязательно приносить вред.
     Thaumiel // Если объект и приносит вред, и сбегает.
 }
-
 
 public enum ArchonType : byte
 {
@@ -68,5 +97,5 @@ public enum ArchonDestructibility : byte
     Normal, // Прочность от 10 до 200, если разумный стамина 100-200
     Hard, // От 300 до 700, стамина 400-800
     Invincible, // от 5000 до 10000
-    DeathEffect // После уничтожения имеет эффект, типо бабах, перерождение ввиде чего то, оставление предмета с каким то эффектом
+    Rebirth // После уничтожения перерождается с несколькими новыми компонентами, но после утрачивает эту способность
 }

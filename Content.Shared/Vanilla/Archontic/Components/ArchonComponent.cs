@@ -1,5 +1,6 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Robust.Shared.Audio;
 
 namespace Content.Shared.Archontic.Components;
 
@@ -11,16 +12,19 @@ public sealed partial class ArchonComponent : Component
     public bool RandomType = true;
 
     [DataField]
+    public bool RandomDestructibility = true;
+
+    [DataField]
     public bool GenerateComponents = true;
 
     /// <summary>
     /// Диапазон количества типов
     /// </summary>
     [DataField]
-    public int MinTypes = 1;
+    public int MinTypes = 2;
 
     [DataField]
-    public int MaxTypes = 2;
+    public int MaxTypes = 3;
 
     /// <summary>
     /// Диапазон количества добавляемых компонентов
@@ -47,9 +51,12 @@ public sealed partial class ArchonComponent : Component
     public float CanBeHumanoidChance = 0.15f;
 
     /// <summary>
-    /// Шанс изменения физических характеристик
+    /// Я не понял как редактировать Destructible
     /// </summary>
     [DataField]
-    public float PhysicsChangeChance = 0.15f;
+    public float Health = 0f;
+
+    [DataField]
+    public string RebirthPrototype = "EffectArchonDeath";
 
 }

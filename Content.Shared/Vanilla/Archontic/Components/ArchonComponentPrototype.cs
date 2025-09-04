@@ -30,13 +30,13 @@ public sealed partial class ArchonComponentPrototype : IPrototype
     public List<ArchonType> Types = new();
 
     /// <summary>
-    /// Уровень опасности архона, 3 это кетер, скорее всего позже перемещу границы в компонент
+    /// Уровень опасности архона
     /// </summary>
     [DataField]
     public int Danger = 0;
 
     /// <summary>
-    /// Уровень возможности побега архона, 3 это евклид, скорее всего позже перемещу границы в компонент
+    /// Уровень возможности побега архона
     /// </summary>
     [DataField]
     public int Escape = 0;
@@ -45,23 +45,42 @@ public sealed partial class ArchonComponentPrototype : IPrototype
     /// Компонент с определённым шансом
     /// </summary>
     [DataField]
-    public ComponentRegistry ChancedComponents = new();
-
-    [DataField]
-    public float ChancedComponentChance = 0.3f;
+    public List<ChancedComponent> ChancedComponents = new();
 
     /// <summary>
-    /// Не добавляет обычные Components если срабатывает шанс
+    /// Если true, то этим компонентом не может владеть гуманоидный
     /// </summary>
     [DataField]
-    public bool ChancedComponentReplaceMain = true;
+    public bool HumanoidBlacklist = false;
 
+    /// <summary>
+    /// Если true, то этим компонентом может владеть только гуманоид
+    /// </summary>
     [DataField]
-    public int ChancedDanger = 0;
-
-    [DataField]
-    public int ChancedEscape = 0;
+    public bool HumanoidWhitelist = false;
 
 }
 
+[DataDefinition]
+public partial struct ChancedComponent
+{
+    [DataField]
+    public ComponentRegistry Components { get; set; }
 
+    [DataField]
+    public float Chance { get; set; }
+
+    [DataField]
+    public int Danger { get; set; }
+
+    [DataField]
+    public int Escape { get; set; }
+
+    public ChancedComponent()
+    {
+        Components = new ComponentRegistry();
+        Chance = 0.3f;
+        Danger = 0;
+        Escape = 0;
+    }
+}
