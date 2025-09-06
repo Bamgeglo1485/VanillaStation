@@ -14,12 +14,12 @@
           Radiation: 0
   chancedComponents:
     - chance: 0.4
-      danger: 1
+      danger: 3
       components:
         - type: RadiationSource
           intensity: 7
     - chance: 0.1
-      danger: 3
+      danger: 4
       components:
         - type: RadiationSource
           intensity: 10
@@ -55,6 +55,7 @@
 
 - type: archonComponent
   id: RandomWalk
+  humanoidBlacklist: true
   types:
     - Pneumatic
   escape: 1
@@ -72,6 +73,7 @@
 
 - type: archonComponent
   id: ChaoticJump
+  humanoidBlacklist: true
   types:
     - Pneumatic
   escape: 2

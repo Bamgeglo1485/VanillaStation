@@ -7,9 +7,9 @@ using Robust.Shared.Audio;
 namespace Content.Shared.Archontic.Components;
 
 /// <summary>
-/// Портативная штука, которая сканирует анхонты
+/// Портативная штука, которая сканирует анхонты для дальнейшей привязки к оборудованиям
 /// </summary>
-[RegisterComponent, Access(typeof(SharedArchonAnalyzeSystem))]
+[RegisterComponent, Access(typeof(SharedArchonSystem))]
 public sealed partial class ArchonScannerComponent : Component
 {
 

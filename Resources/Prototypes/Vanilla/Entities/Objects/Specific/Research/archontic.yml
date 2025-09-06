@@ -15,3 +15,15 @@
     storedRotation: -90
   - type: RequiresSkill
     RequiresResearchLevel: 1
+
+- type: entity
+  parent: ResearchDisk
+  id: AwardDisc
+  name: диск вознаграждения
+  description: 20.000 очков за то, что ты указал нужный класс, хотя он уже известен. Звучит как условность.
+  components:
+  - type: Sprite
+    sprite: Vanilla/Objects/Specific/Research/AwardDisc.rsi
+    state: icon
+  - type: ResearchDisk
+    points: 20000

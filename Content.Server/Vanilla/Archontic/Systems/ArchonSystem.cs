@@ -1,34 +1,41 @@
-using Content.Shared.Archontic.Components;
-using Content.Shared.Vanilla.Warmer;
-using Content.Shared.Damage;
-using Content.Shared.Damage.Systems;
-using Content.Shared.Damage.Components;
-using Content.Shared.Weapons.Melee;
-using Content.Shared.Movement.Components;
-using Content.Shared.Movement.Systems;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
-using Robust.Shared.Utility;
-using System.Collections.Generic;
-using Content.Shared.Damage.Components;
-using Robust.Shared.GameObjects;
-using Robust.Shared.IoC;
-using Robust.Shared.Maths;
 using Robust.Shared.Audio.Systems;
-using Content.Server.Destructible;
-using Content.Server.Spawners.Components;
-using System.Linq;
+using Robust.Shared.GameObjects;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Utility;
+using Robust.Shared.Random;
+using Robust.Shared.Maths;
+using Robust.Shared.IoC;
+
+using Content.Shared.Archontic.Components;
+using Content.Shared.Movement.Components;
+using Content.Shared.Archontic.Systems;
+using Content.Shared.Damage.Components;
+using Content.Shared.Movement.Systems;
+using Content.Shared.Damage.Systems;
+using Content.Shared.Vanilla.Warmer;
+using Content.Shared.Weapons.Melee;
+using Content.Shared.GameTicking;
+using Content.Shared.Damage;
+using Content.Shared.Paper;
 using Content.Shared.Atmos;
+
+using Content.Server.Spawners.Components;
+using Content.Server.Destructible;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Content.Server.Archontic.Systems;
 
 public sealed partial class ArchonSystem : EntitySystem
 {
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _movement = default!;
+    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly DamageableSystem _damageableSystem = default!;
+    [Dependency] private readonly SharedArchonSystem _archonSystem = default!;
     [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
+    [Dependency] private readonly PaperSystem _paperSystem = default!;
+    [Dependency] private readonly IRobustRandom _random = default!;
 
     public override void Initialize()
     {
@@ -36,6 +43,10 @@ public sealed partial class ArchonSystem : EntitySystem
 
         SubscribeLocalEvent<ArchonComponent, DamageChangedEvent>(OnDamage);
         SubscribeLocalEvent<ArchonComponent, MapInitEvent>(OnMapInit);
+
+        SubscribeLocalEvent<ArchonDocumentComponent, ComponentShutdown>(OnDocumentDestroy);
+
+        SubscribeLocalEvent<RoundStartedEvent>(OnRoundEnded);
     }
 
     /// <summary>
@@ -369,7 +380,14 @@ public sealed partial class ArchonSystem : EntitySystem
         }
         else
         {
-            QueueDel(ent);
+            if (dataComp.Document != null)
+            {
+                OnArchonDeath((ent.Owner, dataComp));
+            }
+            else
+            {
+                QueueDel(ent);
+            }
         }
     }
 
@@ -410,5 +428,53 @@ public sealed partial class ArchonSystem : EntitySystem
             warmer.MoleRatio = _random.NextFloat(0f, 1f);
             warmer.GasType = gas;
         }
+    }
+
+    /// <summary>
+    /// Далее системы документа
+    /// </summary>
+
+    private void OnArchonDeath(Entity<ArchonDataComponent> ent)
+    {
+        if (ent.Comp.Document is not { } documentUid)
+            return;
+
+        if (!TryComp<PaperComponent>(documentUid, out var paperComp) ||
+            !TryComp<ArchonDocumentComponent>(documentUid, out var documentComp))
+            return;
+
+        if (documentComp.Archon != ent.Owner)
+            return;
+
+        _paperSystem.TryStamp((documentUid, paperComp), new StampDisplayInfo
+        {
+            StampedName = "stamp-component-stamped-name-expunged",
+            StampedColor = Color.FromHex("#8B0000")
+        }, "paper_stamp-expunged");
+
+        QueueDel(ent);
+    }
+
+    private void OnDocumentDestroy(Entity<ArchonDocumentComponent> ent, ref ComponentShutdown args)
+    {
+        if (ent.Comp.Archon == null)
+            return;
+
+        var archon = ent.Comp.Archon.Value;
+
+        if (!TryComp<ArchonDataComponent>(archon, out var dataComp))
+            return;
+
+        dataComp.Expunged = true;
+    }
+
+    /// <summary>
+    /// Очистка зарегистрированных номеров и айди архонтов
+    /// </summary>
+    private void OnRoundEnded (RoundStartedEvent args)
+    {
+
+        _archonSystem.ClearData();
+
     }
 }

@@ -8,6 +8,12 @@ public sealed partial class ArchonDataComponent : Component
 {
 
     /// <summary>
+    /// Списан ли объект
+    /// </summary>
+    [ViewVariables]
+    public bool Expunged = false;
+
+    /// <summary>
     /// Класс архона, его опасность и возможность сбежать. Enum ArchonClass
     /// </summary>
     [DataField]
@@ -30,6 +36,12 @@ public sealed partial class ArchonDataComponent : Component
     /// </summary>
     [DataField]
     public ArchonDestructibility Destructibility = new ();
+
+    /// <summary>
+    /// Синхронизированный документ
+    /// </summary>
+    [ViewVariables]
+    public EntityUid? Document;
 
     /// <summary>
     /// Список добавленных компонентов
