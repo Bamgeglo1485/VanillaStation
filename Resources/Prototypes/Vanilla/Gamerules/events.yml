@@ -1,0 +1,15 @@
+- type: entity
+  parent: BaseGameRule
+  id: MTFSquadSpawn
+  components:
+  - type: RuleGrids
+  - type: LoadMapRule
+    gridPath: /Maps/Vanilla/Shuttles/MTF_Shuttle.yml
+  - type: StationEvent
+    startAnnouncementColor: "#8b8faf"
+    startAnnouncement: "Мобильная Оперативная Группа Браво-5, под кодовым обозначением Корпоративные ревизоры, вылетела к вашей станции для противодействия Архонтам. Объект переходит под временную юрисдикцию департамента срочных операций фонда С.Р.С. Персонал должен оставаться в безопасных местах и ожидать восстановления условий содержания."
+    duration: null
+    startAudio:
+      path: /Audio/Vanilla/Adminbuse/MTF_Arrive.ogg
+      params:
+        volume: 4

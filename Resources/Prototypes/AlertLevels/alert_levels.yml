@@ -80,12 +80,11 @@
 # RAYTEN-STARTS
     apollyon:
       announcement: alert-level-apollyon-announcement
-      announcementdisable: alert-level-apollyon-announcement-disable # vanilla-station
-      sound: /Audio/Misc/notice1.ogg
-      color: Black
+      announcementdisable: alert-level-apollyon-announcement-disable
+      sound: /Audio/Vanilla/Misc/apollyon_alarm.ogg
+      color: "#8b8faf"
       emergencyLightColor: Red
       forceEnableEmergencyLights: true
       shuttleTime: 600
-      subcode: true # vanilla-station
-
+      subcode: true
 # RAYTENDS
