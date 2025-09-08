@@ -13,6 +13,7 @@
     maxCharge: 2000
     startingCharge: 2000
   - type: Item
+    sprite: Vanilla/Objects/Weapons/Melee/doublestunbaton_inhands.rsi
     heldPrefix: off
     size: Huge
   - type: Clothing
