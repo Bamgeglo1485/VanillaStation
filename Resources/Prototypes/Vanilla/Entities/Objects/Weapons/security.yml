@@ -4,6 +4,11 @@
   id: DoubleStunbaton
   description: A stun baton for incapacitating people with. Actively harming with this is considered bad tone.
   components:
+  - type: Sprite
+    sprite: Vanilla/Objects/Weapons/Melee/doublestunbaton.rsi
+    layers:
+    - state: stunbaton_off
+      map: [ "enum.ToggleableVisuals.Layer" ]
   - type: Battery
     maxCharge: 2000
     startingCharge: 2000
