@@ -1,40 +1,41 @@
 using Robust.Shared.Prototypes;
+using Robust.Shared.GameStates;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Archontic.Components;
 
-[RegisterComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class ArchonDataComponent : Component
 {
 
     /// <summary>
     /// Списан ли объект
     /// </summary>
-    [ViewVariables]
+    [DataField, AutoNetworkedField]
     public bool Expunged = false;
 
     /// <summary>
     /// Класс архона, его опасность и возможность сбежать. Enum ArchonClass
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public ArchonClass Class = ArchonClass.Safe;
 
     /// <summary>
     /// Тип архона для меньшей хаотичности. Enum ArchonType
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public List<ArchonType> Types = new();
 
     /// <summary>
     /// Гуманоидный ли объект
     /// </summary>
-    [ViewVariables]
+    [DataField, AutoNetworkedField]
     public bool Humanoid = false;
 
     /// <summary>
     /// Уничтожаемость архона. Enum ArchonDestructibility
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public ArchonDestructibility Destructibility = new ();
 
     /// <summary>
@@ -42,6 +43,12 @@ public sealed partial class ArchonDataComponent : Component
     /// </summary>
     [ViewVariables]
     public EntityUid? Document;
+
+    /// <summary>
+    /// К какому маяку привязан
+    /// </summary>
+    [ViewVariables]
+    public EntityUid? Beacon;
 
     /// <summary>
     /// Список добавленных компонентов

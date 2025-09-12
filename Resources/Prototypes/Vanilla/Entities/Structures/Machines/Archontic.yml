@@ -1,0 +1,135 @@
+- type: entity
+  id: MachineArchonAnalyzer
+  parent: [ BaseMachinePowered, ConstructibleMachine ]
+  name: анализатор архонтов
+  description: Просто привяжи архонт! Ах да, ещё документы, пожалуйста!
+  components:
+  - type: Sprite
+    sprite: Vanilla/Structures/Machines/ArchonAnalyzer.rsi
+    snapCardinals: true
+    layers:
+    - state: base
+    - state: screen
+      map: ["enum.PowerDeviceVisualLayers.Powered"]
+      shader: unshaded
+  - type: GenericVisualizer
+    visuals:
+      enum.PowerDeviceVisuals.Powered:
+        enum.PowerDeviceVisualLayers.Powered:
+          True: { visible: true }
+          False: { visible: false }
+  # - type: Machine
+  #   board: FlatpackerMachineCircuitboard
+  - type: AmbientSound
+    enabled: false
+    volume: 5
+    range: 3
+    sound:
+      path: /Audio/Machines/scan_loop.ogg
+  - type: Appearance
+  - type: ItemSlots
+    slots:
+      paperSlot:
+        disableEject: true
+        name: отсек для документов
+        whitelist:
+          tags:
+            - Paper
+  - type: ContainerContainer
+    containers:
+      paperSlot: !type:ContainerSlot {}
+      machine_board: !type:Container
+      machine_parts: !type:Container
+  - type: ArchonAnalyzer
+    itemSlot: paperSlot
+  - type: StaticPrice
+    price: 2000
+  # - type: GuideHelp
+  #   guides:
+  #   - Xenoarchaeology
+
+- type: entity
+  parent: [ BaseMachinePowered, ConstructibleMachine ]
+  id: ArchonBeacon
+  name: маяк архонтов
+  description: ПОТОМ
+  components:
+  - type: Transform
+    anchored: true
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.25
+        mask:
+        - Impassable
+  - type: ApcPowerReceiver
+    powerLoad: 300
+  - type: Sprite
+    sprite: Vanilla/Structures/Machines/ArchonBeacon.rsi
+    drawdepth: HighFloorObjects
+    snapCardinals: true
+    layers:
+    - state: base
+    - state: powered
+      map: [ "enum.PowerDeviceVisualLayers.Powered" ]
+      shader: unshaded
+    - state: nonPowered
+      map: [ "enum.ArchonBeaconVisuals.Classes" ]
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.ArchonBeaconVisuals.Classes:
+        num.ArchonBeaconClasses:
+          NonPowered: { state: nonPowered }
+          None: { state: notfound}
+          Safe: { state: safe }
+          Keter: { state: keter }
+          Euclid: { state: euclid }
+          Thaumiel: { state: thaumiel }
+          Breach: { state: breach }
+      enum.PowerDeviceVisuals.Powered:
+        enum.PowerDeviceVisualLayers.Powered:
+          True: { visible: true }
+          False: { visible: false }
+  - type: Machine
+    board: HolopadMachineCircuitboard
+  - type: PointLight
+    radius: 1.3
+    energy: 1.8
+    color: "#afe1fe"
+    enabled: false
+  - type: AmbientSound
+    enabled: false
+    volume: -5
+    range: 3
+    sound:
+      path: /Audio/Ambience/Objects/buzzing.ogg
+  - type: WiresPanel
+  - type: WiresVisuals
+  - type: Wires
+    boardName: wires-board-name-holopad
+    layoutId: Holopad
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:ChangeConstructionNodeBehavior
+        node: machineFrame
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+  - type: ArchonBeacon
+  - type: ResearchClient
+  - type: ActivatableUI
+    key: enum.ResearchClientUiKey.Key
+  - type: ActivatableUIRequiresPower
+  - type: UserInterface
+    interfaces:
+      enum.ResearchClientUiKey.Key:
+        type: ResearchClientBoundUserInterface

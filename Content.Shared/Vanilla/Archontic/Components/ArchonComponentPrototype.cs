@@ -76,11 +76,19 @@ public partial struct ChancedComponent
     [DataField]
     public int Escape { get; set; }
 
+    [DataField]
+    public int AdditiveDanger { get; private set; }
+
+    [DataField]
+    public int AdditiveEscape { get; private set; }
+
     public ChancedComponent()
     {
         Components = new ComponentRegistry();
         Chance = 0.3f;
-        Danger = 0;
+        Danger = 0; // Работает как перезапись опасности
         Escape = 0;
+        AdditiveDanger = 0; // Работает как "Опасность основных компонентов + опасность дополнительного
+        AdditiveEscape = 0;
     }
 }

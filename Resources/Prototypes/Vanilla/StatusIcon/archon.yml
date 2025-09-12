@@ -1,0 +1,42 @@
+- type: archonClassIcon
+  id: ArchonClassIcon
+  abstract: true
+  priority: 1
+  offset: 4
+  locationPreference: Left
+  isShaded: true
+
+- type: archonClassIcon
+  parent: ArchonClassIcon
+  id: Safe
+  icon:
+    sprite: /Textures/Vanilla/Interface/Misc/archon_class_icons.rsi
+    state: safe
+
+- type: archonClassIcon
+  parent: ArchonClassIcon
+  id: Euclid
+  icon:
+    sprite: /Textures/Vanilla/Interface/Misc/archon_class_icons.rsi
+    state: euclid
+
+- type: archonClassIcon
+  parent: ArchonClassIcon
+  id: Keter
+  icon:
+    sprite: /Textures/Vanilla/Interface/Misc/archon_class_icons.rsi
+    state: keter
+
+- type: archonClassIcon
+  parent: ArchonClassIcon
+  id: Thaumiel
+  icon:
+    sprite: /Textures/Vanilla/Interface/Misc/archon_class_icons.rsi
+    state: thaumiel
+
+- type: archonClassIcon
+  parent: ArchonClassIcon
+  id: Unknown
+  icon:
+    sprite: /Textures/Vanilla/Interface/Misc/archon_class_icons.rsi
+    state: unknown

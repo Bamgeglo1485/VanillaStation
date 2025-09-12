@@ -89,6 +89,7 @@ public partial class InventorySystem
         //Rayten-start
         SubscribeLocalEvent<InventoryComponent, RefreshEquipmentHudEvent<ShowDominantDamageGroupIconComponent>>(RefRelayInventoryEvent);
         SubscribeLocalEvent<InventoryComponent, RefreshEquipmentHudEvent < ShowCriminalLevelIconsComponent>>(RefRelayInventoryEvent);
+        SubscribeLocalEvent<InventoryComponent, RefreshEquipmentHudEvent<ShowArchonClassComponent>>(RefRelayInventoryEvent);
         //Rayten-end
         SubscribeLocalEvent<InventoryComponent, RefreshEquipmentHudEvent<ShowHungerIconsComponent>>(RefRelayInventoryEvent);
         SubscribeLocalEvent<InventoryComponent, RefreshEquipmentHudEvent<ShowThirstIconsComponent>>(RefRelayInventoryEvent);

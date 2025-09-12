@@ -45,6 +45,7 @@
     walkModifier: 0.9
     sprintModifier: 0.9
   - type: Geiger
+    attachedToSuit: true
 
 - type: entity
   parent: [ ClothingMaskGas, CentcommContraband ]

@@ -173,6 +173,19 @@ public sealed partial class DamageIconPrototype : StatusIconPrototype, IInheriti
     [AbstractDataField]
     public bool Abstract { get; private set; }
 }
+
+[Prototype]
+public sealed partial class ArchonClassIconPrototype : StatusIconPrototype, IInheritingPrototype
+{
+    /// <inheritdoc />
+    [ParentDataField(typeof(AbstractPrototypeIdArraySerializer<DamageIconPrototype>))]
+    public string[]? Parents { get; private set; }
+
+    /// <inheritdoc />
+    [NeverPushInheritance]
+    [AbstractDataField]
+    public bool Abstract { get; private set; }
+}
 //Rayten-end
 
 /// <summary>

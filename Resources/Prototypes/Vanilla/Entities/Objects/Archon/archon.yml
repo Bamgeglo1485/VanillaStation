@@ -9,6 +9,19 @@
     state: produce
   - type: Archon
     canBeHumanoidChance: 0.05
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.35
+        density: 50
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: MobCollision
+  - type: StatusIcon
 
 - type: entity
   parent: [SimpleSpaceMobBase, MobCombat]
@@ -30,9 +43,10 @@
       fix1:
         shape:
           !type:PhysShapeCircle
-          radius: 0.40
-          density: 80
-          mask:
-            - FlyingMobMask
-          layer:
-            - FlyingMobLayer
+          radius: 0.35
+        density: 50
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: StatusIcon

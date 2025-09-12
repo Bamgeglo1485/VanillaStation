@@ -20,13 +20,6 @@ public sealed partial class ArchonAnalyzerComponent : Component
     [ViewVariables]
     public EntityUid? LinkedArchon;
 
-
-    /// <summary>
-    /// Звук ну типа удачно
-    /// </summary>
-    [DataField]
-    public SoundSpecifier? SuccessSound = new SoundPathSpecifier("/Audio/Vanilla/Items/archonLoad.ogg");
-
     /// <summary>
     /// Прототип бумаги отчёта
     /// </summary>
@@ -46,14 +39,15 @@ public sealed partial class ArchonAnalyzerComponent : Component
     public string DocumentPrototype = "SynchronizedDocument";
 
     /// <summary>
+    /// Звук ну типа удачно
+    /// </summary>
+    [DataField]
+    public SoundSpecifier? SuccessSound = new SoundPathSpecifier("/Audio/Vanilla/Items/archonLoad.ogg");
+
+    /// <summary>
     /// Звук ну типо недуачно
     /// </summary>
     [DataField]
     public SoundSpecifier? DenySound = new SoundPathSpecifier("/Audio/Vanilla/Items/archonCancel.ogg");
 
-    /// <summary>
-    /// звук ну типо принтер
-    /// </summary>
-    [DataField("soundPrint")]
-    public SoundSpecifier? SoundPrint = new SoundPathSpecifier("/Audio/Machines/short_print_and_rip.ogg");
 }

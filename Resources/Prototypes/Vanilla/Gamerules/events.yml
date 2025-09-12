@@ -12,4 +12,4 @@
     startAudio:
       path: /Audio/Vanilla/Adminbuse/MTF_Arrive.ogg
       params:
-        volume: 4
+        volume: 0

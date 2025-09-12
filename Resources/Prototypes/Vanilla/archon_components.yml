@@ -14,12 +14,12 @@
           Radiation: 0
   chancedComponents:
     - chance: 0.4
-      danger: 3
+      danger: 5
       components:
         - type: RadiationSource
           intensity: 7
     - chance: 0.1
-      danger: 4
+      danger: 6
       components:
         - type: RadiationSource
           intensity: 10
@@ -37,16 +37,16 @@
       shootMinInterval: 90
   chancedComponents:
     - chance: 0.4
-      danger: 1
-      escape: 1
+      danger: 4
+      escape: 3
       components:
         - type: LightningArcShooter
           shootRange: 8
           shootMaxInterval: 40
           shootMinInterval: 10
     - chance: 0.2
-      danger: 2
-      escape: 2
+      danger: 5
+      escape: 4
       components:
         - type: LightningArcShooter
           shootRange: 13
@@ -63,7 +63,7 @@
     - type: RandomWalk
   chancedComponents:
     - chance: 0.4
-      escape: 1
+      escape: 2
       components:
         - type: RandomWalk
           maxStepCooldown: 1
@@ -86,7 +86,7 @@
       jumpMinInterval: 10
   chancedComponents:
     - chance: 0.4
-      escape: 1
+      escape: 3
       components:
         - type: ChaoticJump
           collisionMask: 0
@@ -95,7 +95,7 @@
           jumpMaxInterval: 180
           jumpMinInterval: 90
     - chance: 0.1
-      escape: 2
+      escape: 4
       components:
         - type: ChaoticJump
           collisionMask: 0
@@ -118,7 +118,7 @@
       movementVisibilityRate: 0.10
   chancedComponents:
     - chance: 0.4
-      escape: 1
+      escape: 2
       components:
         - type: Stealth
           minVisibility: 0.01
@@ -154,8 +154,8 @@
           - ItemMask
   chancedComponents:
     - chance: 0.4
-      escape: 1
-      danger: 1
+      escape: 2
+      danger: 2
       components:
         - type: Slippery
           staminaDamage: 50
@@ -163,8 +163,8 @@
             knockdownTime: 5.0
             launchForwardsMultiplier: 3.0
     - chance: 0.2
-      escape: 2
-      danger: 2
+      escape: 3
+      danger: 3
       components:
         - type: Slippery
           staminaDamage: 100
@@ -217,8 +217,8 @@
     - type: CombatMode
   chancedComponents:
     - chance: 0.4
-      escape: 2
-      danger: 1
+      escape: 5
+      danger: 2
       components:
         - type: GhostRole
           makeSentient: true
@@ -240,12 +240,12 @@
       reflectProb: 0.3
   chancedComponents:
     - chance: 0.4
-      danger: 1
+      danger: 2
       components:
         - type: Reflect
           reflectProb: 0.6
     - chance: 0.1
-      danger: 2
+      danger: 3
       components:
         - type: Reflect
           reflectProb: 0.9
@@ -310,15 +310,15 @@
     - type: RandomizeArchonComponents
   chancedComponents:
     - chance: 0.3
-      danger: 2
-      escape: 2
+      danger: 6
+      escape: 4
       components:
         - type: TimedSpawner
           prototypes:
           - SpawnMobXenoHard
     - chance: 0.3
-      danger: 4
-      escape: 1
+      danger: 8
+      escape: 3
       components:
         - type: TimedSpawner
           prototypes:
@@ -329,8 +329,8 @@
           prototypes:
           - ReagentSlime
     - chance: 0.3
-      danger: 2
-      escape: 2
+      danger: 6
+      escape: 4
       components:
         - type: TimedSpawner
           prototypes:
@@ -359,7 +359,7 @@
           prototypes:
           - PresentRandomUnsafe
     - chance: 0.001
-      danger: 6
+      danger: 10
       components:
         - type: TimedSpawner
           prototypes:
@@ -368,7 +368,7 @@
 # AI - Компоненты ИИ, щиткод немного
 
 - type: archonComponent
-  id: HTNAggessive
+  id: HTNAI
   tag: AI
   types:
     - Luminary
@@ -388,47 +388,30 @@
       factions:
       - AllHostile
     - type: CombatMode
+    - type: GhostRole
+      makeSentient: true
+      name: ghost-role-information-archon-angry-name
+      description: ghost-role-information-archon-angry-description
+      rules: ghost-role-information-antagonist-rules
+      raffle:
+        settings: short
   chancedComponents:
-    - chance: 0.4
-      escape: 2
-      danger: 1
+    - chance: 0.3
+      escape: 3
+      danger: 3
       components:
-        - type: GhostRole
-          makeSentient: true
-          name: ghost-role-information-archon-angry-name
-          description: ghost-role-information-archon-angry-description
-          rules: ghost-role-information-antagonist-rules
-          raffle:
-            settings: short
-
-- type: archonComponent
-  id: HTNNeutral
-  tag: AI
-  types:
-    - Luminary
-  escape: 3
-  danger: 2
-  components:
-    - type: DangerMob
-    - type: InputMover
-    - type: MobMover
-    - type: HTN
-      rootTask:
-        task: IdleCompound
-    - type: NpcFactionMember
-      factions:
-      - SimpleNeutral
-    - type: CombatMode
-    - type: InteractionPopup
-      successChance: 0.2
-      interactSuccessString: petting-success-soft-floofy
-      interactFailureString: petting-failure-bat
-      interactSuccessSpawn: EffectHearts
-  chancedComponents:
-    - chance: 0.4
-      escape: 2
-      danger: 1
-      components:
+        - type: HTN
+          rootTask:
+            task: IdleCompound
+        - type: NpcFactionMember
+          factions:
+          - SimpleNeutral
+        - type: CombatMode
+        - type: InteractionPopup
+          successChance: 0.2
+          interactSuccessString: petting-success-soft-floofy
+          interactFailureString: petting-failure-bat
+          interactSuccessSpawn: EffectHearts
         - type: GhostRole
           makeSentient: true
           name: ghost-role-information-archon-neutral-name
@@ -436,33 +419,15 @@
           rules: ghost-role-information-freeagent-rules
           raffle:
             settings: short
-
-- type: archonComponent
-  id: HTNPassive
-  tag: AI
-  types:
-    - Luminary
-  escape: 3
-  danger: 2
-  components:
-    - type: DangerMob
-    - type: InputMover
-    - type: MobMover
-    - type: HTN
-      rootTask:
-        task: IdleCompound
-    - type: NpcFactionMember
-      factions:
-      - Passive
-    - type: InteractionPopup
-      successChance: 0.2
-      interactSuccessString: petting-success-soft-floofy
-      interactFailureString: petting-failure-bat
-      interactSuccessSpawn: EffectHearts
-  chancedComponents:
-    - chance: 0.4
-      escape: 1
+    - chance: 0.2
+      escape: 3
       components:
+        - type: HTN
+          rootTask:
+            task: IdleCompound
+        - type: NpcFactionMember
+          factions:
+          - Passive
         - type: GhostRole
           makeSentient: true
           name: ghost-role-information-archon-passive-name
@@ -489,7 +454,7 @@
       reduction: 0
   chancedComponents:
     - chance: 0.4
-      danger: 2
+      danger: 5
       components:
         - type: Firestarter
           ignitionRadius: 8
@@ -508,7 +473,7 @@
       reduction: 0
   chancedComponents:
     - chance: 0.4
-      danger: 2
+      danger: 4
       components:
         - type: IgniteOnMeleeHit
           fireStacks: 2
@@ -525,8 +490,8 @@
     - type: MeleeThrowOnHit
   chancedComponents:
     - chance: 0.4
-      danger: 1
-      escape: 2
+      danger: 2
+      escape: 3
       components:
         - type: MeleeThrowOnHit
           speed: 10

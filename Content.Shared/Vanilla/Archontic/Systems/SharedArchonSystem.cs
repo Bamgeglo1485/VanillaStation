@@ -1,12 +1,15 @@
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Graphics;
 using Robust.Shared.Utility;
 using Robust.Shared.Random;
+using Robust.Shared.Timing;
 using Robust.Shared.Audio;
 
 using Content.Shared.Archontic.Components;
+using Content.Shared.Power.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Examine;
 using Content.Shared.Popups;
@@ -19,28 +22,36 @@ namespace Content.Shared.Archontic.Systems;
 
 public sealed partial class SharedArchonSystem : EntitySystem
 {
-
+    
+    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+    [Dependency] private readonly SharedPowerReceiverSystem _power = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly PaperSystem _paperSystem = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
+    [Dependency] private readonly IGameTiming _gameTiming = default!;
 
     public override void Initialize()
     {
         base.Initialize();
+
+        SubscribeLocalEvent<ArchonDataComponent, DirtyArchonEvent>(DirtyArchon);
 
         SubscribeLocalEvent<ArchonAnalyzerComponent, EntInsertedIntoContainerMessage>(OnItemSlotChanged);
         SubscribeLocalEvent<ArchonAnalyzerComponent, ExaminedEvent>(OnAnalyzerExamine);
 
         SubscribeLocalEvent<ArchonScannerComponent, ExaminedEvent>(OnScannerExamine);
         SubscribeLocalEvent<ArchonScannerComponent, AfterInteractEvent>(OnInteract);
+
+        SubscribeLocalEvent<ArchonBeaconComponent, ExaminedEvent>(OnBeaconExamine);
     }
 
     // Хз как это работает, мне это дикпик выдал
     public static readonly Regex ObjectNumberRegex = new Regex(@"Объект №:\s*ACO-\d+-NT", RegexOptions.IgnoreCase);
     public static readonly Regex ObjectNameRegex = new Regex(@"Название объекта:\s*.+", RegexOptions.IgnoreCase);
     public static readonly Regex ObjectClassRegex = new Regex(@"Класс объекта:\s*(Безопасный|Евклид|Кетер|Таумиэль)", RegexOptions.IgnoreCase);
+    public static readonly Regex ObjectStatusRegex = new Regex(@"Статус объекта:\s*(Под наблюдением)", RegexOptions.IgnoreCase);
     public static readonly Regex ContainmentRegex = new Regex(@"Особые условия содержания:\s*.{50,}", RegexOptions.IgnoreCase | RegexOptions.Singleline);
     public static readonly Regex DescriptionRegex = new Regex(@"Описание:\s*.{50,}", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
@@ -73,14 +84,36 @@ public sealed partial class SharedArchonSystem : EntitySystem
 
             _audio.PlayPvs(comp.ScanSound, uid);
             _popup.PopupEntity($"Архон просканирован, сигнатура: {comp.LinkedArchon.Value}", uid);
+
         }
-        else if (TryComp<ArchonAnalyzerComponent>(target, out var analyzerComp) && comp.LinkedArchon != null)
+        else if (TryComp<ArchonAnalyzerComponent>(target, out var analyzerComp) && comp.LinkedArchon != null && _power.IsPowered(target))
         {
 
             analyzerComp.LinkedArchon = comp.LinkedArchon;
 
             _audio.PlayPvs(comp.LoadSound, uid);
             _popup.PopupEntity("Сигнатура Архонта передана анализатору", uid);
+
+        }
+        else if (TryComp<ArchonBeaconComponent>(target, out var beaconComp) && TryComp<ArchonDataComponent>(comp.LinkedArchon, out var dataComp2) && comp.LinkedArchon != null && _power.IsPowered(target))
+        {
+
+            if (dataComp2.Document == null)
+                return;
+
+            beaconComp.LinkedArchon = comp.LinkedArchon;
+
+            if (dataComp2.Beacon != null && TryComp<ArchonBeaconComponent>(dataComp2.Beacon, out var beaconCompToNull))
+            {
+                beaconCompToNull.LinkedArchon = null;
+            }
+
+            dataComp2.Beacon = target;
+
+            _audio.PlayPvs(comp.LoadSound, uid);
+            _popup.PopupEntity("Сигнатура Архонта передана маяку", uid);
+
+            SetClass(target, beaconComp);
 
         }
     }
@@ -94,8 +127,6 @@ public sealed partial class SharedArchonSystem : EntitySystem
     /// </summary>
     private void OnItemSlotChanged(EntityUid uid, ArchonAnalyzerComponent comp, EntInsertedIntoContainerMessage args)
     {
-        if (!comp.Initialized && args.Entity == null)
-            return;
 
         var errors = new List<string> { };
 
@@ -109,7 +140,7 @@ public sealed partial class SharedArchonSystem : EntitySystem
             return;
         }
 
-        if (!TryComp<PaperComponent>(args.Entity, out var paperComp) || paperComp.Content == null)
+        if (!TryComp<PaperComponent>(args.Entity, out var paperComp))
         {
             _container.RemoveEntity(uid, args.Entity);
             _audio.PlayPvs(comp.DenySound, uid);
@@ -154,7 +185,7 @@ public sealed partial class SharedArchonSystem : EntitySystem
         var classMatch = ObjectClassRegex.Match(content);
         if (classMatch.Success)
         {
-            var objectClass = classMatch.Groups[1].Value; 
+            var objectClass = classMatch.Groups[1].Value;
             if (ArchonClasses.TryGetValue(objectClass, out var documentClass))
             {
                 if (documentClass != dataComp.Class)
@@ -208,6 +239,9 @@ public sealed partial class SharedArchonSystem : EntitySystem
         if (!ObjectNameRegex.IsMatch(content))
             errors.Add("Отсутствует наименование объекта.");
 
+        if (!ObjectStatusRegex.IsMatch(content))
+            errors.Add("Статус может быть только Под Наблюдением");
+
         if (!ObjectClassRegex.IsMatch(content))
             errors.Add("Ложный класс объекта. Допустимые: Безопасный, Евклид, Кетер, Таумиэль");
 
@@ -226,19 +260,16 @@ public sealed partial class SharedArchonSystem : EntitySystem
         var printed = Spawn(component.MachineOutput, Transform(uid).Coordinates);
 
         if (!TryComp<PaperComponent>(printed, out var paperComp))
+        {
+            QueueDel(printed);
             return printed;
+        }
 
         _metaData.SetEntityName(printed, ($"отчёт о анализе {component.LinkedArchon}"));
 
         var text = new StringBuilder();
 
         _paperSystem.SetContent((printed, paperComp), text.ToString());
-        _audio.PlayPvs(component.SoundPrint, uid,
-            AudioParams.Default
-            .WithVariation(0.25f)
-            .WithVolume(3f)
-            .WithRolloffFactor(2.8f)
-            .WithMaxDistance(4.5f));
 
         return printed;
     }
@@ -318,6 +349,14 @@ public sealed partial class SharedArchonSystem : EntitySystem
 
     }
 
+    private void OnBeaconExamine(EntityUid uid, ArchonBeaconComponent comp, ref ExaminedEvent args)
+    {
+        if (!args.IsInDetailsRange)
+            return;
+
+        ShowArchonID(uid, comp.LinkedArchon, ref args);
+    }
+
     private void ShowArchonID(EntityUid uid, EntityUid? linkedArchon, ref ExaminedEvent args)
     {
         if (!args.IsInDetailsRange)
@@ -331,5 +370,122 @@ public sealed partial class SharedArchonSystem : EntitySystem
     {
         RegisteredArchons.Clear();
         RegisteredNumbers.Clear();
+    }
+
+    /// <summary>
+    /// Дальше идут системы маяка
+    /// </summary>
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+        var query = EntityQueryEnumerator<ArchonBeaconComponent, TransformComponent>();
+        var curTime = _gameTiming.CurTime;
+
+        while (query.MoveNext(out var uid, out var comp, out var xform))
+        {
+            if (curTime < comp.NextUpdate)
+                continue;
+
+            comp.NextUpdate = curTime + TimeSpan.FromSeconds(comp.UpdateSpeed);
+
+            if (!_power.IsPowered(uid))
+            {
+                _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.NonPowered);
+                return;
+            }
+
+            if (!TryComp<ArchonDataComponent>(comp.LinkedArchon, out var dataComp))
+            {
+                _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.None);
+                return;
+            }
+
+            if (CheckInContainment(uid, comp, dataComp, xform))
+            {
+                int mod = 1;
+
+                if (comp.ModificatePointsByClass)
+                {
+                    mod = dataComp.Class switch
+                    {
+                        ArchonClass.Safe => 1,
+                        ArchonClass.Euclid => 2,
+                        ArchonClass.Keter => 3,
+                        ArchonClass.Thaumiel => 4,
+                    };
+                }
+
+                var points = comp.ResearchPointsPerSecond;
+                RaiseLocalEvent(uid, new BeaconPointAddEvent(points * comp.UpdateSpeed));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Устанавливает визуал класса
+    /// </summary>
+    private void SetClass(EntityUid uid, ArchonBeaconComponent comp)
+    {
+        if (!TryComp<ArchonDataComponent>(comp.LinkedArchon, out var dataComp))
+            return;
+
+        var visualState = dataComp.Class switch
+        {
+            ArchonClass.Safe => ArchonBeaconClasses.Safe,
+            ArchonClass.Euclid => ArchonBeaconClasses.Euclid,
+            ArchonClass.Keter => ArchonBeaconClasses.Keter,
+            ArchonClass.Thaumiel => ArchonBeaconClasses.Thaumiel
+        };
+
+        _appearance.SetData(uid, ArchonBeaconVisuals.Classes, visualState);
+    }
+
+    /// <summary>
+    /// Проверка состояний архонта - сбежал, на содержании, не найден/списан
+    /// </summary>
+    private bool CheckInContainment(EntityUid uid, ArchonBeaconComponent comp, ArchonDataComponent dataComp, TransformComponent xform)
+    {
+
+        if (dataComp.Document == null || dataComp.Expunged == true)
+        {
+            _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.None);
+            return false;
+        }
+
+        if (!TryComp<TransformComponent>(comp.LinkedArchon, out var archonXform))
+        {
+            _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.None);
+            return false;
+        }
+
+        var distance = (archonXform.WorldPosition - xform.WorldPosition).Length();
+
+        if (distance > comp.Radius && !dataComp.Expunged)
+        {
+            comp.Breached = true;
+
+            _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.Breach);
+            return false;
+        }
+
+        if (comp.Breached == true)
+        {
+            comp.Breached = false;
+
+            SetClass(uid, comp);
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Дальше идут системы архонт генерации
+    /// </summary>
+    ///
+
+    private void DirtyArchon(EntityUid uid, ArchonDataComponent comp, DirtyArchonEvent args)
+    {
+        Dirty(uid, comp);
     }
 }

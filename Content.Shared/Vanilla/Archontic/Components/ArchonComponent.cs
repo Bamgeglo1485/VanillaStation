@@ -1,4 +1,5 @@
 using Robust.Shared.Prototypes;
+using Robust.Shared.GameStates;
 using Robust.Shared.Utility;
 using Robust.Shared.Audio;
 
@@ -59,4 +60,8 @@ public sealed partial class ArchonComponent : Component
     [DataField]
     public string RebirthPrototype = "EffectArchonDeath";
 
+}
+
+public sealed class DirtyArchonEvent : EntityEventArgs
+{
 }

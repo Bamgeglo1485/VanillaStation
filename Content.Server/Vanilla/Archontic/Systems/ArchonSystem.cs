@@ -1,11 +1,3 @@
-using Robust.Shared.Audio.Systems;
-using Robust.Shared.GameObjects;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Utility;
-using Robust.Shared.Random;
-using Robust.Shared.Maths;
-using Robust.Shared.IoC;
-
 using Content.Shared.Archontic.Components;
 using Content.Shared.Movement.Components;
 using Content.Shared.Archontic.Systems;
@@ -19,7 +11,16 @@ using Content.Shared.Damage;
 using Content.Shared.Paper;
 using Content.Shared.Atmos;
 
+using Robust.Shared.Audio.Systems;
+using Robust.Shared.GameObjects;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Utility;
+using Robust.Shared.Random;
+using Robust.Shared.Maths;
+using Robust.Shared.IoC;
+
 using Content.Server.Spawners.Components;
+using Content.Server.Research.Systems;
 using Content.Server.Destructible;
 
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ public sealed partial class ArchonSystem : EntitySystem
     [Dependency] private readonly SharedArchonSystem _archonSystem = default!;
     [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
     [Dependency] private readonly PaperSystem _paperSystem = default!;
+    [Dependency] private readonly ResearchSystem _research = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
 
     public override void Initialize()
@@ -45,6 +47,8 @@ public sealed partial class ArchonSystem : EntitySystem
         SubscribeLocalEvent<ArchonComponent, MapInitEvent>(OnMapInit);
 
         SubscribeLocalEvent<ArchonDocumentComponent, ComponentShutdown>(OnDocumentDestroy);
+
+        SubscribeLocalEvent<ArchonBeaconComponent, BeaconPointAddEvent>(AddResearchPoints);
 
         SubscribeLocalEvent<RoundStartedEvent>(OnRoundEnded);
     }
@@ -95,6 +99,8 @@ public sealed partial class ArchonSystem : EntitySystem
 
         if (TryComp<RandomizeArchonComponentsComponent>(ent, out _))
             RandomizeComponent(ent, dataComp);
+
+        RaiseLocalEvent(ent, new DirtyArchonEvent { });
     }
 
     /// <summary>
@@ -118,14 +124,16 @@ public sealed partial class ArchonSystem : EntitySystem
 
             var proto = _random.Pick(availablePrototypes);
 
+            int addingDanger = proto.Danger;
+            int addingEscape = proto.Escape;
+            int additiveDanger = 0; 
+            int additiveEscape = 0; 
+
             // Сначала добавляем основные компоненты
             foreach (var (compType, component) in proto.Components)
             {
                 EntityManager.AddComponent(ent, component, overwrite: true);
             }
-
-            dataComp.Danger += proto.Danger;
-            dataComp.Escape += proto.Escape;
 
             // Затем проверяем и добавляем ChancedComponents
             foreach (var chancedComponent in proto.ChancedComponents)
@@ -137,11 +145,17 @@ public sealed partial class ArchonSystem : EntitySystem
                         EntityManager.AddComponent(ent, component, overwrite: true);
                     }
 
-                    dataComp.Danger += chancedComponent.Danger;
-                    dataComp.Escape += chancedComponent.Escape;
+                    addingDanger = chancedComponent.Danger;
+                    addingEscape = chancedComponent.Escape;
+                    additiveDanger += chancedComponent.AdditiveDanger; 
+                    additiveEscape += chancedComponent.AdditiveEscape; 
+
                     break;
                 }
             }
+
+            dataComp.Danger += addingDanger + additiveDanger;
+            dataComp.Escape += addingEscape + additiveEscape;
 
             dataComp.AddedComponents.Add(proto.ID);
         }
@@ -446,11 +460,23 @@ public sealed partial class ArchonSystem : EntitySystem
         if (documentComp.Archon != ent.Owner)
             return;
 
+        var content = paperComp.Content;
+        if (!string.IsNullOrEmpty(content))
+        {
+            content = content.Replace("Статус объекта: Под наблюдением", "Статус объекта: Списан");
+            _paperSystem.SetContent(documentUid, content);
+        }
+
         _paperSystem.TryStamp((documentUid, paperComp), new StampDisplayInfo
         {
             StampedName = "stamp-component-stamped-name-expunged",
             StampedColor = Color.FromHex("#8B0000")
         }, "paper_stamp-expunged");
+
+        if (TryComp<ArchonComponent>(ent, out var comp))
+        {
+            Spawn(comp.RebirthPrototype, Transform(ent).Coordinates);
+        }
 
         QueueDel(ent);
     }
@@ -475,6 +501,20 @@ public sealed partial class ArchonSystem : EntitySystem
     {
 
         _archonSystem.ClearData();
+
+    }
+
+    /// <summary>
+    /// Далее системы маяка
+    /// </summary>
+    /// 
+    private void AddResearchPoints(EntityUid uid, ArchonBeaconComponent comp, BeaconPointAddEvent args)
+    {
+
+        if (!_research.TryGetClientServer(uid, out var server, out var serverComponent))
+            return;
+
+        _research.ModifyServerPoints(server.Value, args.Points, serverComponent);
 
     }
 }

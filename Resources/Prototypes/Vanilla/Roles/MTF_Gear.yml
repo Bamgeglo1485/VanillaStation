@@ -6,7 +6,7 @@
     head: ClothingHeadHelmetMTF
     mask: ClothingMaskGasMTF
     outerClothing: ClothingOuterArmorMTF
-    eyes: ClothingEyesMedSecThermalGlasses
+    eyes: ClothingEyesGlassesArchonVisorMTF
     gloves: ClothingHandsGlovesCombat
     ears: ClothingHeadsetCentCom
     id: MTFSoldierKeyCard
