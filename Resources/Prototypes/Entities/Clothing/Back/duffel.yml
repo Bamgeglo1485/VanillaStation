@@ -62,6 +62,12 @@
   - type: Storage
     storageOpenSound:
       collection: BikeHorn
+      params:
+        variation: 0.125
+    storageInsertSound:
+      collection: FootstepClown
+      params:
+        variation: 0.125
 
 - type: entity
   parent: [ClothingBackpackDuffel, FirstSecurityContraband]
@@ -250,6 +256,9 @@
   - type: ClothingSpeedModifier
     sprintModifier: 1 # makes its stats identical to other variants of bag of holding
   - type: HeldSpeedModifier
+  - type: Tag # Rayten
+    tags:
+    - BagOfHolding
 
 - type: entity
   parent: [ ClothingBackpackDuffel, CentcommContraband ]

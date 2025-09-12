@@ -1,13 +1,17 @@
 #Normal windoors
 - type: entity
   id: BaseWindoor
-  parent: BaseStructure
+  parent: [BaseDeltaPressureGlassQuarter, BaseStructure]
   abstract: true
   placement:
     mode: SnapgridCenter
   components:
   - type: RequiresSkill
     RequiresEngineeringLevel: 2
+  - type: Anchorable
+    flags:
+    - Anchorable
+  - type: Rotatable
   - type: MeleeSound
     soundGroups:
       Brute:
@@ -172,7 +176,7 @@
 
 - type: entity
   id: BaseSecureWindoor
-  parent: BaseWindoor
+  parent: [BaseDeltaPressureReinforcedGlassQuarter, BaseWindoor]
   abstract: true
   components:
   - type: Sprite
@@ -244,7 +248,7 @@
 #Plasma Windoors
 - type: entity
   id: BasePlasmaWindoor
-  parent: BaseWindoor
+  parent: [BaseDeltaPressurePlasmaQuarter, BaseWindoor]
   abstract: true
   components:
   - type: Sprite
@@ -309,7 +313,7 @@
 
 - type: entity
   id: BaseSecurePlasmaWindoor
-  parent: BaseSecureWindoor
+  parent: [BaseDeltaPressureReinforcedPlasmaQuarter, BaseSecureWindoor]
   abstract: true
   components:
   - type: Sprite
@@ -381,7 +385,7 @@
 #Uranium Windoors
 - type: entity
   id: BaseUraniumWindoor
-  parent: BaseWindoor
+  parent: [BaseDeltaPressurePlasmaQuarter, BaseWindoor]
   abstract: true
   components:
   - type: Sprite
@@ -446,7 +450,7 @@
 
 - type: entity
   id: BaseSecureUraniumWindoor
-  parent: BaseSecureWindoor
+  parent: [BaseDeltaPressureReinforcedPlasmaQuarter, BaseSecureWindoor]
   abstract: true
   components:
   - type: Sprite

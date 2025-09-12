@@ -5,11 +5,6 @@
   description: You wear this on your back and put items into it.
   suffix: Chameleon
   components:
-    - type: Competitive #Rayten
-      difficult: 1
-      actualName: Сумка-Хамеллион
-      hiddenDesc: hidden-desc-Chameleon
-      enemyTechnology: true
     - type: Tag
       tags: [] # ignore "WhitelistChameleon" tag
     - type: Sprite
@@ -101,6 +96,7 @@
     - WhitelistChameleon
     - CorgiWearable
     - PetOnly
+    - ScurretWearable
   - type: Construction
     graph: ClothingBagPet
     node: bagPet
@@ -126,3 +122,6 @@
         location: Middle
       extra_hand_2:
         location: Middle
+  - type: Tag # Rayten
+    tags:
+    - HARMPACK

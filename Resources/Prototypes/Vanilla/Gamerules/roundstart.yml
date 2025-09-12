@@ -49,5 +49,6 @@
 - type: entity
   id: TeamDeathMatch
   parent: BaseGameRule
-  # components: мне просто впадлу выносить это в открытую репу
-  # - type: TDMRule
+  components:
+  - type: TDMRule
+  - type: TTTRule

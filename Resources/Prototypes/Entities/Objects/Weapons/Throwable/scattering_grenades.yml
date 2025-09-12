@@ -87,6 +87,7 @@
     - timer
     sound:
       path: "/Audio/Machines/door_lock_off.ogg"
+    positional: true
 
 - type: entity
   parent: [ScatteringGrenadeBase, SecondContraband]
@@ -114,6 +115,7 @@
     - timer
     sound:
       path: "/Audio/Machines/door_lock_off.ogg"
+    positional: true
   - type: StaticPrice
     price: 2500
 
@@ -140,6 +142,7 @@
     - timer
     sound:
       path: "/Audio/Items/bikehorn.ogg"
+    positional: true
 
 - type: entity
   parent: [SoapSyndie, ScatteringGrenadeBase, FirstContraband]
@@ -147,11 +150,6 @@
   name: slipocalypse clustersoap
   description: Spreads small pieces of syndicate soap over an area upon landing on the floor.
   components:
-  - type: Competitive #Rayten
-    actualName: Кластерное мыло Скользкопокалипсис
-    hiddenDesc: hidden-desc-SlipocalypseClusterSoap
-    difficult: 1
-    enemyTechnology: false
   - type: Sprite
     sprite: Objects/Specific/Janitorial/soap.rsi
     layers:
@@ -172,6 +170,7 @@
     - timer
     sound:
       path: "/Audio/Effects/flash_bang.ogg"
+    positional: true
   - type: StaticPrice
     price: 1000
 
@@ -204,3 +203,4 @@
     - timer
     sound:
       path: "/Audio/Weapons/Guns/Gunshots/batrifle.ogg"
+    positional: true

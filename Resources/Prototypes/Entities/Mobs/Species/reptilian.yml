@@ -11,6 +11,7 @@
     - Snout
     - HeadTop
     - HeadSide
+    - Tail
     undergarmentBottom: UndergarmentBottomBoxersReptilian
   - type: Hunger
   - type: Puller
@@ -96,12 +97,13 @@
             state: shoes
     # Corvax-Displacements-End
     # Rayten-start
-  - type: NightVision 
+  - type: NightVision
   - type: PointLight
     radius: 9
     energy: 1.5
     color: "#013220"
     enabled: false
+    netsync: false
   - type: PassiveDamage
     allowedStates:
     - Alive

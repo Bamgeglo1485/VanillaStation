@@ -1427,6 +1427,25 @@
     state: pda-seniorofficer
 
 - type: entity
+  parent: BasePDA
+  id: SeniorCourierPDA
+  name: senior courier PDA
+  description: Smells like postage stamps and shuttle fuel.
+  components:
+  - type: Pda
+    id: CargoIDCard
+  - type: Appearance
+    appearanceDataInit:
+     enum.PdaVisuals.PdaType:
+       !type:String
+       pda-seniorcourier
+  - type: PdaBorderColor
+    borderColor: "#e39751"
+    accentVColor: "#DFDFDF"
+  - type: Icon
+    state: pda-seniorcourier
+
+- type: entity
   parent: [ FirstContraband, SyndiPDA ]
   id: PiratePDA
   name: pirate PDA
@@ -1467,17 +1486,12 @@
       - MedTekCartridge
 
 - type: entity
-  parent: [BasePDA, VoiceLock]
+  parent: [BasePDA, SelectableLock]
   id: ChameleonPDA
   name: passenger PDA
   description: Why isn't it gray?
   suffix: Chameleon
   components:
-  - type: Competitive #Rayten
-    difficult: 1
-    actualName: КПК-Хамеллион
-    hiddenDesc: hidden-desc-Chameleon
-    enemyTechnology: true
   - type: PdaBorderColor
     borderColor: "#717059"
   - type: Tag
