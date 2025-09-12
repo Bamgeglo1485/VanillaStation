@@ -6,13 +6,14 @@ using Content.Shared.Movement.Systems;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Vanilla.Warmer;
 using Content.Shared.Weapons.Melee;
+using Content.Shared.Interaction;
 using Content.Shared.GameTicking;
 using Content.Shared.Damage;
 using Content.Shared.Paper;
 using Content.Shared.Atmos;
 
-using Robust.Shared.Audio.Systems;
 using Robust.Shared.GameObjects;
+using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Robust.Shared.Random;
@@ -20,11 +21,10 @@ using Robust.Shared.Maths;
 using Robust.Shared.IoC;
 
 using Content.Server.Spawners.Components;
-using Content.Server.Research.Systems;
 using Content.Server.Destructible;
 
-using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Content.Server.Archontic.Systems;
 
@@ -34,21 +34,26 @@ public sealed partial class ArchonSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly DamageableSystem _damageableSystem = default!;
     [Dependency] private readonly SharedArchonSystem _archonSystem = default!;
-    [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
     [Dependency] private readonly PaperSystem _paperSystem = default!;
-    [Dependency] private readonly ResearchSystem _research = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
+        /// <summary>
+        /// ArchonSystem
+        /// </summary>
         SubscribeLocalEvent<ArchonComponent, DamageChangedEvent>(OnDamage);
         SubscribeLocalEvent<ArchonComponent, MapInitEvent>(OnMapInit);
 
         SubscribeLocalEvent<ArchonDocumentComponent, ComponentShutdown>(OnDocumentDestroy);
 
-        SubscribeLocalEvent<ArchonBeaconComponent, BeaconPointAddEvent>(AddResearchPoints);
+        /// <summary>
+        /// ArchonSystem.Research
+        /// </summary>
+        SubscribeLocalEvent<ArchonAnalyzerComponent, EntInsertedIntoContainerMessage>(OnItemSlotChanged);
+        SubscribeLocalEvent<ArchonScannerComponent, AfterInteractEvent>(OnInteract);
 
         SubscribeLocalEvent<RoundStartedEvent>(OnRoundEnded);
     }
@@ -100,7 +105,7 @@ public sealed partial class ArchonSystem : EntitySystem
         if (TryComp<RandomizeArchonComponentsComponent>(ent, out _))
             RandomizeComponent(ent, dataComp);
 
-        RaiseLocalEvent(ent, new DirtyArchonEvent { });
+        _archonSystem.DirtyArchon(ent, dataComp);
     }
 
     /// <summary>
@@ -463,7 +468,7 @@ public sealed partial class ArchonSystem : EntitySystem
         var content = paperComp.Content;
         if (!string.IsNullOrEmpty(content))
         {
-            content = content.Replace("Статус объекта: Под наблюдением", "Статус объекта: Списан");
+            content = content.Replace("Статус объекта: Под наблюдением", "Статус объекта: [color=#cc0836]Списан[/color]");
             _paperSystem.SetContent(documentUid, content);
         }
 
@@ -492,29 +497,5 @@ public sealed partial class ArchonSystem : EntitySystem
             return;
 
         dataComp.Expunged = true;
-    }
-
-    /// <summary>
-    /// Очистка зарегистрированных номеров и айди архонтов
-    /// </summary>
-    private void OnRoundEnded (RoundStartedEvent args)
-    {
-
-        _archonSystem.ClearData();
-
-    }
-
-    /// <summary>
-    /// Далее системы маяка
-    /// </summary>
-    /// 
-    private void AddResearchPoints(EntityUid uid, ArchonBeaconComponent comp, BeaconPointAddEvent args)
-    {
-
-        if (!_research.TryGetClientServer(uid, out var server, out var serverComponent))
-            return;
-
-        _research.ModifyServerPoints(server.Value, args.Points, serverComponent);
-
     }
 }

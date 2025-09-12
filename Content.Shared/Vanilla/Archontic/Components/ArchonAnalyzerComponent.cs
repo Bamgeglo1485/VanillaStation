@@ -1,6 +1,5 @@
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
-using Content.Shared.Containers.ItemSlots;
-using Content.Shared.Archontic.Systems;
+using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Robust.Shared.Audio;
@@ -10,7 +9,7 @@ namespace Content.Shared.Archontic.Components;
 /// <summary>
 /// Стационарная штука, которая анализируют документы
 /// </summary>
-[RegisterComponent, Access(typeof(SharedArchonSystem))]
+[RegisterComponent, NetworkedComponent]
 public sealed partial class ArchonAnalyzerComponent : Component
 {
 
@@ -19,6 +18,12 @@ public sealed partial class ArchonAnalyzerComponent : Component
     /// </summary>
     [ViewVariables]
     public EntityUid? LinkedArchon;
+
+    /// <summary>
+    /// Контейнер для документов
+    /// </summary>
+    [DataField]
+    public string SlotId = new("paperSlot");
 
     /// <summary>
     /// Прототип бумаги отчёта

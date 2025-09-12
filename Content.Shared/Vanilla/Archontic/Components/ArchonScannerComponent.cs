@@ -1,6 +1,6 @@
 using Content.Shared.Containers.ItemSlots;
-using Content.Shared.Archontic.Systems;
 using Robust.Shared.Prototypes;
+using Robust.Shared.GameStates;
 using Robust.Shared.Utility;
 using Robust.Shared.Audio;
 
@@ -9,7 +9,7 @@ namespace Content.Shared.Archontic.Components;
 /// <summary>
 /// Портативная штука, которая сканирует анхонты для дальнейшей привязки к оборудованиям
 /// </summary>
-[RegisterComponent, Access(typeof(SharedArchonSystem))]
+[RegisterComponent, NetworkedComponent]
 public sealed partial class ArchonScannerComponent : Component
 {
 

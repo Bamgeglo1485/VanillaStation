@@ -61,7 +61,3 @@ public sealed partial class ArchonComponent : Component
     public string RebirthPrototype = "EffectArchonDeath";
 
 }
-
-public sealed class DirtyArchonEvent : EntityEventArgs
-{
-}

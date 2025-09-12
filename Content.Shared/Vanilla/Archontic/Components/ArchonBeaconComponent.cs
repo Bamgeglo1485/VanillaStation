@@ -1,5 +1,3 @@
-using Content.Shared.Archontic.Systems;
-
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 using Robust.Shared.Serialization;
 using Robust.Shared.GameStates;
@@ -10,7 +8,7 @@ namespace Content.Shared.Archontic.Components;
 /// <summary>
 /// Стационарная штука, которая приносит очки, если архонт в радиусе действия
 /// </summary>
-[RegisterComponent, NetworkedComponent, Access(typeof(SharedArchonSystem))]
+[RegisterComponent, NetworkedComponent]
 public sealed partial class ArchonBeaconComponent : Component
 {
 
@@ -48,16 +46,6 @@ public sealed partial class ArchonBeaconComponent : Component
     public int UpdateSpeed = 5;
     [DataField("nextUpdate", customTypeSerializer: typeof(TimeOffsetSerializer))]
     public TimeSpan NextUpdate;
-}
-
-public sealed class BeaconPointAddEvent : EntityEventArgs
-{
-    public int Points = 5;
-
-    public BeaconPointAddEvent(int points)
-    {
-        Points = points;
-    }
 }
 
 [Serializable, NetSerializable]

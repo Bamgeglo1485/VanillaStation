@@ -41,13 +41,13 @@ public sealed partial class ArchonDataComponent : Component
     /// <summary>
     /// Синхронизированный документ
     /// </summary>
-    [ViewVariables]
+    [ViewVariables, AutoNetworkedField]
     public EntityUid? Document;
 
     /// <summary>
     /// К какому маяку привязан
     /// </summary>
-    [ViewVariables]
+    [ViewVariables, AutoNetworkedField]
     public EntityUid? Beacon;
 
     /// <summary>
