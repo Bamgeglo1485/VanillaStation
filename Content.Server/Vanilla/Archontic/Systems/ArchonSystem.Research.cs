@@ -239,7 +239,7 @@ public sealed partial class ArchonSystem : EntitySystem
 
         QueueDel(args.Entity);
 
-        _archonSystem.DirtyArchon(comp.LinkedArchon, dataComp);
+        _archonSystem.DirtyArchon(comp.LinkedArchon.Value, dataComp);
 
         SetSuccess(Print(uid, comp), errors);
     }
@@ -368,58 +368,6 @@ public sealed partial class ArchonSystem : EntitySystem
         };
 
         _appearance.SetData(uid, ArchonBeaconVisuals.Classes, visualState);
-    }
-
-    /// <summary>
-    /// Дальше идут системы маяка
-    /// </summary>
-
-    public override void Update(float frameTime)
-    {
-        base.Update(frameTime);
-        var query = EntityQueryEnumerator<ArchonBeaconComponent, TransformComponent>();
-        var curTime = _gameTiming.CurTime;
-
-        while (query.MoveNext(out var uid, out var comp, out var xform))
-        {
-            if (curTime < comp.NextUpdate)
-                continue;
-
-            comp.NextUpdate = curTime + TimeSpan.FromSeconds(comp.UpdateSpeed);
-
-            if (!_power.IsPowered(uid))
-            {
-                _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.NonPowered);
-                return;
-            }
-
-            if (!TryComp<ArchonDataComponent>(comp.LinkedArchon, out var dataComp))
-            {
-                _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.None);
-                return;
-            }
-
-            if (CheckInContainment(uid, comp, dataComp, xform))
-            {
-                int mod = 1;
-
-                if (comp.ModificatePointsByClass)
-                {
-                    mod = dataComp.Class switch
-                    {
-                        ArchonClass.Safe => 1,
-                        ArchonClass.Euclid => 2,
-                        ArchonClass.Keter => 3,
-                        ArchonClass.Thaumiel => 4,
-                    };
-                }
-
-                if (!_research.TryGetClientServer(uid, out var server, out var serverComponent))
-                    return;
-
-                _research.ModifyServerPoints(server.Value, comp.ResearchPointsPerSecond * mod, serverComponent);
-            }
-        }
     }
 
     /// <summary>

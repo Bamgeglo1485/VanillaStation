@@ -20,6 +20,7 @@
   id: MTFSoldier
   inhand:
   - WeaponSubMachineGunAtreides
+  - WeaponMicroHid
 
 # Коммандос
 - type: startingGear
@@ -31,3 +32,4 @@
     id: MTFCommandosKeyCard
   inhand:
   - WeaponRifleM90GrenadeLauncher
+  - WeaponMicroHid

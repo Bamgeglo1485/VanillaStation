@@ -1,10 +1,11 @@
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 using Robust.Shared.Prototypes;
 using Robust.Shared.GameStates;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Archontic.Components;
 
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState, AutoGenerateComponentPause]
 public sealed partial class ArchonDataComponent : Component
 {
 
@@ -25,6 +26,24 @@ public sealed partial class ArchonDataComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public List<ArchonType> Types = new();
+
+    /// <summary>
+    /// Состояние архонта. Enum ArchonState
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public ArchonState State = new();
+
+    /// <summary>
+    /// Лень объяснять, используется для первичных действий при переходе. Enum ArchonState
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public ArchonState LastState = new();
+
+    /// <summary>
+    /// Использует ли состояния архонта
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool HaveStates = true;
 
     /// <summary>
     /// Гуманоидный ли объект
@@ -49,6 +68,12 @@ public sealed partial class ArchonDataComponent : Component
     /// </summary>
     [ViewVariables, AutoNetworkedField]
     public EntityUid? Beacon;
+
+    /// <summary>
+    /// Энтити после полиморфа, то есть стазисный объект
+    /// </summary>
+    [ViewVariables]
+    public EntityUid? PolymorphEntity;
 
     /// <summary>
     /// Список добавленных компонентов
@@ -79,6 +104,31 @@ public sealed partial class ArchonDataComponent : Component
     /// </summary>
     [DataField]
     public int EscapeLimit = 5;
+
+    /// <summary>
+    /// Прототип стазиса, должен быть прототипом полиморфа
+    /// </summary>
+    [DataField]
+    public string StasisPrototype = "ArchonStasis";
+
+    /// <summary>
+    /// Длительность стазиса
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public TimeSpan StasisDelay = TimeSpan.FromSeconds(20);
+
+    /// <summary>
+    /// Сколько раз в него попадал ХИД снаряд
+    /// </summary>
+    [ViewVariables]
+    public int StasisHits = 0;
+
+    /// <summary>
+    /// Когда он выйдет из стазиса
+    /// </summary>
+    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
+    [AutoNetworkedField, AutoPausedField]
+    public TimeSpan StasisExit = TimeSpan.Zero;
 
     /// <summary>
     /// Ну логика объяснена в основном компоненте
@@ -117,4 +167,11 @@ public enum ArchonDestructibility : byte
     Hard, // От 300 до 700, стамина 400-800
     Invincible, // от 5000 до 10000
     Rebirth // После уничтожения перерождается с несколькими новыми компонентами, но после утрачивает эту способность
+}
+
+public enum ArchonState : byte
+{
+    Stasis, // Объект никак не влияет на внешние факторы
+    Basic, // Обычне состояние
+    Awake // Пробуждение. Объект не может перейти в стазис и хп и стамина умножаются
 }

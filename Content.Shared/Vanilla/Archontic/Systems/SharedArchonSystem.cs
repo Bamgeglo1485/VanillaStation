@@ -16,8 +16,8 @@ public sealed partial class SharedArchonSystem : EntitySystem
         SubscribeLocalEvent<ArchonAnalyzerComponent, ExaminedEvent>(OnAnalyzerExamine);
         SubscribeLocalEvent<ArchonScannerComponent, ExaminedEvent>(OnScannerExamine);
         SubscribeLocalEvent<ArchonBeaconComponent, ExaminedEvent>(OnBeaconExamine);
-    }
 
+    }
 
     private void OnAnalyzerExamine(EntityUid uid, ArchonAnalyzerComponent comp, ref ExaminedEvent args)
     {
@@ -25,14 +25,12 @@ public sealed partial class SharedArchonSystem : EntitySystem
         ShowArchonID(uid, comp.LinkedArchon, ref args);
 
     }
-
     private void OnScannerExamine(EntityUid uid, ArchonScannerComponent comp, ref ExaminedEvent args)
     {
 
         ShowArchonID(uid, comp.LinkedArchon, ref args);
 
     }
-
     private void OnBeaconExamine(EntityUid uid, ArchonBeaconComponent comp, ref ExaminedEvent args)
     {
         if (!args.IsInDetailsRange)
@@ -51,10 +49,8 @@ public sealed partial class SharedArchonSystem : EntitySystem
     }
 
     /// <summary>
-    /// Дальше идут системы архонт генерации
+    /// Синхронизирует данные архонта с клиентом
     /// </summary>
-    ///
-
     public void DirtyArchon(EntityUid uid, ArchonDataComponent comp)
     {
         Dirty(uid, comp);

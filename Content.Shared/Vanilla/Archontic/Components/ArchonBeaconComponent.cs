@@ -42,10 +42,6 @@ public sealed partial class ArchonBeaconComponent : Component
     [DataField]
     public bool Breached = false;
 
-    [DataField("updateSpeed")]
-    public int UpdateSpeed = 5;
-    [DataField("nextUpdate", customTypeSerializer: typeof(TimeOffsetSerializer))]
-    public TimeSpan NextUpdate;
 }
 
 [Serializable, NetSerializable]

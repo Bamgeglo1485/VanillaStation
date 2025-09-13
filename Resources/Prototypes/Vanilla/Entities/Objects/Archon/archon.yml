@@ -50,3 +50,13 @@
         layer:
         - MobLayer
   - type: StatusIcon
+
+- type: entity
+  parent: BaseItem
+  id: ArchonStasis
+  name: дестабилизрованный архонт
+  description: Архонт, временно потерявший синхронизацию с редспейсом. Его стоит поместить под содержание, пока он не поместил тебя... Прямиком в ад.
+  components:
+  - type: Sprite
+    sprite: Vanilla/Effects/ArchonEffects.rsi
+    state: stasis
