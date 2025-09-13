@@ -32,7 +32,7 @@ public sealed partial class ArchonSystem : EntitySystem
     [Dependency] private readonly IGameTiming _gameTiming = default!;
 
     public static readonly Regex ObjectNumberRegex = new Regex(@"Объект №:\s*ACO-\d+-NT", RegexOptions.IgnoreCase);
-    public static readonly Regex ObjectNameRegex = new Regex(@"Название объекта:\s*.+", RegexOptions.IgnoreCase);
+    public static readonly Regex ObjectNameRegex = new Regex(@"Название объекта:\s*(.{1,20})", RegexOptions.IgnoreCase);
     public static readonly Regex ObjectClassRegex = new Regex(@"Класс объекта:\s*(Безопасный|Евклид|Кетер|Таумиэль)", RegexOptions.IgnoreCase);
     public static readonly Regex ObjectStatusRegex = new Regex(@"Статус объекта:\s*(Под наблюдением)", RegexOptions.IgnoreCase);
     public static readonly Regex ContainmentRegex = new Regex(@"Особые условия содержания:\s*.{50,}", RegexOptions.IgnoreCase | RegexOptions.Singleline);
@@ -168,6 +168,14 @@ public sealed partial class ArchonSystem : EntitySystem
             errors.Add("Данный архонт уже зарегистрирован в системе");
         }
 
+        var nameMatch = ObjectNameRegex.Match(content);
+        var objectName = nameMatch.Groups[1].Value.Trim();
+
+        if (objectName.Length > 20)
+        {
+            errors.Add("Название объекта не должно превышать 20 символов");
+        }
+
         if (errors.Count > 0)
         {
             _audio.PlayPvs(comp.DenySound, uid);
@@ -189,8 +197,6 @@ public sealed partial class ArchonSystem : EntitySystem
                 if (documentClass != dataComp.Class)
                 {
                     errors.Add($"Класс объекта не соответствует предпологаемым. Предположительный ID класса: {dataComp.Class}");
-
-                    content = content.Replace("Статус объекта: Под наблюдением", "Статус объекта: [color=darkred]Списан[/color]");
                 }
                 else
                 {
@@ -212,6 +218,8 @@ public sealed partial class ArchonSystem : EntitySystem
                 _paperSystem.SetContent(paper, content);
             }
         }
+
+        _metaData.SetEntityName(comp.LinkedArchon.Value, objectName);
 
         RegisteredNumbers.Add(numberMatch.Value.Trim());
         RegisteredArchons.Add(comp.LinkedArchon.Value);
@@ -239,9 +247,11 @@ public sealed partial class ArchonSystem : EntitySystem
 
         QueueDel(args.Entity);
 
+
         _archonSystem.DirtyArchon(comp.LinkedArchon.Value, dataComp);
 
         SetSuccess(Print(uid, comp), errors);
+
     }
 
     private List<string> CheckDocumentFormat(string content)
@@ -252,7 +262,9 @@ public sealed partial class ArchonSystem : EntitySystem
             errors.Add("Неверный формат номера объекта. Требуется: 'Объект №: ACO-ЧИСЛО-NT'");
 
         if (!ObjectNameRegex.IsMatch(content))
+        {
             errors.Add("Отсутствует наименование объекта.");
+        }
 
         if (!ObjectStatusRegex.IsMatch(content))
             errors.Add("Отсутствует или неправилен статус объекта. Статус может быть только Под Наблюдением");
