@@ -15,7 +15,7 @@ public sealed partial class StasisArchonOnCollideComponent : Component
     /// Сколько максимум раз можно застрелить 1 архонт
     /// </summary>
     [ViewVariables]
-    public int MaxHits = 3;
+    public int MaxHits = 2;
 
     /// <summary>
     /// Длительность стазиса

@@ -52,7 +52,7 @@ public sealed class AutoEyeClosingSystem : EntitySystem
 
             _eyeClosingSystem.SetEyelids(uid, true);
 
-            _blinkEndTimes[uid] = curTime + TimeSpan.FromSeconds(BlinkDuration);
+            blinkEndTimes[uid] = curTime + TimeSpan.FromSeconds(BlinkDuration);
         }
 
         nextBlinkTime = curTime + TimeSpan.FromSeconds(BlinkInterval);

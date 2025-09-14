@@ -39,6 +39,9 @@ public sealed class ShowArchonClassSystem : EquipmentHudSystem<ShowArchonClassCo
 
         ProtoId<ArchonClassIconPrototype> iconId;
 
+        if (dataComp.State = ArchonClass.Awake)
+            iconId = "Awake";
+
         if (showRealClass == true)
         {
             iconId = dataComp.Class.ToString();

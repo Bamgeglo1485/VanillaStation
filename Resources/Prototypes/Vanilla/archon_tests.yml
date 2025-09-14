@@ -1,0 +1,47 @@
+- type: archonTest
+  id: Activate
+  desc: Попытаться активировать объект.
+  ComponentsWhitelist: TriggerOnActivate
+
+- type: archonTest
+  id: Examine
+  desc: Детально осмотреть объект.
+
+- type: archonTest
+  id: Death
+  desc: Уничтожить объект.
+  ComponentsWhitelist: ArchonHealth
+
+- type: archonTest
+  id: Breach
+  desc: Выпустить объект с зоны содержания на несколько секунд.
+  minDanger: 4
+  minEscape: 2
+
+- type: archonTest
+  id: Damage
+  desc: Нанести по объекту несколько ударов ломом.
+  ComponentsWhitelist: Damageable
+
+- type: archonTest
+  id: Equip
+  tag: Item
+  desc: Попробывать надеть объект.
+  ComponentsWhitelist: Clothing
+
+- type: archonTest
+  id: Throw
+  tag: Item
+  desc: Бросить объект.
+  ComponentsBlacklist: Unremoveable
+
+- type: archonTest
+  id: ThrowHit
+  tag: Item
+  desc: Бросить объект в кого то.
+  ComponentsBlacklist: Unremoveable
+
+- type: archonTest
+  id: Hand
+  tag: Item
+  desc: Взять объект в руки.

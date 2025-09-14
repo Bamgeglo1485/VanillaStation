@@ -24,19 +24,25 @@ public sealed partial class ArchonComponentPrototype : IPrototype
     public string Tag = "Generic";
 
     /// <summary>
+    /// Описание действий
+    /// </summary>
+    [DataField(required: true)]
+    public string Desc = "Какает";
+
+    /// <summary>
     /// Тип архонта для меньшей хаотичности. Enum ArchonType
     /// </summary>
     [DataField]
     public List<ArchonType> Types = new();
 
     /// <summary>
-    /// Уровень опасности архона
+    /// Уровень опасности архонта
     /// </summary>
     [DataField]
     public int Danger = 0;
 
     /// <summary>
-    /// Уровень возможности побега архона
+    /// Уровень возможности побега архонта
     /// </summary>
     [DataField]
     public int Escape = 0;

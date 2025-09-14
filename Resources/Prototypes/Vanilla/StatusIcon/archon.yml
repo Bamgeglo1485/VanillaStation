@@ -40,3 +40,10 @@
   icon:
     sprite: /Textures/Vanilla/Interface/Misc/archon_class_icons.rsi
     state: unknown
+
+- type: archonClassIcon
+  parent: ArchonClassIcon
+  id: Awake
+  icon:
+    sprite: /Textures/Vanilla/Interface/Misc/archon_class_icons.rsi
+    state: awake

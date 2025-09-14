@@ -1,0 +1,95 @@
+# Generic - Основные компоненты
+
+- type: archonComponent
+  id: Stun
+  tag: Item
+  desc: Объект вызывает изнурение при попадании по телу
+  danger: 2
+  components:
+    - type: StaminaDamageOnCollide
+
+- type: archonComponent
+  id: Ignite
+  desc: Объект вызывает воспламенение при попадании по телу
+  tag: Item
+  danger: 2
+  components:
+    - type: IgniteOnCollide
+
+- type: archonComponent
+  id: Unremoveable
+  desc: Объект намертво соединяется с рукой на [ ДАННЫЕ УДАЛЕНЫ ]
+  tag: Item
+  danger: 2
+  components:
+    - type: Unremoveable
+
+- type: archonComponent
+  id: Clothing
+  desc: Объект способен прикрепляться на тело
+  tag: Item
+  components:
+    - type: Clothing
+      slots:
+      - suitStorage
+      - Belt
+      - Back
+    - type: TriggerOnGotEquipped
+      slotFlags:
+      - suitStorage
+      - Belt
+      - Back
+  chancedComponents:
+    - chance: 0.2
+      components:
+        - type: ExtraHandsEquipment
+
+- type: archonComponent
+  id: DamageOnHolding
+  desc: Объект вызывает клеточные повреждение поверхности или органов
+  tag: Item
+  Danger: 3
+  components:
+    - type: DamageOnHolding
+      enabled: true
+      damage:
+        types:
+          Heat: 2
+  chancedComponents:
+    - chance: 0.5
+      components:
+      - type: DamageOnHolding
+        enabled: true
+        damage:
+          types:
+            Piercing: 2
+    - chance: 0.2
+      danger: 1
+      components:
+      - type: DamageOnHolding
+        enabled: true
+        damage:
+          types:
+            Asphyxiation: 5
+    - chance: 0.2
+      danger: 1
+      components:
+      - type: DamageOnHolding
+        enabled: true
+        damage:
+          types:
+            Bloodloss: 5
+
+- type: archonComponent
+  id: TriggerOnUse
+  desc: Объект возможно использовать
+  tag: Item
+  components:
+    - type: TriggerOnUse
+
+- type: archonComponent
+  id: TriggerOnLand
+  desc: Объект активируется при приземлении
+  tag: Item
+  components:
+    - type: TriggerOnLand

@@ -6,17 +6,29 @@ using Robust.Shared.Audio;
 namespace Content.Shared.Archontic.Components;
 
 [RegisterComponent]
-public sealed partial class ArchonComponent : Component
+public sealed partial class ArchonGenerateComponent : Component
 {
 
     [DataField]
     public bool RandomType = true;
 
     [DataField]
-    public bool RandomDestructibility = true;
+    public bool GenerateComponents = true;
 
     [DataField]
-    public bool GenerateComponents = true;
+    public bool TriggerComponents = true;
+
+    /// <summary>
+    /// Тэг для базовых компонентов
+    /// </summary>
+    [DataField]
+    public string GenericTag = "Generic";
+
+    /// <summary>
+    /// Дополнительный тэг
+    /// </summary>
+    [DataField]
+    public string? AdditiveTag;
 
     /// <summary>
     /// Диапазон количества типов
@@ -50,14 +62,5 @@ public sealed partial class ArchonComponent : Component
     /// </summary>
     [DataField]
     public float CanBeHumanoidChance = 0.15f;
-
-    /// <summary>
-    /// Я не понял как редактировать Destructible
-    /// </summary>
-    [DataField]
-    public float Health = 0f;
-
-    [DataField]
-    public string RebirthPrototype = "EffectArchonDeath";
 
 }

@@ -27,3 +27,11 @@
     state: icon
   - type: ResearchDisk
     points: 20000
+
+- type: entity
+  parent: AwardDisc
+  id: AwardDisc5000
+  description: 5.000 очков за то, что ты бросил аномальный кирпич в напарника. Звучит как бизнес.
+  components:
+  - type: ResearchDisk
+    points: 5000

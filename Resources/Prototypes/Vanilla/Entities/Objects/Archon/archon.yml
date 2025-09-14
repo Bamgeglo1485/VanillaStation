@@ -1,14 +1,18 @@
 - type: entity
   parent: BaseItem
   id: ArchonItemRandom
-  name: тест
-  description: тест
+  name: ???
+  description: Неизвестный объект, с довольно странной аурой.
+  suffix: Архонт, Предмет
   components:
   - type: Sprite
     sprite: Objects/Specific/Hydroponics/apple.rsi
     state: produce
-  - type: Archon
+  - type: ArchonData
+  - type: ArchonHealth
+  - type: ArchonGenerate
     canBeHumanoidChance: 0.05
+    additiveTag: Item
   - type: Fixtures
     fixtures:
       fix1:
@@ -24,12 +28,22 @@
   - type: StatusIcon
 
 - type: entity
+  parent: ArchonItemRandom
+  id: ArchonItemRandomStasis
+  suffix: Архонт, Предмет, Без стазиса
+  components:
+  - type: ArchonData
+    stasisDelay: 1
+
+- type: entity
   parent: [SimpleSpaceMobBase, MobCombat]
   id: ArchonHumanoidRandom
   name: тест
   description: тест
   components:
-  - type: Archon
+  - type: ArchonData
+  - type: ArchonHealth
+  - type: ArchonGenerate
     canBeHumanoidChance: 1
   - type: Sprite
     drawdepth: Mobs

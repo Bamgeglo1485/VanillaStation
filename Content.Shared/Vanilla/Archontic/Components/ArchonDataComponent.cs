@@ -52,6 +52,21 @@ public sealed partial class ArchonDataComponent : Component
     public bool Humanoid = false;
 
     /// <summary>
+    /// Созданы ли тесты для него
+    /// </summary>
+    [DataField]
+    public bool TestsGenerated = false;
+
+    /// <summary>
+    /// Текущие тесты
+    /// </summary>
+    [DataField]
+    public List<string> ActiveTests = new();
+
+    [DataField]
+    public HashSet<string> CompletedTests = new();
+
+    /// <summary>
     /// Уничтожаемость архона. Enum ArchonDestructibility
     /// </summary>
     [DataField, AutoNetworkedField]
@@ -70,6 +85,12 @@ public sealed partial class ArchonDataComponent : Component
     public EntityUid? Beacon;
 
     /// <summary>
+    /// К какому ГЗТ привязан
+    /// </summary>
+    [ViewVariables, AutoNetworkedField]
+    public EntityUid? MTG;
+
+    /// <summary>
     /// Энтити после полиморфа, то есть стазисный объект
     /// </summary>
     [ViewVariables]
@@ -80,6 +101,12 @@ public sealed partial class ArchonDataComponent : Component
     /// </summary>
     [DataField]
     public List<string> AddedComponents = new();
+
+    /// <summary>
+    /// Список добавленных прототипов
+    /// </summary>
+    [DataField]
+    public List<ArchonComponentPrototype> AddedPrototypes = new();
 
     /// <summary>
     /// Уровень опасности
@@ -97,13 +124,13 @@ public sealed partial class ArchonDataComponent : Component
     /// Уровень опасности для класса Кетер
     /// </summary>
     [DataField]
-    public int DangerLimit = 5;
+    public int DangerLimit = 8;
 
     /// <summary>
     /// Уровень опасности для класса Евклид
     /// </summary>
     [DataField]
-    public int EscapeLimit = 5;
+    public int EscapeLimit = 8;
 
     /// <summary>
     /// Прототип стазиса, должен быть прототипом полиморфа
@@ -115,7 +142,7 @@ public sealed partial class ArchonDataComponent : Component
     /// Длительность стазиса
     /// </summary>
     [DataField, AutoNetworkedField]
-    public TimeSpan StasisDelay = TimeSpan.FromSeconds(20);
+    public TimeSpan StasisDelay = TimeSpan.FromSeconds(300);
 
     /// <summary>
     /// Сколько раз в него попадал ХИД снаряд
@@ -129,6 +156,18 @@ public sealed partial class ArchonDataComponent : Component
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
     [AutoNetworkedField, AutoPausedField]
     public TimeSpan StasisExit = TimeSpan.Zero;
+
+    /// <summary>
+    /// Тэг базовых компонентов
+    /// </summary>
+    [DataField]
+    public string GenericTag = "Generic";
+
+    /// <summary>
+    /// Дополнительный тэг
+    /// </summary>
+    [DataField]
+    public string? AdditiveTag;
 
     /// <summary>
     /// Ну логика объяснена в основном компоненте
@@ -174,4 +213,8 @@ public enum ArchonState : byte
     Stasis, // Объект никак не влияет на внешние факторы
     Basic, // Обычне состояние
     Awake // Пробуждение. Объект не может перейти в стазис и хп и стамина умножаются
+}
+
+public sealed class ArchonDeathEvent : EntityEventArgs
+{
 }

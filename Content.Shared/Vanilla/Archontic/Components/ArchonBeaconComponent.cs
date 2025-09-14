@@ -61,3 +61,7 @@ public enum ArchonBeaconClasses : byte
     None,
     NonPowered
 }
+
+public sealed class ArchonBreachEvent : EntityEventArgs
+{
+}

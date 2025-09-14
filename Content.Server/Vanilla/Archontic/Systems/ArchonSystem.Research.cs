@@ -54,19 +54,15 @@ public sealed partial class ArchonSystem : EntitySystem
     /// </summary>
     private void OnRoundEnded (RoundStartedEvent args)
     {
-
         RegisteredArchons.Clear();
         RegisteredNumbers.Clear();
-
     }
 
     /// <summary>
-    /// Далее системы анализатора и маяка
+    /// Система сканера архонтов
     /// </summary>
-    ///
     private void OnInteract(EntityUid uid, ArchonScannerComponent comp, AfterInteractEvent args)
     {
-
         if (args.Handled)
             return;
 
@@ -76,27 +72,25 @@ public sealed partial class ArchonSystem : EntitySystem
         if (!args.CanReach)
             return;
 
+        // При сканировании архонта
         if (TryComp<ArchonDataComponent>(target, out var dataComp))
         {
-
             comp.LinkedArchon = target;
 
             _audio.PlayPvs(comp.ScanSound, uid);
             _popup.PopupEntity($"Архон просканирован, сигнатура: {comp.LinkedArchon.Value}", uid);
-
         }
+        // Передача архонта анализатору
         else if (TryComp<ArchonAnalyzerComponent>(target, out var analyzerComp) && comp.LinkedArchon != null && _power.IsPowered(target))
         {
-
             analyzerComp.LinkedArchon = comp.LinkedArchon;
 
             _audio.PlayPvs(comp.LoadSound, uid);
             _popup.PopupEntity("Сигнатура Архонта передана анализатору", uid);
-
         }
+        // Передача архонта маяку
         else if (TryComp<ArchonBeaconComponent>(target, out var beaconComp) && TryComp<ArchonDataComponent>(comp.LinkedArchon, out var dataComp2) && comp.LinkedArchon != null && _power.IsPowered(target))
         {
-
             if (dataComp2.Document == null)
                 return;
 
@@ -115,10 +109,15 @@ public sealed partial class ArchonSystem : EntitySystem
             SetClass(target, beaconComp);
 
         }
+        // Передача архонта ГЗТ
+        else if (TryComp<MTGComponent>(target, out var mtgComp) && TryComp<ArchonDataComponent>(comp.LinkedArchon, out var dataComp3) && comp.LinkedArchon != null && _power.IsPowered(target))
+        {
+            GenerateTests(comp.LinkedArchon.Value, dataComp3, target, mtgComp);
+        }
     }
 
     /// <summary>
-    /// При вставлении бумажки
+    /// При вставлении бумажки в анализатор
     /// </summary>
     private void OnItemSlotChanged(EntityUid uid, ArchonAnalyzerComponent comp, EntInsertedIntoContainerMessage args)
     {
@@ -140,6 +139,7 @@ public sealed partial class ArchonSystem : EntitySystem
         if (!TryComp<PaperComponent>(args.Entity, out var paperComp))
         {
             _container.RemoveEntity(uid, args.Entity);
+
             _audio.PlayPvs(comp.DenySound, uid);
 
             errors.Add("Ошибка при нанесении чернил");
@@ -178,9 +178,10 @@ public sealed partial class ArchonSystem : EntitySystem
 
         if (errors.Count > 0)
         {
+            _container.RemoveEntity(uid, args.Entity);
+
             _audio.PlayPvs(comp.DenySound, uid);
             _popup.PopupEntity("Обнаружены ошибки в документе", uid);
-            _container.RemoveEntity(uid, args.Entity);
 
             SetErrors(Print(uid, comp), errors);
 
@@ -203,6 +204,7 @@ public sealed partial class ArchonSystem : EntitySystem
                     Spawn(comp.AwardPrototype, Transform(uid).Coordinates);
                 }
 
+                // Ставит в документе правильный класс
                 var adaptedClass = dataComp.Class switch
                 {
                     ArchonClass.Safe => "[color=#0aad49]Безопасный[/color]",
@@ -219,6 +221,7 @@ public sealed partial class ArchonSystem : EntitySystem
             }
         }
 
+        // Устанавливает названия объекта с документа Архонту, почему бы нет
         _metaData.SetEntityName(comp.LinkedArchon.Value, objectName);
 
         RegisteredNumbers.Add(numberMatch.Value.Trim());
@@ -227,6 +230,7 @@ public sealed partial class ArchonSystem : EntitySystem
         _audio.PlayPvs(comp.SuccessSound, uid);
         _popup.PopupEntity("Документ принят и проверен", uid);
 
+        // Дальше создание синхронированного документа
         var document = Spawn(comp.DocumentPrototype, Transform(uid).Coordinates);
 
         if (TryComp<PaperComponent>(args.Entity, out var documentComp))
@@ -234,7 +238,9 @@ public sealed partial class ArchonSystem : EntitySystem
             _paperSystem.SetContent(document, paperComp.Content);
 
             var archonDocumentComp = EnsureComp<ArchonDocumentComponent>(document);
+
             EnsureComp<PaperComponent>(document, out var documentPaperComp);
+
             archonDocumentComp.Archon = comp.LinkedArchon;
             dataComp.Document = document;
 
@@ -247,13 +253,15 @@ public sealed partial class ArchonSystem : EntitySystem
 
         QueueDel(args.Entity);
 
-
         _archonSystem.DirtyArchon(comp.LinkedArchon.Value, dataComp);
 
         SetSuccess(Print(uid, comp), errors);
 
     }
 
+    /// <summary>
+    /// Проверяет достоверность формата документа
+    /// </summary>
     private List<string> CheckDocumentFormat(string content)
     {
         var errors = new List<string>();
@@ -281,6 +289,9 @@ public sealed partial class ArchonSystem : EntitySystem
         return errors;
     }
 
+    /// <summary>
+    /// Делает бумажку
+    /// </summary>
     private EntityUid Print(EntityUid uid, ArchonAnalyzerComponent component)
     {
 
@@ -301,7 +312,9 @@ public sealed partial class ArchonSystem : EntitySystem
         return printed;
     }
 
-    // пипец щиткод
+    /// <summary>
+    /// Делает лист с ошибками, большой щиткод
+    /// </summary>
     private void SetErrors(EntityUid uid, List<string> errors)
     {
         var text = new StringBuilder();
@@ -338,7 +351,9 @@ public sealed partial class ArchonSystem : EntitySystem
         _paperSystem.SetContent(uid, text.ToString());
     }
 
-    // ещё больший щиткод
+    /// <summary>
+    /// Делает лист с ошибками, ещё больший щиткод
+    /// </summary>
     private void SetSuccess(EntityUid uid, List<string> errors)
     {
         var text = new StringBuilder();
@@ -387,14 +402,8 @@ public sealed partial class ArchonSystem : EntitySystem
     /// </summary>
     private bool CheckInContainment(EntityUid uid, ArchonBeaconComponent comp, ArchonDataComponent dataComp, TransformComponent xform)
     {
-
-        if (dataComp.Document == null || dataComp.Expunged == true)
-        {
-            _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.None);
-            return false;
-        }
-
-        if (!TryComp<TransformComponent>(comp.LinkedArchon, out var archonXform))
+        if (dataComp.Document == null || dataComp.Expunged == true ||
+        !TryComp<TransformComponent>(comp.LinkedArchon, out var archonXform))
         {
             _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.None);
             return false;
@@ -408,10 +417,13 @@ public sealed partial class ArchonSystem : EntitySystem
         {
             comp.Breached = true;
             _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.Breach);
+
+            RaiseLocalEvent(uid, new ArchonBreachEvent());
+
             return false;
         }
 
-        if (comp.Breached == true)
+        if (comp.Breached)
         {
             comp.Breached = false;
 

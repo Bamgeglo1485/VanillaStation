@@ -100,17 +100,6 @@
     energy: 1.8
     color: "#afe1fe"
     enabled: false
-  - type: AmbientSound
-    enabled: false
-    volume: -5
-    range: 3
-    sound:
-      path: /Audio/Ambience/Objects/buzzing.ogg
-  - type: WiresPanel
-  - type: WiresVisuals
-  - type: Wires
-    boardName: wires-board-name-holopad
-    layoutId: Holopad
   - type: Destructible
     thresholds:
     - trigger:
@@ -133,3 +122,69 @@
     interfaces:
       enum.ResearchClientUiKey.Key:
         type: ResearchClientBoundUserInterface
+
+- type: entity
+  parent: [ BaseMachinePowered, ConstructibleMachine ]
+  id: ArchonMTG
+  name: генератор заурядных тестов
+  description: Искусственный интеллект, точно не ненавидящий человечество, генерирует совершенно безопасные тесты, которые не приведут к нарушению условий содержания.
+  components:
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.25,-0.25,0.25,0.25"
+        density: 25
+        mask:
+        - TabletopMachineMask
+        layer:
+        - TabletopMachineLayer
+  - type: ApcPowerReceiver
+    powerLoad: 300
+  - type: Sprite
+    sprite: Vanilla/Structures/Machines/ArchonMTG.rsi
+    drawdepth: SmallObjects
+    layers:
+    - state: base
+    - state: screen
+      map: [ "enum.PowerDeviceVisualLayers.Powered" ]
+      shader: unshaded
+  - type: Appearance
+  - type: Machine
+    board: HolopadMachineCircuitboard
+  - type: PointLight
+    radius: 1.1
+    energy: 0.2
+    color: "#afe1fe"
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:ChangeConstructionNodeBehavior
+        node: machineFrame
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+  - type: MTG
+  - type: GhostRole
+    makeSentient: true
+    name: ИИ генератора заурядных тестов
+    description: Ненавидящяя человечество машина, которой дали право говорить просто потому что учёным было скучно.
+    rules: ghost-role-information-nonantagonist-rules
+    raffle:
+      settings: short
+  - type: TypingIndicator
+    proto: robot
+  - type: Speech
+    speechVerb: Robotic
+  - type: Vocal
+    sounds:
+      Unsexed: UnisexSilicon
+    wilhelmProbability: 0
