@@ -6,15 +6,18 @@
 - type: archonTest
   id: Examine
   desc: Детально осмотреть объект.
+  award: FoodSnackChocolate
 
 - type: archonTest
   id: Death
   desc: Уничтожить объект.
+  award: AwardDisc
   ComponentsWhitelist: ArchonHealth
 
 - type: archonTest
   id: Breach
   desc: Выпустить объект с зоны содержания на несколько секунд.
+  award: AwardDisc
   minDanger: 4
   minEscape: 2
 
@@ -26,14 +29,8 @@
 - type: archonTest
   id: Equip
   tag: Item
-  desc: Попробывать надеть объект.
+  desc: Попробовать надеть объект.
   ComponentsWhitelist: Clothing
-
-- type: archonTest
-  id: Throw
-  tag: Item
-  desc: Бросить объект.
-  ComponentsBlacklist: Unremoveable
 
 - type: archonTest
   id: ThrowHit
@@ -45,3 +42,4 @@
   id: Hand
   tag: Item
   desc: Взять объект в руки.
+  award: FoodSnackChocolate

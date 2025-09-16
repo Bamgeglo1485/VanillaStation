@@ -6,12 +6,14 @@ using Content.Shared.Interaction;
 using Content.Shared.GameTicking;
 using Content.Shared.Popups;
 using Content.Shared.Paper;
+using Content.Shared.Radio;
 
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 
+using Content.Server.Radio.EntitySystems;
 using Content.Server.Research.Systems;
 
 using System.Text.RegularExpressions;
@@ -30,6 +32,7 @@ public sealed partial class ArchonSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly ResearchSystem _research = default!;
     [Dependency] private readonly IGameTiming _gameTiming = default!;
+    [Dependency] private readonly RadioSystem _radio = default!;
 
     public static readonly Regex ObjectNumberRegex = new Regex(@"Объект №:\s*ACO-\d+-NT", RegexOptions.IgnoreCase);
     public static readonly Regex ObjectNameRegex = new Regex(@"Название объекта:\s*(.{1,20})", RegexOptions.IgnoreCase);
@@ -130,6 +133,9 @@ public sealed partial class ArchonSystem : EntitySystem
         {
             _container.RemoveEntity(uid, args.Entity);
 
+            _audio.PlayPvs(comp.DenySound, uid);
+            _popup.PopupEntity("Ошибка", uid);
+
             errors.Add("Анализатор не имеет привязанного к себе Архонта");
             SetErrors(Print(uid, comp), errors);
 
@@ -141,6 +147,7 @@ public sealed partial class ArchonSystem : EntitySystem
             _container.RemoveEntity(uid, args.Entity);
 
             _audio.PlayPvs(comp.DenySound, uid);
+            _popup.PopupEntity("Ошибка", uid);
 
             errors.Add("Ошибка при нанесении чернил");
             SetErrors(Print(uid, comp), errors);
@@ -160,6 +167,10 @@ public sealed partial class ArchonSystem : EntitySystem
             if (RegisteredNumbers.Contains(objectNumber))
             {
                 errors.Add($"Объект с номером {objectNumber} уже зарегистрирован в системе");
+            }
+            else if (objectNumber == "Объект №: ACO-69-NT" || objectNumber == "Объект №: ACO-1488-NT")
+            {
+                errors.Add($"[color=color=#cc0836]Сообщение от Администратора:[/color] Воу, ввёл такие смешные цифры, и думаешь что тот ещё юморист? Скажу тебе одно - да пошёл ты ДАННЫЕ УДАЛЕНЫ");
             }
         }
 
@@ -335,7 +346,7 @@ public sealed partial class ArchonSystem : EntitySystem
         text.AppendLine("ИТОГ:");
         text.AppendLine("─────────────");
         text.AppendLine("Статус: ДОКУМЕНТ НЕ ПРИНЯТ");
-        text.AppendLine("[italic]Требуется повторная подача документа после исправления всех ошибок. Запомните, что попытки подделки документов или обмана автоматической системы могут и будут отслеживаться БЮРДЕПом фонда С.Р.С, если те будут обнаружены, мы отправим запрос о дисциплинарном взыскании вашему локальному Центральному Командованию[/italic]");
+        text.AppendLine("[italic]Требуется повторная подача документа после исправления всех ошибок. Запомните, что попытки подделки документов или обмана автоматической системы могут и будут отслеживаться БЮРДЕПом фонда Н.З.П, если те будут обнаружены, мы отправим запрос о дисциплинарном взыскании вашему локальному Центральному Командованию[/italic]");
 
         text.AppendLine();
         text.AppendLine("РЕКОМЕНДАЦИИ:");
@@ -418,7 +429,23 @@ public sealed partial class ArchonSystem : EntitySystem
             comp.Breached = true;
             _appearance.SetData(uid, ArchonBeaconVisuals.Classes, ArchonBeaconClasses.Breach);
 
-            RaiseLocalEvent(uid, new ArchonBreachEvent());
+            RaiseLocalEvent(comp.LinkedArchon.Value, new ArchonBreachEvent());
+
+            string number = "Неизвестный";
+
+            if (TryComp<PaperComponent>(dataComp.Document, out var paperComp))
+            {
+                var content = paperComp.Content;
+                var numberMatch = ObjectNumberRegex.Match(content);
+
+                if (numberMatch.Success)
+                {
+                    number = numberMatch.Value;
+                }
+            }
+
+            var message = Loc.GetString("archon-breached-announcement", ("number", number));
+            _radio.SendRadioMessage(uid, message, _prototypeManager.Index<RadioChannelPrototype>(comp.ScienceChannel), uid);
 
             return false;
         }

@@ -30,9 +30,6 @@
       raffle:
         settings: short
   chancedComponents:
-    - chance: 0.8
-      components:
-        - type: Muted
     - chance: 0.3
       escape: 3
       danger: 3

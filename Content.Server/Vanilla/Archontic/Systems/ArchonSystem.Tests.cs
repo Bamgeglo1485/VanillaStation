@@ -5,12 +5,13 @@ using Content.Shared.Inventory.Events;
 using Content.Shared.Archontic.Systems;
 using Content.Shared.Interaction;
 using Content.Shared.GameTicking;
-using Content.Shared.Damage;
-using Content.Shared.Hands;
 using Content.Shared.Throwing;
 using Content.Shared.Examine;
+using Content.Shared.Dataset;
 using Content.Shared.Popups;
+using Content.Shared.Damage;
 using Content.Shared.Paper;
+using Content.Shared.Hands;
 
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.GameObjects;
@@ -24,157 +25,197 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
+using Content.Server.Chat.Systems;
+
 namespace Content.Server.Archontic.Systems;
 
 public sealed partial class ArchonSystem
 {
+    [Dependency] private readonly ChatSystem _chat = default!;
 
-    private void GenerateTests(EntityUid archonUid, ArchonDataComponent dataComp, EntityUid mtgUid, MTGComponent mtg)
+    private void GenerateTests(EntityUid archonUid, ArchonDataComponent dataComp, EntityUid mtgUid, MTGComponent mtgComp)
     {
         if (dataComp.TestsGenerated)
         {
-            _audio.PlayPvs(mtg.DenySound, mtgUid);
-            _popup.PopupEntity("Тесты уже были сгенерированы для этого архонта", mtgUid);
+            _audio.PlayPvs(mtgComp.DenySound, mtgUid);
+            _chat.TrySendInGameICMessage(mtgUid, Loc.GetString("mtg-archon-duplicat"), InGameICChatType.Speak, true);
 
+            var paper = Spawn(mtgComp.MachineOutput, Transform(mtgUid).Coordinates);
+
+            var content = new StringBuilder();
+            content.AppendLine("=== ТЕСТЫ ДЛЯ АРХОНТА ===");
+            content.AppendLine();
+
+            foreach (var test in dataComp.ActiveTests)
+            {
+                content.AppendLine($"Тест: {test}");
+                content.AppendLine("---");
+            }
+
+            _paperSystem.SetContent(paper, content.ToString());
             return;
         }
 
-        if (dataComp.Document == null || dataComp.Expunged == true)
+        if (dataComp.Document == null || dataComp.Expunged)
         {
-            _audio.PlayPvs(mtg.DenySound, mtgUid);
-            _popup.PopupEntity("Не обнаружено архонта в системе", mtgUid);
-
+            _audio.PlayPvs(mtgComp.DenySound, mtgUid);
+            _chat.TrySendInGameICMessage(mtgUid, Loc.GetString("mtg-archon-nonregistered"), InGameICChatType.Speak, true);
             return;
         }
 
-        CreateTestPaper(mtgUid, mtg, archonUid, dataComp);
-
-        dataComp.MTG = mtgUid;
-        dataComp.TestsGenerated = true;
+        if (CreateTestPaper(mtgUid, mtgComp, archonUid, dataComp) != null)
+        {
+            dataComp.MTG = mtgUid;
+            dataComp.TestsGenerated = true;
+        }
     }
 
-    private EntityUid? CreateTestPaper(EntityUid mtgUid, MTGComponent mtg, EntityUid archonUid, ArchonDataComponent dataComp)
+    private EntityUid? CreateTestPaper(EntityUid mtgUid, MTGComponent mtgComp, EntityUid archonUid, ArchonDataComponent dataComp)
     {
-        var paper = Spawn("Paper", Transform(mtgUid).Coordinates);
+        var paper = Spawn(mtgComp.MachineOutput, Transform(mtgUid).Coordinates);
+        var validTests = new List<ArchonTestPrototype>();
 
-        var validTest = new List<ArchonTestPrototype>();
-
-        // Подбор подходящих тестов
         foreach (var proto in _prototypeManager.EnumeratePrototypes<ArchonTestPrototype>())
         {
-            // Проверка на соответствие тэга
-            if (proto.Tag != dataComp.GenericTag &&
-                (dataComp.AdditiveTag != proto.Tag))
+            // Проверка тегов
+            if (proto.Tag != dataComp.GenericTag && dataComp.AdditiveTag != proto.Tag)
                 continue;
 
-            // Проверка на присутствие компонентов из вайтлиста
-            if (proto.ComponentsWhitelist.Count > 0)
-            {
-                bool hasComponents = true;
+            // Проверка вайтлиста компонентов
+            if (!CheckComponentsWhitelist(archonUid, proto))
+                continue;
 
-                foreach (var componentType in proto.ComponentsWhitelist)
-                {
-                    var type = Type.GetType(componentType);
-                    if (type == null || !HasComp(archonUid, type))
-                    {
-                        hasComponents = false;
-                        break;
-                    }
-                }
-
-                if (!hasComponents)
-                    continue;
-            }
-
-            // Проверка на отсутствие компонентов из блеклиста
-            if (proto.ComponentsBlacklist.Count > 0)
-            {
-                bool hasBlacklistedComponent = false;
-
-                foreach (var componentType in proto.ComponentsBlacklist)
-                {
-                    var type = Type.GetType(componentType);
-                    if (type != null && HasComp(archonUid, type))
-                    {
-                        hasBlacklistedComponent = true;
-                        break;
-                    }
-                }
-
-                if (hasBlacklistedComponent)
-                    continue;
-            }
-
-            // Проверка на минимальный побег и опасность
+            // Проверка уровней опасности и побега
             if (dataComp.Danger < proto.MinDangerLevel || dataComp.Escape < proto.MinEscapeLevel)
                 continue;
 
-            validTest.Add(proto);
+            validTests.Add(proto);
         }
 
-        var tests = validTest
+        if (validTests.Count == 0)
+            return null;
+
+        var selectedTests = validTests
             .OrderBy(x => _random.Next())
-            .Take(mtg.MaxTests)
+            .Take(mtgComp.MaxTests)
             .ToList();
-
-        foreach (var testproto in tests)
-        {
-            dataComp.ActiveTests.Add(testproto.ID);
-        }
 
         var content = new StringBuilder();
         content.AppendLine("=== ТЕСТЫ ДЛЯ АРХОНТА ===");
         content.AppendLine();
 
-        foreach (var test in tests)
+        foreach (var test in selectedTests)
         {
+            dataComp.ActiveTests.Add(test.ID);
             content.AppendLine($"Тест: {test.Desc}");
             content.AppendLine("---");
         }
+        content.AppendLine();
+
+        if (TryGetRandomComment(mtgComp, out var comment))
+            content.AppendLine(comment);
 
         _paperSystem.SetContent(paper, content.ToString());
-
-        _audio.PlayPvs(mtg.SuccessSound, mtgUid);
-        _popup.PopupEntity("Тесты были сгенерированы", mtgUid);
+        _audio.PlayPvs(mtgComp.SuccessSound, mtgUid);
+        _chat.TrySendInGameICMessage(mtgUid, Loc.GetString("mtg-test-generated"), InGameICChatType.Speak, true);
 
         return paper;
     }
 
-    private void CompleteTest(EntityUid uid, string testId, ArchonDataComponent comp)
+    private bool CheckComponentsWhitelist(EntityUid uid, ArchonTestPrototype proto)
     {
-        comp.ActiveTests.Remove(testId);
-        comp.CompletedTests.Add(testId);
+        if (proto.ComponentsWhitelist.Count > 0)
+        {
+            foreach (var componentType in proto.ComponentsWhitelist)
+            {
+                var type = Type.GetType(componentType);
+                if (type == null || !HasComp(uid, type))
+                    return false;
+            }
+        }
 
-        if (!TryComp<MTGComponent>(comp.MTG, out var mtgComp) || comp.MTG == null)
+        if (proto.ComponentsBlacklist.Count > 0)
+        {
+            foreach (var componentType in proto.ComponentsBlacklist)
+            {
+                var type = Type.GetType(componentType);
+                if (type != null && HasComp(uid, type))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    private bool TryGetRandomComment(MTGComponent mtgComp, out string comment)
+    {
+        comment = string.Empty;
+
+        if (string.IsNullOrEmpty(mtgComp.CommentsDataset))
+            return false;
+
+        if (!_prototypeManager.TryIndex<LocalizedDatasetPrototype>(mtgComp.CommentsDataset, out var dataset))
+            return false;
+
+        comment = Loc.GetString(_random.Pick(dataset.Values));
+        return true;
+    }
+
+    private void CompleteTest(EntityUid uid, string testId, ArchonDataComponent dataComp)
+    {
+        if (!dataComp.ActiveTests.Remove(testId))
             return;
 
-        var paper = Spawn("Paper", Transform(comp.MTG.Value).Coordinates);
+        dataComp.CompletedTests.Add(testId);
 
+        if (dataComp.MTG is not { } mtgUid || !TryComp<MTGComponent>(mtgUid, out var mtgComp))
+            return;
+
+        if (!_prototypeManager.TryIndex<ArchonTestPrototype>(testId, out var testProto))
+            return;
+
+        var paper = Spawn(mtgComp.MachineOutput, Transform(mtgUid).Coordinates);
         var content = new StringBuilder();
         content.AppendLine("=== ОТЧЁТ О ВЫПОЛНЕНИИ ТЕСТА ===");
         content.AppendLine();
         content.AppendLine($"Тест '{testId}' был успешно выполнен!");
+        content.AppendLine();
 
-        Spawn(mtgComp.AwardDisc, Transform(comp.MTG.Value).Coordinates);
+        if (TryGetRandomComment(mtgComp, out var comment))
+            content.AppendLine(comment);
+
         _paperSystem.SetContent(paper, content.ToString());
+        Spawn(testProto.Award, Transform(mtgUid).Coordinates);
 
-        if (comp.ActiveTests.Count > 0)
-            return;
+        if (dataComp.ActiveTests.Count == 0)
+            CreateFinalReport(uid, mtgUid, mtgComp, dataComp);
+    }
 
-        var paperDesc = Spawn("Paper", Transform(comp.MTG.Value).Coordinates);
-        var contentDesc = new StringBuilder();
-        contentDesc.AppendLine("=== ДАННЫЕ С ТЕСТОВ ===");
-        contentDesc.AppendLine();
+    private void CreateFinalReport(EntityUid uid, EntityUid mtgUid, MTGComponent mtgComp, ArchonDataComponent dataComp)
+    {
+        var paper = Spawn(mtgComp.MachineOutput, Transform(mtgUid).Coordinates);
+        var content = new StringBuilder();
+        content.AppendLine("=== ДАННЫЕ С ТЕСТОВ ===");
+        content.AppendLine();
 
-        foreach (var proto in comp.AddedPrototypes)
+        if (TryComp<ArchonGenerateComponent>(uid, out var genComp) && genComp.AddedPrototypes != null)
         {
-            contentDesc.AppendLine(proto.Desc);
+            foreach (var proto in genComp.AddedPrototypes)
+            {
+                content.AppendLine(proto.Desc);
+            }
+        }
+        else if (!string.IsNullOrEmpty(dataComp.Description))
+        {
+            content.AppendLine(dataComp.Description);
         }
 
-        _paperSystem.SetContent(paperDesc, contentDesc.ToString());
+        if (TryGetRandomComment(mtgComp, out var comment))
+            content.AppendLine(comment);
 
-        _audio.PlayPvs(mtgComp.SuccessSound, comp.MTG.Value);
-        _popup.PopupEntity("Тест успешно выполнен", comp.MTG.Value);
+        _paperSystem.SetContent(paper, content.ToString());
+        _audio.PlayPvs(mtgComp.SuccessSound, mtgUid);
+        _chat.TrySendInGameICMessage(mtgUid, Loc.GetString("mtg-test-complete"), InGameICChatType.Speak, true);
     }
 
     private void OnDeath(EntityUid uid, ArchonDataComponent comp, ref ArchonDeathEvent args)

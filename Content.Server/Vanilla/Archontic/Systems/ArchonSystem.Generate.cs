@@ -45,9 +45,9 @@ public sealed partial class ArchonSystem : EntitySystem
         {
             dataComp.Humanoid = true;
 
-            SetComponents(ent, dataComp, "AI", 1, 1);
-            SetComponents(ent, dataComp, "Damage", 0, 1);
-            SetComponents(ent, dataComp, "Movement", 0, 1);
+            SetComponents(ent, dataComp, ent.Comp, "AI", 1, 1);
+            SetComponents(ent, dataComp, ent.Comp, "Damage", 0, 1);
+            SetComponents(ent, dataComp, ent.Comp, "Movement", 0, 1);
 
             SetRandomDamage(ent, dataComp);
             SetRandomMovementSpeed(ent, dataComp);
@@ -67,18 +67,18 @@ public sealed partial class ArchonSystem : EntitySystem
         if (comp.RandomType)
             SetRandomArchonType(ent, dataComp);
 
-        SetComponents(ent, dataComp, comp.GenericTag, comp.MinComponents, comp.MaxComponents);
+        SetComponents(ent, dataComp, ent.Comp, comp.GenericTag, comp.MinComponents, comp.MaxComponents);
 
         if (comp.TriggerComponents)
         {
-            SetComponents(ent, dataComp, "TriggerOn", 1, 2);
-            SetComponents(ent, dataComp, "OnTrigger", 1, 2);
+            SetComponents(ent, dataComp, ent.Comp, "TriggerOn", 1, 2);
+            SetComponents(ent, dataComp, ent.Comp, "OnTrigger", 1, 2);
         }
 
         if (comp.AdditiveTag != null)
         {
             dataComp.AdditiveTag = comp.AdditiveTag;
-            SetComponents(ent, dataComp, comp.AdditiveTag, comp.MinComponents, comp.MaxComponents);
+            SetComponents(ent, dataComp, ent.Comp, comp.AdditiveTag, comp.MinComponents, comp.MaxComponents);
         }
 
         dataComp.GenericTag = comp.GenericTag;
@@ -97,7 +97,7 @@ public sealed partial class ArchonSystem : EntitySystem
     /// <summary>
     /// Добавляет компоненты, которые соответствуют типам архонта
     /// </summary>
-    private void SetComponents(EntityUid ent, ArchonDataComponent dataComp, string tag, int minCount, int maxCount)
+    private void SetComponents(EntityUid ent, ArchonDataComponent dataComp, ArchonGenerateComponent comp, string tag, int minCount, int maxCount)
     {
         var validPrototypes = GetArchonPrototypes(ent, dataComp, tag);
         if (validPrototypes.Count == 0)
@@ -107,7 +107,7 @@ public sealed partial class ArchonSystem : EntitySystem
         for (var i = 0; i < count; i++)
         {
             var availablePrototypes = validPrototypes
-                .Where(p => !dataComp.AddedComponents.Contains(p.ID))
+                .Where(p => !comp.AddedComponents.Contains(p.ID))
                 .ToList();
 
             if (availablePrototypes.Count == 0)
@@ -148,8 +148,8 @@ public sealed partial class ArchonSystem : EntitySystem
             dataComp.Danger += addingDanger + additiveDanger;
             dataComp.Escape += addingEscape + additiveEscape;
 
-            //dataComp.AddedComponents.Add(proto.ID); Вроде он не влияет ни на ничего
-            dataComp.AddedPrototypes.Add(proto);
+            comp.AddedComponents.Add(proto.ID);
+            comp.AddedPrototypes.Add(proto);
         }
     }
 

@@ -20,6 +20,12 @@ public sealed partial class ArchonTestPrototype : IPrototype
     [DataField]
     public string Tag = "Generic";
 
+    /// <summary>
+    /// Прототип вознаграждения
+    /// </summary>
+    [DataField]
+    public string Award = "AwardDisc5000";
+
     [DataField]
     public List<string> ComponentsWhitelist = new();
 

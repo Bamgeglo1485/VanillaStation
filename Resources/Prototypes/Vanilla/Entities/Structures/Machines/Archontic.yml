@@ -173,6 +173,7 @@
       - !type:DoActsBehavior
         acts: ["Destruction"]
   - type: MTG
+    commentsDataset: MTGComments
   - type: GhostRole
     makeSentient: true
     name: ИИ генератора заурядных тестов

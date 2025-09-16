@@ -33,13 +33,12 @@ public sealed class ShowArchonClassSystem : EquipmentHudSystem<ShowArchonClassCo
 
     private void OnGetStatusIcons(EntityUid uid, ArchonDataComponent dataComp, ref GetStatusIconsEvent args)
     {
-
         if (!IsActive)
             return;
 
         ProtoId<ArchonClassIconPrototype> iconId;
 
-        if (dataComp.State = ArchonClass.Awake)
+        if (dataComp.State == ArchonState.Awake)
             iconId = "Awake";
 
         if (showRealClass == true)
@@ -62,6 +61,5 @@ public sealed class ShowArchonClassSystem : EquipmentHudSystem<ShowArchonClassCo
             return;
 
         args.StatusIcons.Add(iconPrototype);
-
     }
 }

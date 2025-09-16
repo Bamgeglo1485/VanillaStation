@@ -1,7 +1,10 @@
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 using Robust.Shared.Serialization;
 using Robust.Shared.GameStates;
 using Robust.Shared.Timing;
+
+using Content.Shared.Radio;
 
 namespace Content.Shared.Archontic.Components;
 
@@ -41,6 +44,12 @@ public sealed partial class ArchonBeaconComponent : Component
     /// </summary>
     [DataField]
     public bool Breached = false;
+
+    /// <summary>
+    /// Канал для ОБНАРУЖЕНО МАССОВОЕ НАРУШЕНИЕ УСЛОВИЙ СОДЕРЖАНИЯ ОБЪЕКТОВ КЛАССА КЕТЕР И ЕВКЛИД
+    /// </summary>
+    [DataField("scienceChannel", customTypeSerializer: typeof(PrototypeIdSerializer<RadioChannelPrototype>))]
+    public string ScienceChannel = "Science";
 
 }
 

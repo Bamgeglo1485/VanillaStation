@@ -18,7 +18,7 @@
 
 - type: archonComponent
   id: Unremoveable
-  desc: Объект намертво соединяется с рукой на [ ДАННЫЕ УДАЛЕНЫ ]
+  desc: Объект намертво соединяется с рукой на ДАННЫЕ УДАЛЕНЫ
   tag: Item
   danger: 2
   components:
@@ -54,7 +54,7 @@
       enabled: true
       damage:
         types:
-          Heat: 2
+          Heat: 10
   chancedComponents:
     - chance: 0.5
       components:
@@ -62,7 +62,7 @@
         enabled: true
         damage:
           types:
-            Piercing: 2
+            Piercing: 10
     - chance: 0.2
       danger: 1
       components:
@@ -70,7 +70,7 @@
         enabled: true
         damage:
           types:
-            Asphyxiation: 5
+            Asphyxiation: 15
     - chance: 0.2
       danger: 1
       components:
@@ -78,7 +78,7 @@
         enabled: true
         damage:
           types:
-            Bloodloss: 5
+            Bloodloss: 15
 
 - type: archonComponent
   id: TriggerOnUse

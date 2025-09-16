@@ -2,6 +2,7 @@ using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 using Robust.Shared.Prototypes;
 using Robust.Shared.GameStates;
 using Robust.Shared.Utility;
+using Robust.Shared.Audio;
 
 namespace Content.Shared.Archontic.Components;
 
@@ -14,6 +15,12 @@ public sealed partial class ArchonDataComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public bool Expunged = false;
+
+    /// <summary>
+    /// Описание объекта, используется при выполнении всех тестов, и если архонт не был сгенерирован
+    /// </summary>
+    [DataField]
+    public string? Description;
 
     /// <summary>
     /// Класс архона, его опасность и возможность сбежать. Enum ArchonClass
@@ -44,6 +51,12 @@ public sealed partial class ArchonDataComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public bool HaveStates = true;
+
+    /// <summary>
+    /// Шанс выйти в пробуждении при стимуляции
+    /// </summary>
+    [DataField]
+    public float AwakeChance = 0.4f;
 
     /// <summary>
     /// Гуманоидный ли объект
@@ -95,18 +108,6 @@ public sealed partial class ArchonDataComponent : Component
     /// </summary>
     [ViewVariables]
     public EntityUid? PolymorphEntity;
-
-    /// <summary>
-    /// Список добавленных компонентов
-    /// </summary>
-    [DataField]
-    public List<string> AddedComponents = new();
-
-    /// <summary>
-    /// Список добавленных прототипов
-    /// </summary>
-    [DataField]
-    public List<ArchonComponentPrototype> AddedPrototypes = new();
 
     /// <summary>
     /// Уровень опасности
@@ -170,16 +171,28 @@ public sealed partial class ArchonDataComponent : Component
     public string? AdditiveTag;
 
     /// <summary>
-    /// Ну логика объяснена в основном компоненте
+    /// Если объект попадёт в космос, то он вернётся и пробудится
     /// </summary>
     [DataField]
-    public float RandomDangerMin;
+    public bool Comeback = true;
+
+    /// <summary>
+    /// Звук при камбеке
+    /// </summary>
     [DataField]
-    public float RandomDangerMax;
+    public SoundSpecifier? ComebackSound = new SoundPathSpecifier("/Audio/Vanilla/Effects/archonComeback.ogg");
+
+    /// <summary>
+    /// Эффект смерти и пробуждения
+    /// </summary>
     [DataField]
-    public float RandomEscapeMin;
+    public string AwakeEffect = "EffectArchonDeath";
+
+    /// <summary>
+    /// Можно ли написать на него документ
+    /// </summary>
     [DataField]
-    public float RandomEscapeMax;
+    public bool CanBeAnalyzed = false;
 
 }
 

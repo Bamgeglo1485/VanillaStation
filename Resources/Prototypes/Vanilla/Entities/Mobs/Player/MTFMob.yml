@@ -49,7 +49,7 @@
       allowSpeech: true
       makeSentient: true
       name: коммандос отряда МОГ
-      description: Восстановите условия содержания Архонт объектов союзной корпорации.
+      description: Восстановите условия содержания архонт объектов союзной корпорации.
       rules: ghost-role-information-nonantagonist-rules
       raffle:
         settings: default
@@ -72,7 +72,7 @@
       allowSpeech: true
       makeSentient: true
       name: солдат отряда МОГ
-      description: Восстановите условия содержания Архонт объектов союзной корпорации.
+      description: Восстановите условия содержания архонт объектов союзной корпорации.
       rules: ghost-role-information-nonantagonist-rules
       raffle:
         settings: default

@@ -49,6 +49,18 @@ public sealed partial class ArchonGenerateComponent : Component
     public int MaxComponents = 3;
 
     /// <summary>
+    /// Список добавленных компонентов
+    /// </summary>
+    [DataField]
+    public List<string> AddedComponents = new();
+
+    /// <summary>
+    /// Список прототипов архонта
+    /// </summary>
+    [DataField]
+    public List<ArchonComponentPrototype> AddedPrototypes = new();
+
+    /// <summary>
     /// Диапазон количества триггеров компонентов. Типо OnTrigger и TriggerOn
     /// </summary>
     [DataField]

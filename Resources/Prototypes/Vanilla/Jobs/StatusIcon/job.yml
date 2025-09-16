@@ -1,7 +1,7 @@
 - type: jobIcon
   parent: JobIcon
-  id: JobIconSRS
+  id: JobIconfal
   icon:
     sprite: /Textures/Vanilla/Interface/Misc/job_icons.rsi
-    state: srs
+    state: fal
   jobName: член МОГ

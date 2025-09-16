@@ -3,6 +3,8 @@ using Content.Shared.Movement.Components;
 using Content.Shared.Archontic.Systems;
 using Content.Shared.Damage.Components;
 using Content.Shared.Movement.Systems;
+using Content.Shared.Mobs.Components;
+using Content.Shared.Mind.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Vanilla.Warmer;
 using Content.Shared.Weapons.Melee;
@@ -19,6 +21,7 @@ using Content.Shared.Examine;
 using Content.Shared.Hands;
 
 using Robust.Shared.GameObjects;
+using Robust.Shared.Collections;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
@@ -99,19 +102,26 @@ public sealed partial class ArchonSystem : EntitySystem
         NextUpdate = curTime + TimeSpan.FromSeconds(UpdateSpeed);
 
         var beaconQuery = EntityQueryEnumerator<ArchonBeaconComponent, TransformComponent>();
-        var archonQuery = EntityQueryEnumerator<PolymorphedEntityComponent>();
+        var polyQuery = EntityQueryEnumerator<PolymorphedEntityComponent>();
+        var archonQuery = EntityQueryEnumerator<ArchonDataComponent, TransformComponent>();
 
-        while (beaconQuery.MoveNext(out var uid, out var beaconComp, out var xform))
+        while (beaconQuery.MoveNext(out var uid, out var beaconComp, out var trans))
         {
-            BeaconUpdate(uid, beaconComp, xform);
+            BeaconUpdate(uid, beaconComp, trans);
         }
 
-        while (archonQuery.MoveNext(out var polyUid, out var polyComp))
+        while (polyQuery.MoveNext(out var polyUid, out var polyComp))
         {
             if (!TryComp<ArchonDataComponent>(polyComp.Parent, out var dataComp))
                 continue;
 
-            ArchonUpdate(polyComp.Parent.Value, dataComp);
+            ArchonStateUpdate(polyComp.Parent.Value, dataComp);
+        }
+
+        while (archonQuery.MoveNext(out var archon, out var dataComp, out var trans))
+        {
+
+            ArchonUpdate(archon, dataComp, trans);
         }
     }
 
@@ -152,41 +162,72 @@ public sealed partial class ArchonSystem : EntitySystem
         }
     }
 
-    private void ArchonUpdate(EntityUid uid, ArchonDataComponent comp)
+    private void ArchonStateUpdate(EntityUid uid, ArchonDataComponent dataComp)
     {
-        if (_gameTiming.CurTime >= comp.StasisExit)
+        if ((_gameTiming.CurTime >= dataComp.StasisExit) && (dataComp.HaveStates == true || dataComp.State == ArchonState.Stasis))
         {
-            if (comp.HaveStates == false || comp.State != ArchonState.Stasis)
+            ForceStasisExit(uid, dataComp);
+        }
+    }
+
+    private void ArchonUpdate(EntityUid uid, ArchonDataComponent dataComp, TransformComponent transComp)
+    {
+        // Телепорт архонта, если его выкинули в космос, ну или он сам, а ещё он перейдёт в awake с шансом 40 процентов
+        if (dataComp.Comeback == true && Transform(uid).GridUid == null)
+        {
+            var map = Transform(uid).MapID;
+            var validMinds = new ValueList<EntityUid>();
+            var mindQuery = EntityQueryEnumerator<MindContainerComponent, MobStateComponent, TransformComponent, MetaDataComponent>();
+
+            while (mindQuery.MoveNext(out var targetUid, out var mc, out _, out var xform, out var meta))
+            {
+                if (mc.HasMind && !_container.IsEntityOrParentInContainer(targetUid, meta: meta, xform: xform) && xform.MapID == map)
+                {
+                    validMinds.Add(targetUid);
+                }
+            }
+
+            if (validMinds.Count == 0)
                 return;
 
-            ForceStasisExit(uid, comp);
+            var target = _random.Pick(validMinds);
+
+            _trans.SetCoordinates(uid, transComp, Transform(target).Coordinates);
+            _popup.PopupEntity("Архонт материализуется рядом с вами", uid);
+
+            if (dataComp.State != ArchonState.Awake && _random.Prob(dataComp.AwakeChance))
+                ForceAwake(uid, dataComp);
+            else
+                _audio.PlayPvs(dataComp.ComebackSound, uid);
         }
     }
 
     /// <summary>
     /// Перемещение архонта в состояние стазиса
     /// </summary>
-    public void ForceStasis(EntityUid uid, ArchonDataComponent comp)
+    public void ForceStasis(EntityUid uid, ArchonDataComponent dataComp)
     {
-        comp.LastState = ArchonState.Stasis;
+
+        dataComp.LastState = ArchonState.Stasis;
 
         EnsureComp<PolymorphableComponent>(uid);
 
         // Используем полиморфы, так как это наиболее лёгкий вариант, иначе нужно заморчиваться в заморозками всякими, в котором я не разбираюсь
-        comp.PolymorphEntity = _morph.PolymorphEntity(uid, comp.StasisPrototype);
+        dataComp.PolymorphEntity = _morph.PolymorphEntity(uid, dataComp.StasisPrototype);
     }
 
     /// <summary>
     /// Перемещение архонта в обычное состояние
     /// </summary>
-    public void ForceStasisExit(EntityUid uid, ArchonDataComponent comp)
+    public void ForceStasisExit(EntityUid uid, ArchonDataComponent dataComp)
     {
-        if (!TryComp<PolymorphedEntityComponent>(comp.PolymorphEntity, out var polyComp) || comp.PolymorphEntity == null)
+
+        if (!TryComp<PolymorphedEntityComponent>(dataComp.PolymorphEntity, out var polyComp) || dataComp.PolymorphEntity == null)
             return;
 
-        comp.LastState = ArchonState.Basic;
+        dataComp.LastState = ArchonState.Basic;
 
-        _morph.Revert(comp.PolymorphEntity.Value);
+        _morph.Revert(dataComp.PolymorphEntity.Value);
     }
 
     /// <summary>
@@ -194,6 +235,9 @@ public sealed partial class ArchonSystem : EntitySystem
     /// </summary>
     public void ForceAwake(EntityUid uid, ArchonDataComponent dataComp)
     {
+        if (dataComp.State == ArchonState.Awake)
+            return;
+
         dataComp.LastState = ArchonState.Awake;
 
         if (TryComp<ArchonHealthComponent>(uid, out var healthComp))
@@ -202,8 +246,15 @@ public sealed partial class ArchonSystem : EntitySystem
         if (TryComp<StaminaComponent>(uid, out var staminaComp))
             staminaComp.CritThreshold *= 3;
 
-        SetComponents(uid, dataComp, "Generic", 2, 4);
+        if (TryComp<ArchonGenerateComponent>(uid, out var genComp))
+            SetComponents(uid, dataComp, genComp, "Generic", 2, 4);
+
         SetArchonClass(dataComp);
+
+        if (TryComp<DamageableComponent>(uid, out var damagComp))
+           _damageableSystem.SetAllDamage(uid, damagComp, 0);
+
+        Spawn(dataComp.AwakeEffect, Transform(uid).Coordinates);
 
         if (dataComp.Document is not { } documentUid)
             return;
@@ -212,10 +263,8 @@ public sealed partial class ArchonSystem : EntitySystem
             !TryComp<ArchonDocumentComponent>(documentUid, out var documentComp))
             return;
 
-        if (documentComp.Archon != uid)
-            return;
-
-        SetDocumentStatus((uid, dataComp), "[color=#cc0836]Пробуждён[/color]", documentUid, paperComp);
+        if (documentComp.Archon == uid)
+            SetDocumentStatus((uid, dataComp), "[color=#cc0836]Пробуждён[/color]", documentUid, paperComp);
     }
 
     private void SetDocumentStatus(Entity<ArchonDataComponent> ent, string status, EntityUid documentUid, PaperComponent paperComp)
@@ -299,10 +348,7 @@ public sealed partial class ArchonSystem : EntitySystem
             StampedColor = Color.FromHex("#8B0000")
         }, "paper_stamp-expunged");
 
-        if (TryComp<ArchonHealthComponent>(ent, out var healthComp))
-        {
-            Spawn(healthComp.DeathEffect, Transform(ent).Coordinates);
-        }
+         Spawn(ent.Comp.AwakeEffect, Transform(ent).Coordinates);
 
         RaiseLocalEvent(ent, new ArchonDeathEvent());
     }
@@ -312,7 +358,10 @@ public sealed partial class ArchonSystem : EntitySystem
     /// </summary>
     private void OnProjectileHit(EntityUid uid, StasisArchonOnCollideComponent comp, ref ProjectileHitEvent args)
     {
-        if (!TryComp<ArchonDataComponent>(args.Target, out var dataComp) || dataComp.State == ArchonState.Awake)
+        if (!TryComp<ArchonDataComponent>(args.Target, out var dataComp))
+            return;
+
+        if (dataComp.State != ArchonState.Basic)
             return;
 
         if (dataComp.StasisHits >= comp.MaxHits)
