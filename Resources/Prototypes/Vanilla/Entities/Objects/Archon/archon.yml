@@ -26,10 +26,12 @@
         - MobLayer
   - type: MobCollision
   - type: StatusIcon
+  - type: Stamina
+    stunTime: 120
 
 - type: entity
   parent: ArchonItemRandom
-  id: ArchonItemRandomStasis
+  id: ArchonItemRandomDestasis
   suffix: Архонт, Предмет, Без стазиса
   components:
   - type: ArchonData
@@ -38,8 +40,9 @@
 - type: entity
   parent: [SimpleSpaceMobBase, MobCombat]
   id: ArchonHumanoidRandom
-  name: тест
-  description: тест
+  name: ???
+  description: Неизвестный объект, с довольно странной аурой.
+  suffix: Архонт, Существо
   components:
   - type: ArchonData
   - type: ArchonHealth
@@ -51,19 +54,22 @@
     layers:
     - map: [ "enum.DamageStateVisualLayers.Base" ]
       state: alive
+  - type: Stamina
+    stunTime: 120
   - type: Physics
-  - type: Fixtures
-    fixtures:
-      fix1:
-        shape:
-          !type:PhysShapeCircle
-          radius: 0.35
-        density: 50
-        mask:
-        - MobMask
-        layer:
-        - MobLayer
   - type: StatusIcon
+  - type: ReplacementAccent
+    accent: genericAggressive
+
+- type: entity
+  parent: ArchonHumanoidRandom
+  id: ArchonHumanoidRandomDestasis
+  name: ???
+  description: Неизвестный объект, с довольно странной аурой.
+  suffix: Архонт, Существо
+  components:
+  - type: ArchonData
+    stasisDelay: 1
 
 - type: entity
   parent: BaseItem

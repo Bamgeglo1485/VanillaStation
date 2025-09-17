@@ -311,6 +311,14 @@
             types: {}
 
 - type: archonComponent
+  id: Blind
+  desc: Объект имеет атрофированные зрительные органы.
+  danger: -2
+  humanoidWhitelist: true
+  components:
+    - type: BlindPredator
+
+- type: archonComponent
   id: PeriodicSpawn
   desc: Объект ДАННЫЕ УДАЛЕНЫ, вызывая различные предметы или существ
   types:
