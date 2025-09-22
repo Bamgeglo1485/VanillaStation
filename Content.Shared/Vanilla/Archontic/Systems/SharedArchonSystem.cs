@@ -47,12 +47,4 @@ public sealed partial class SharedArchonSystem : EntitySystem
         if (linkedArchon != null)
             args.PushMarkup($"Привязан архонт с сигнатурой: {linkedArchon.Value}");
     }
-
-    /// <summary>
-    /// Синхронизирует данные архонта с клиентом
-    /// </summary>
-    public void DirtyArchon(EntityUid uid, ArchonDataComponent comp)
-    {
-        Dirty(uid, comp);
-    }
 }

@@ -264,7 +264,7 @@ public sealed partial class ArchonSystem : EntitySystem
 
         QueueDel(args.Entity);
 
-        _archonSystem.DirtyArchon(comp.LinkedArchon.Value, dataComp);
+        Dirty(comp.LinkedArchon.Value, dataComp);
 
         SetSuccess(Print(uid, comp), errors);
 

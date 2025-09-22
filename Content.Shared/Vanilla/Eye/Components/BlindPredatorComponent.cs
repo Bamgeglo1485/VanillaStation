@@ -19,10 +19,10 @@ public sealed partial class BlindPredatorComponent : Component
     public float VisibleDistanceWalk = 2.5f;
 
     [DataField("visibleDistanceRun"), AutoNetworkedField]
-    public float VisibleDistanceRun = 5.5f;
+    public float VisibleDistanceRun = 6.5f;
 
     [DataField("userRunModifier"), AutoNetworkedField]
-    public float UserRunModifier = 0.5f;
+    public float UserRunModifier = 1f;
 
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoNetworkedField]
     public TimeSpan EnableTime = TimeSpan.Zero;

@@ -19,16 +19,10 @@ public sealed partial class ArchonGenerateComponent : Component
     public bool TriggerComponents = true;
 
     /// <summary>
-    /// Тэг для базовых компонентов
+    /// Ядро архонта
     /// </summary>
-    [DataField]
-    public string GenericTag = "Generic";
-
-    /// <summary>
-    /// Дополнительный тэг
-    /// </summary>
-    [DataField]
-    public string? AdditiveTag;
+    [DataField(required: true)]
+    public ProtoId<ArchonCorePrototype> Core;
 
     /// <summary>
     /// Диапазон количества типов
@@ -59,20 +53,5 @@ public sealed partial class ArchonGenerateComponent : Component
     /// </summary>
     [DataField]
     public List<ArchonComponentPrototype> AddedPrototypes = new();
-
-    /// <summary>
-    /// Диапазон количества триггеров компонентов. Типо OnTrigger и TriggerOn
-    /// </summary>
-    [DataField]
-    public int MinTriggers = 1;
-
-    [DataField]
-    public int MaxTriggers = 2;
-
-    /// <summary>
-    /// Шанс быть разумным гуманоидоподобным, ну не совсем гуманоид, типо NPC
-    /// </summary>
-    [DataField]
-    public float CanBeHumanoidChance = 0.15f;
 
 }

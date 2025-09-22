@@ -35,30 +35,6 @@ public sealed partial class ArchonDataComponent : Component
     public List<ArchonType> Types = new();
 
     /// <summary>
-    /// Состояние архонта. Enum ArchonState
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public ArchonState State = new();
-
-    /// <summary>
-    /// Лень объяснять, используется для первичных действий при переходе. Enum ArchonState
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public ArchonState LastState = new();
-
-    /// <summary>
-    /// Использует ли состояния архонта
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public bool HaveStates = true;
-
-    /// <summary>
-    /// Шанс выйти в пробуждении при стимуляции
-    /// </summary>
-    [DataField]
-    public float AwakeChance = 0.4f;
-
-    /// <summary>
     /// Гуманоидный ли объект
     /// </summary>
     [DataField, AutoNetworkedField]
@@ -104,12 +80,6 @@ public sealed partial class ArchonDataComponent : Component
     public EntityUid? MTG;
 
     /// <summary>
-    /// Энтити после полиморфа, то есть стазисный объект
-    /// </summary>
-    [ViewVariables]
-    public EntityUid? PolymorphEntity;
-
-    /// <summary>
     /// Уровень опасности
     /// </summary>
     [DataField]
@@ -134,65 +104,22 @@ public sealed partial class ArchonDataComponent : Component
     public int EscapeLimit = 8;
 
     /// <summary>
-    /// Прототип стазиса, должен быть прототипом полиморфа
+    /// Тэги для тестов
     /// </summary>
     [DataField]
-    public string StasisPrototype = "ArchonStasis";
-
-    /// <summary>
-    /// Длительность стазиса
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public TimeSpan StasisDelay = TimeSpan.FromSeconds(300);
-
-    /// <summary>
-    /// Сколько раз в него попадал ХИД снаряд
-    /// </summary>
-    [ViewVariables]
-    public int StasisHits = 0;
-
-    /// <summary>
-    /// Когда он выйдет из стазиса
-    /// </summary>
-    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
-    [AutoNetworkedField, AutoPausedField]
-    public TimeSpan StasisExit = TimeSpan.Zero;
-
-    /// <summary>
-    /// Тэг базовых компонентов
-    /// </summary>
-    [DataField]
-    public string GenericTag = "Generic";
-
-    /// <summary>
-    /// Дополнительный тэг
-    /// </summary>
-    [DataField]
-    public string? AdditiveTag;
-
-    /// <summary>
-    /// Если объект попадёт в космос, то он вернётся и пробудится
-    /// </summary>
-    [DataField]
-    public bool Comeback = true;
-
-    /// <summary>
-    /// Звук при камбеке
-    /// </summary>
-    [DataField]
-    public SoundSpecifier? ComebackSound = new SoundPathSpecifier("/Audio/Vanilla/Effects/archonComeback.ogg");
-
-    /// <summary>
-    /// Эффект смерти и пробуждения
-    /// </summary>
-    [DataField]
-    public string AwakeEffect = "EffectArchonDeath";
+    public List<string> Tags = new();
 
     /// <summary>
     /// Можно ли написать на него документ
     /// </summary>
     [DataField]
     public bool CanBeAnalyzed = false;
+
+    /// <summary>
+    /// Эффект смерти
+    /// </summary>
+    [DataField]
+    public string DeathEffect = "EffectArchonDeath";
 
 }
 

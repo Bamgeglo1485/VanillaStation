@@ -10,7 +10,8 @@
     - type: EmpOnTrigger
     - type: UseDelayOnTrigger
     - type: UseDelay
-      delay: 10
+      delay: 90
+    - type: UseDelayTriggerCondition
 
 - type: archonComponent
   id: Flash
@@ -23,7 +24,8 @@
     - type: FlashOnTrigger
     - type: UseDelayOnTrigger
     - type: UseDelay
-      delay: 10
+      delay: 90
+    - type: UseDelayTriggerCondition
 
 - type: archonComponent
   id: Smoke
@@ -37,7 +39,8 @@
       spreadAmount: 5
     - type: UseDelayOnTrigger
     - type: UseDelay
-      delay: 10
+      delay: 90
+    - type: UseDelayTriggerCondition
 
 - type: archonComponent
   id: Repulse
@@ -50,7 +53,8 @@
     - type: RepulseAttractOnTrigger
     - type: UseDelayOnTrigger
     - type: UseDelay
-      delay: 10
+      delay: 90
+    - type: UseDelayTriggerCondition
 
 - type: archonComponent
   id: Spawn
@@ -64,7 +68,8 @@
     - type: RandomizeArchonComponents
     - type: UseDelayOnTrigger
     - type: UseDelay
-      delay: 10
+      delay: 180
+    - type: UseDelayTriggerCondition
   chancedComponents:
     - chance: 0.3
       danger: 6

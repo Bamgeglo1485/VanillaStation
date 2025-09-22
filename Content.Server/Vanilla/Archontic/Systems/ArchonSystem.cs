@@ -58,7 +58,8 @@ public sealed partial class ArchonSystem : EntitySystem
         /// </summary>
         SubscribeLocalEvent<StasisArchonOnCollideComponent, ProjectileHitEvent>(OnProjectileHit);
         SubscribeLocalEvent<ArchonDocumentComponent, ComponentShutdown>(OnDocumentDestroy);
-        SubscribeLocalEvent<ArchonDataComponent, ComponentStartup>(OnComponentStartup);
+        SubscribeLocalEvent<ArchonDataComponent, ComponentShutdown>(OnArchonDataShutdown);
+        SubscribeLocalEvent<ArchonComponent, ComponentStartup>(OnComponentStartup);
         SubscribeLocalEvent<ArchonHealthComponent, DamageChangedEvent>(OnDamage);
 
         /// <summary>
@@ -103,7 +104,7 @@ public sealed partial class ArchonSystem : EntitySystem
 
         var beaconQuery = EntityQueryEnumerator<ArchonBeaconComponent, TransformComponent>();
         var polyQuery = EntityQueryEnumerator<PolymorphedEntityComponent>();
-        var archonQuery = EntityQueryEnumerator<ArchonDataComponent, TransformComponent>();
+        var archonQuery = EntityQueryEnumerator<ArchonComponent, TransformComponent>();
 
         while (beaconQuery.MoveNext(out var uid, out var beaconComp, out var trans))
         {
@@ -112,16 +113,16 @@ public sealed partial class ArchonSystem : EntitySystem
 
         while (polyQuery.MoveNext(out var polyUid, out var polyComp))
         {
-            if (!TryComp<ArchonDataComponent>(polyComp.Parent, out var dataComp))
+            if (!TryComp<ArchonComponent>(polyComp.Parent, out var comp))
                 continue;
 
-            ArchonStateUpdate(polyComp.Parent.Value, dataComp);
+            ArchonStateUpdate(polyComp.Parent.Value, comp);
         }
 
-        while (archonQuery.MoveNext(out var archon, out var dataComp, out var trans))
+        while (archonQuery.MoveNext(out var archon, out var comp, out var trans))
         {
 
-            ArchonUpdate(archon, dataComp, trans);
+            ArchonUpdate(archon, comp, trans);
         }
     }
 
@@ -162,18 +163,18 @@ public sealed partial class ArchonSystem : EntitySystem
         }
     }
 
-    private void ArchonStateUpdate(EntityUid uid, ArchonDataComponent dataComp)
+    private void ArchonStateUpdate(EntityUid uid, ArchonComponent comp)
     {
-        if ((_gameTiming.CurTime >= dataComp.StasisExit) && (dataComp.HaveStates == true || dataComp.State == ArchonState.Stasis))
+        if ((_gameTiming.CurTime >= comp.StasisExit) && (comp.State == ArchonState.Stasis))
         {
-            ForceStasisExit(uid, dataComp);
+            ForceStasisExit(uid, comp);
         }
     }
 
-    private void ArchonUpdate(EntityUid uid, ArchonDataComponent dataComp, TransformComponent transComp)
+    private void ArchonUpdate(EntityUid uid, ArchonComponent comp, TransformComponent transComp)
     {
         // Телепорт архонта, если его выкинули в космос, ну или он сам, а ещё он перейдёт в awake с шансом 40 процентов
-        if (dataComp.Comeback == true && Transform(uid).GridUid == null)
+        if (comp.Comeback == true && Transform(uid).GridUid == null)
         {
             var map = Transform(uid).MapID;
             var validMinds = new ValueList<EntityUid>();
@@ -195,50 +196,55 @@ public sealed partial class ArchonSystem : EntitySystem
             _trans.SetCoordinates(uid, transComp, Transform(target).Coordinates);
             _popup.PopupEntity("Архонт материализуется рядом с вами", uid);
 
-            if (dataComp.State != ArchonState.Awake && _random.Prob(dataComp.AwakeChance))
-                ForceAwake(uid, dataComp);
+            if (comp.State != ArchonState.Awake && _random.Prob(comp.AwakeChance))
+                ForceAwake(uid, comp);
             else
-                _audio.PlayPvs(dataComp.ComebackSound, uid);
+                _audio.PlayPvs(comp.ComebackSound, uid);
         }
     }
 
     /// <summary>
     /// Перемещение архонта в состояние стазиса
     /// </summary>
-    public void ForceStasis(EntityUid uid, ArchonDataComponent dataComp)
+    public void ForceStasis(EntityUid uid, ArchonComponent comp)
     {
 
-        dataComp.LastState = ArchonState.Stasis;
+        comp.LastState = comp.State;
+        comp.State = ArchonState.Stasis;
 
         EnsureComp<PolymorphableComponent>(uid);
 
         // Используем полиморфы, так как это наиболее лёгкий вариант, иначе нужно заморчиваться в заморозками всякими, в котором я не разбираюсь
-        dataComp.PolymorphEntity = _morph.PolymorphEntity(uid, dataComp.StasisPrototype);
+        comp.PolymorphEntity = _morph.PolymorphEntity(uid, comp.StasisPrototype);
     }
 
     /// <summary>
     /// Перемещение архонта в обычное состояние
     /// </summary>
-    public void ForceStasisExit(EntityUid uid, ArchonDataComponent dataComp)
+    public void ForceStasisExit(EntityUid uid, ArchonComponent comp)
     {
 
-        if (!TryComp<PolymorphedEntityComponent>(dataComp.PolymorphEntity, out var polyComp) || dataComp.PolymorphEntity == null)
+        if (!TryComp<PolymorphedEntityComponent>(comp.PolymorphEntity, out var polyComp) || comp.PolymorphEntity == null)
             return;
 
-        dataComp.LastState = ArchonState.Basic;
+        comp.LastState = comp.State;
+        comp.State = ArchonState.Basic;
 
-        _morph.Revert(dataComp.PolymorphEntity.Value);
+        _morph.Revert(comp.PolymorphEntity.Value);
     }
 
     /// <summary>
     /// Перемещение архонта в состояние пробуждения
     /// </summary>
-    public void ForceAwake(EntityUid uid, ArchonDataComponent dataComp)
+    public void ForceAwake(EntityUid uid, ArchonComponent comp)
     {
-        if (dataComp.State == ArchonState.Awake)
+        if (comp.State == ArchonState.Awake)
             return;
 
-        dataComp.LastState = ArchonState.Awake;
+        var dataComp = EnsureComp<ArchonDataComponent>(uid);
+
+        comp.LastState = comp.State;
+        comp.State = ArchonState.Awake;
 
         if (TryComp<ArchonHealthComponent>(uid, out var healthComp))
             healthComp.Health *= 3;
@@ -246,15 +252,15 @@ public sealed partial class ArchonSystem : EntitySystem
         if (TryComp<StaminaComponent>(uid, out var staminaComp))
             staminaComp.CritThreshold *= 3;
 
-        if (TryComp<ArchonGenerateComponent>(uid, out var genComp))
-            SetComponents(uid, dataComp, genComp, "Generic", 2, 4);
+        //if (TryComp<ArchonGenerateComponent>(uid, out var genComp))
+            //SetComponents(uid, dataComp, genComp, "Generic");
 
         SetArchonClass(dataComp);
 
         if (TryComp<DamageableComponent>(uid, out var damagComp))
            _damageableSystem.SetAllDamage(uid, damagComp, 0);
 
-        Spawn(dataComp.AwakeEffect, Transform(uid).Coordinates);
+        Spawn(comp.AwakeEffect, Transform(uid).Coordinates);
 
         if (dataComp.Document is not { } documentUid)
             return;
@@ -280,15 +286,12 @@ public sealed partial class ArchonSystem : EntitySystem
     /// <summary>
     /// Стазис архонта при спавне
     /// </summary>
-    private void OnComponentStartup(EntityUid uid, ArchonDataComponent dataComp, ComponentStartup args)
+    private void OnComponentStartup(EntityUid uid, ArchonComponent comp, ComponentStartup args)
     {
-        if (dataComp.HaveStates)
-        {
-            dataComp.State = ArchonState.Stasis;
-            dataComp.StasisExit = _gameTiming.CurTime + dataComp.StasisDelay;
+        comp.State = ArchonState.Stasis;
+        comp.StasisExit = _gameTiming.CurTime + comp.StasisDelay;
 
-            ForceStasis(uid, dataComp);
-        }
+        ForceStasis(uid, comp);
     }
 
     /// <summary>
@@ -307,14 +310,14 @@ public sealed partial class ArchonSystem : EntitySystem
 
         var dataComp = EnsureComp<ArchonDataComponent>(ent);
 
-        if (dataComp.Destructibility == ArchonDestructibility.Rebirth)
+        if (dataComp.Destructibility == ArchonDestructibility.Rebirth && TryComp<ArchonComponent>(ent, out var archonComp))
         {
             SetDestructibility(ent, dataComp);
-            ForceAwake(ent, dataComp);
+            ForceAwake(ent, archonComp);
 
-            dataComp.State = ArchonState.Awake;
+            archonComp.State = ArchonState.Awake;
         }
-        else
+        else 
         {
 
             if (dataComp.Document != null)
@@ -328,8 +331,16 @@ public sealed partial class ArchonSystem : EntitySystem
     /// <summary>
     /// При смерти архонта
     /// </summary>
+    private void OnArchonDataShutdown(Entity<ArchonDataComponent> ent, ref ComponentShutdown args)
+    {
+        OnArchonDeath(ent);
+    }
+
     private void OnArchonDeath(Entity<ArchonDataComponent> ent)
     {
+
+        Spawn(ent.Comp.DeathEffect, Transform(ent).Coordinates);
+
         if (ent.Comp.Document is not { } documentUid)
             return;
 
@@ -348,8 +359,6 @@ public sealed partial class ArchonSystem : EntitySystem
             StampedColor = Color.FromHex("#8B0000")
         }, "paper_stamp-expunged");
 
-         Spawn(ent.Comp.AwakeEffect, Transform(ent).Coordinates);
-
         RaiseLocalEvent(ent, new ArchonDeathEvent());
     }
 
@@ -358,19 +367,19 @@ public sealed partial class ArchonSystem : EntitySystem
     /// </summary>
     private void OnProjectileHit(EntityUid uid, StasisArchonOnCollideComponent comp, ref ProjectileHitEvent args)
     {
-        if (!TryComp<ArchonDataComponent>(args.Target, out var dataComp))
+        if (!TryComp<ArchonComponent>(args.Target, out var archonComp))
             return;
 
-        if (dataComp.State != ArchonState.Basic)
+        if (archonComp.State != ArchonState.Basic)
             return;
 
-        if (dataComp.StasisHits >= comp.MaxHits)
+        if (archonComp.StasisHits >= archonComp.MaxHits)
             return;
 
-        dataComp.StasisHits++;
-        dataComp.StasisExit = _gameTiming.CurTime + comp.StasisDelay;
+        archonComp.StasisHits++;
+        archonComp.StasisExit = _gameTiming.CurTime + comp.StasisDelay;
 
-        ForceStasis(args.Target, dataComp);
+        ForceStasis(args.Target, archonComp);
     }
 
     /// <summary>

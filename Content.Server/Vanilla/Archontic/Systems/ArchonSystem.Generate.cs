@@ -8,6 +8,7 @@ using Content.Shared.Vanilla.Warmer;
 using Content.Shared.Weapons.Melee;
 using Content.Shared.Interaction;
 using Content.Shared.GameTicking;
+using Content.Shared.StoryGen;
 using Content.Shared.Damage;
 using Content.Shared.Paper;
 using Content.Shared.Atmos;
@@ -29,6 +30,8 @@ namespace Content.Server.Archontic.Systems;
 public sealed partial class ArchonSystem : EntitySystem
 {
 
+    [Dependency] private readonly StoryGeneratorSystem _storyGen = default!;
+
     /// <summary>
     /// Базовые действия при появлении Архонта
     /// </summary>
@@ -41,18 +44,6 @@ public sealed partial class ArchonSystem : EntitySystem
 
         var dataComp = EnsureComp<ArchonDataComponent>(ent);
 
-        if (_random.Prob(comp.CanBeHumanoidChance))
-        {
-            dataComp.Humanoid = true;
-
-            SetComponents(ent, dataComp, ent.Comp, "AI", 1, 1);
-            SetComponents(ent, dataComp, ent.Comp, "Damage", 0, 1);
-            SetComponents(ent, dataComp, ent.Comp, "Movement", 0, 1);
-
-            SetRandomDamage(ent, dataComp);
-            SetRandomMovementSpeed(ent, dataComp);
-        }
-
         GenerateArchon(ent, dataComp);
 
     }
@@ -60,50 +51,66 @@ public sealed partial class ArchonSystem : EntitySystem
     /// <summary>
     /// Генерирует сам архонт
     /// </summary>
-    private void GenerateArchon(Entity<ArchonGenerateComponent> ent, ArchonDataComponent dataComp)
+    public void GenerateArchon(Entity<ArchonGenerateComponent> ent, ArchonDataComponent dataComp)
     {
         var comp = ent.Comp;
 
+        // Ищем прототип ядра
+        if (!_prototypeManager.TryIndex<ArchonCorePrototype>(comp.Core, out var core))
+            return;
+
+        // Устанавливаем переменные
+        dataComp.Humanoid = core.Humanoid;
+        dataComp.Tags = core.Tags.Select(t => t.Tag).ToList();
+
+        // Устанавливаем тип архонта
         if (comp.RandomType)
-            SetRandomArchonType(ent, dataComp);
-
-        SetComponents(ent, dataComp, ent.Comp, comp.GenericTag, comp.MinComponents, comp.MaxComponents);
-
-        if (comp.TriggerComponents)
         {
-            SetComponents(ent, dataComp, ent.Comp, "TriggerOn", 1, 2);
-            SetComponents(ent, dataComp, ent.Comp, "OnTrigger", 1, 2);
+            SetRandomArchonType(ent, dataComp, core.Types);
         }
 
-        if (comp.AdditiveTag != null)
+        // Добавляем компоненты
+        foreach (var tag in core.Tags)
         {
-            dataComp.AdditiveTag = comp.AdditiveTag;
-            SetComponents(ent, dataComp, ent.Comp, comp.AdditiveTag, comp.MinComponents, comp.MaxComponents);
+            SetComponents(ent, dataComp, comp, core, tag);
         }
 
-        dataComp.GenericTag = comp.GenericTag;
-
-        if (TryComp<ArchonHealthComponent>(ent, out var health))
+        // Устанавливаем прочность архонта
+        if (TryComp<ArchonHealthComponent>(ent, out var health) && core.RandomDestructibility)
             SetDestructibility((ent, health), dataComp);
 
+        // Урон
+        if (core.RandomDamage)
+            SetRandomDamage(ent, dataComp);
+
+        // Скорость
+        if (core.RandomMovementSpeed)
+            SetRandomMovementSpeed(ent, dataComp);
+
+        // Рандомизируем переменные некоторых компонентов
         if (TryComp<RandomizeArchonComponentsComponent>(ent, out _))
             RandomizeComponent(ent, dataComp);
 
+        // Делаем рандомное описание
+        SetDescription((ent, dataComp), core);
+
+        // На основе побега и опасности устанавливаем класс
         SetArchonClass(dataComp);
 
-        _archonSystem.DirtyArchon(ent, dataComp);
+        Dirty(ent, dataComp);
     }
 
     /// <summary>
     /// Добавляет компоненты, которые соответствуют типам архонта
     /// </summary>
-    private void SetComponents(EntityUid ent, ArchonDataComponent dataComp, ArchonGenerateComponent comp, string tag, int minCount, int maxCount)
+    public void SetComponents(EntityUid ent, ArchonDataComponent dataComp, ArchonGenerateComponent comp,
+                             ArchonCorePrototype core, ArchonTag tag)
     {
-        var validPrototypes = GetArchonPrototypes(ent, dataComp, tag);
+        var validPrototypes = GetArchonPrototypes(ent, dataComp, tag.Tag);
         if (validPrototypes.Count == 0)
             return;
 
-        var count = _random.Next(minCount, maxCount + 1);
+        var count = _random.Next(tag.Min, tag.Max + 1);
         for (var i = 0; i < count; i++)
         {
             var availablePrototypes = validPrototypes
@@ -156,7 +163,7 @@ public sealed partial class ArchonSystem : EntitySystem
     /// <summary>
     /// Получает компоненты, который соответствуют типам архонта
     /// </summary>
-    private List<ArchonComponentPrototype> GetArchonPrototypes(EntityUid ent, ArchonDataComponent dataComp, string tag)
+    public List<ArchonComponentPrototype> GetArchonPrototypes(EntityUid ent, ArchonDataComponent dataComp, string tag)
     {
         var prototypes = new List<ArchonComponentPrototype>();
 
@@ -186,7 +193,7 @@ public sealed partial class ArchonSystem : EntitySystem
     /// <summary>
     /// Устанавливает класс Архонта на основе уровня опасности и сбегаемости
     /// </summary>
-    private void SetArchonClass(ArchonDataComponent dataComp)
+    public void SetArchonClass(ArchonDataComponent dataComp)
     {
         var danger = dataComp.Danger;
         var escape = dataComp.Escape;
@@ -212,15 +219,17 @@ public sealed partial class ArchonSystem : EntitySystem
     /// <summary>
     /// Устанавливает случайные типы Архонта
     /// </summary>
-    private void SetRandomArchonType(Entity<ArchonGenerateComponent> ent, ArchonDataComponent dataComp)
+    public void SetRandomArchonType(Entity<ArchonGenerateComponent> ent, ArchonDataComponent dataComp, List<ArchonType> coreTypes)
     {
         var comp = ent.Comp;
 
-        var types = Enum.GetValues<ArchonType>().ToList();
-        var count = Math.Min(_random.Next(comp.MinTypes, comp.MaxTypes + 1), types.Count);
+        if (coreTypes == null || coreTypes.Count == 0)
+            coreTypes = Enum.GetValues<ArchonType>().ToList();
 
-        dataComp.Types = types
-            .OrderBy(x => _random.Next())
+        var count = Math.Min(_random.Next(comp.MinTypes, comp.MaxTypes + 1), coreTypes.Count);
+
+        dataComp.Types = coreTypes
+            .OrderBy(x => _random.Next()) 
             .Take(count)
             .ToList();
     }
@@ -228,7 +237,7 @@ public sealed partial class ArchonSystem : EntitySystem
     /// <summary>
     /// Даёт архонту случайный урон, скорость удара, которая зависит от показателя опасности
     /// </summary>
-    private void SetRandomDamage(Entity<ArchonGenerateComponent> ent, ArchonDataComponent dataComp)
+    public void SetRandomDamage(Entity<ArchonGenerateComponent> ent, ArchonDataComponent dataComp)
     {
         float modifier;
 
@@ -260,7 +269,7 @@ public sealed partial class ArchonSystem : EntitySystem
     /// <summary>
     /// Даёт архонту случайную скорость, которая зависит от показателя сбегаемости
     /// </summary>
-    private void SetRandomMovementSpeed(Entity<ArchonGenerateComponent> ent, ArchonDataComponent dataComp)
+    public void SetRandomMovementSpeed(Entity<ArchonGenerateComponent> ent, ArchonDataComponent dataComp)
     {
         float modifier;
 
@@ -282,9 +291,22 @@ public sealed partial class ArchonSystem : EntitySystem
     }
 
     /// <summary>
+    /// Устанавливает описание Архонта
+    /// </summary>
+    public void SetDescription(Entity<ArchonDataComponent> ent, ArchonCorePrototype core)
+    {
+        if (!_storyGen.TryGenerateStoryFromTemplate(core.Template, out var story))
+            return;
+
+        var meta = MetaData(ent);
+
+        _metaData.SetEntityDescription(ent, story, meta);
+    }
+
+    /// <summary>
     /// Даёт архонту случайную прочность
     /// </summary>
-    private void SetDestructibility(Entity<ArchonHealthComponent> ent, ArchonDataComponent dataComp)
+    public void SetDestructibility(Entity<ArchonHealthComponent> ent, ArchonDataComponent dataComp)
     {
         var comp = ent.Comp;
 
@@ -330,7 +352,7 @@ public sealed partial class ArchonSystem : EntitySystem
     /// <summary>
     /// Рандомизация некоторых компонентов
     /// </summary>
-    private void RandomizeComponent(Entity<ArchonGenerateComponent> ent, ArchonDataComponent dataComp)
+    public void RandomizeComponent(Entity<ArchonGenerateComponent> ent, ArchonDataComponent dataComp)
     {
         if (TryComp<TimedSpawnerComponent>(ent, out var spawner))
         {

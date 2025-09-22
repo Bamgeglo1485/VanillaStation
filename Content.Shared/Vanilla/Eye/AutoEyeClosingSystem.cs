@@ -1,4 +1,5 @@
 using Content.Shared.Eye.Blinding.Components;
+using Content.Shared.Mobs.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
@@ -7,13 +8,14 @@ namespace Content.Shared.Eye.Blinding.Systems;
 public sealed class AutoEyeClosingSystem : EntitySystem
 {
     [Dependency] private readonly EyeClosingSystem _eyeClosingSystem = default!;
+    [Dependency] private readonly MobStateSystem _mobStateSystem = default!;
     [Dependency] private readonly SharedTransformSystem _trans = default!;
     [Dependency] private readonly IGameTiming _gameTiming = default!;
 
-    private const float BlinkInterval = 12f;
+    private const float BlinkInterval = 7f;
     private const float BlinkDuration = 0.4f;
 
-    private TimeSpan nextBlinkTime;
+    public TimeSpan nextBlinkTime;
     private readonly Dictionary<EntityUid, TimeSpan> blinkEndTimes = new();
 
     public override void Initialize()
@@ -30,6 +32,9 @@ public sealed class AutoEyeClosingSystem : EntitySystem
         var entitiesToRemove = new List<EntityUid>();
         foreach (var (uid, endTime) in blinkEndTimes)
         {
+            if (!_mobStateSystem.IsAlive(uid))
+                return;
+
             if (curTime >= endTime && TryComp<EyeClosingComponent>(uid, out var eyeComp))
             {
                 _eyeClosingSystem.SetEyelids(uid, false);

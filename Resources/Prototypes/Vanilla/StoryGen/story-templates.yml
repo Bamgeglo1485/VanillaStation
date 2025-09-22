@@ -1,0 +1,9 @@
+- type: storyTemplate
+  id: ArchonDescItem
+  locId: archon-desc-item
+  variables:
+    genDesc: ArchGeneralDescription
+    physDesc: ArchPhysicalDescription
+    spaceDesc: ArchSpaceDescription
+    smellDesc: ArchSmellDescription
+    memDesc: ArchMemeticDescription

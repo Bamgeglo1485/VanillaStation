@@ -1,0 +1,79 @@
+- type: entity
+  name: скульптура
+  id: MobSculptureArchon
+  parent: [ BaseMob, MobDamageable, MobPolymorphable ]
+  description: А что это за коричневые пятна?
+  components:
+    - type: DangerMob
+    - type: InputMover
+    - type: MobMover
+    - type: NpcFactionMember
+      factions:
+      - AllHostile
+    - type: Sprite
+      drawdepth: Mobs
+      sprite: Vanilla/Mobs/Archons/Sculpture.rsi
+      state: alive
+    - type: CombatMode
+    - type: Physics
+    - type: MovementSpeedModifier
+      baseWalkSpeed: 5
+      baseSprintSpeed: 5
+    - type: MeleeWeapon
+      altDisarm: false
+      angle: 0
+      animation: WeaponArcBite
+      damage:
+        types:
+          Structure: 50
+    - type: Muted
+    - type: Tag
+      tags:
+        - DoorBumpOpener
+        - CannotSuicide
+        - Sculpture
+    - type: MobThresholds
+      thresholds:
+        900: Alive
+        910: Dead
+    - type: ArchonHealth
+      health: 899
+    - type: BlockMovementOnEyeContact
+      damage:
+        types:
+          Blunt: 50
+          Asphyxiation: 30
+    - type: Archon
+    - type: ArchonData
+      description: Объект не движется во время поддержания постоянного зрительного контакта, если он нарушен, то объект совершает передвижение со скоростью ДАННЫЕ УДАЛЕНЫ, в основном нанося повреждения в области шеи.
+      awakeChance: 0
+      humanoid: true
+      comeback: false
+    - type: NPCUseActionOnTarget
+      actionId: Action173Teleport
+    - type: Prying
+      pryPowered: true
+      force: true
+      speedModifier: 5
+      useSound:
+        path: /Audio/Items/crowbar.ogg
+    - type: HTN
+      rootTask:
+        task: 173Compound
+      blackboard:
+        NavClimb: !type:Bool
+          true
+        NavInteract: !type:Bool
+          true
+        NavPry: !type:Bool
+          true
+        NavSmash: !type:Bool
+          true
+
+- type: entity
+  id: MobSculptureArchonUnstasis
+  suffix: Без стазиса
+  parent: MobSculptureArchon
+  components:
+    - type: Archon
+      stasisDelay: 1

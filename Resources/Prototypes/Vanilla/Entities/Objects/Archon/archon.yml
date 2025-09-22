@@ -10,9 +10,9 @@
     state: produce
   - type: ArchonData
   - type: ArchonHealth
+  - type: Archon
   - type: ArchonGenerate
-    canBeHumanoidChance: 0.05
-    additiveTag: Item
+    core: Item
   - type: Fixtures
     fixtures:
       fix1:
@@ -25,16 +25,17 @@
         layer:
         - MobLayer
   - type: MobCollision
+  - type: RequireProjectileTarget
   - type: StatusIcon
   - type: Stamina
-    stunTime: 120
+    stunTime: 60
 
 - type: entity
   parent: ArchonItemRandom
   id: ArchonItemRandomDestasis
   suffix: Архонт, Предмет, Без стазиса
   components:
-  - type: ArchonData
+  - type: Archon
     stasisDelay: 1
 
 - type: entity
@@ -44,10 +45,11 @@
   description: Неизвестный объект, с довольно странной аурой.
   suffix: Архонт, Существо
   components:
+  - type: Archon
   - type: ArchonData
   - type: ArchonHealth
   - type: ArchonGenerate
-    canBeHumanoidChance: 1
+    core: Humanoid
   - type: Sprite
     drawdepth: Mobs
     sprite: Mobs/Aliens/Carps/space.rsi
@@ -55,7 +57,7 @@
     - map: [ "enum.DamageStateVisualLayers.Base" ]
       state: alive
   - type: Stamina
-    stunTime: 120
+    stunTime: 60
   - type: Physics
   - type: StatusIcon
   - type: ReplacementAccent
@@ -66,9 +68,9 @@
   id: ArchonHumanoidRandomDestasis
   name: ???
   description: Неизвестный объект, с довольно странной аурой.
-  suffix: Архонт, Существо
+  suffix: Архонт, Существо, Без стазиса
   components:
-  - type: ArchonData
+  - type: Archon
     stasisDelay: 1
 
 - type: entity

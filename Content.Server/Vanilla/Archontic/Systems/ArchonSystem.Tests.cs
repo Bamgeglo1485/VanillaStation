@@ -78,7 +78,8 @@ public sealed partial class ArchonSystem
         foreach (var proto in _prototypeManager.EnumeratePrototypes<ArchonTestPrototype>())
         {
             // Проверка тегов
-            if (proto.Tag != dataComp.GenericTag && dataComp.AdditiveTag != proto.Tag)
+            if (!string.IsNullOrEmpty(proto.Tag) &&
+                !dataComp.Tags.Contains(proto.Tag))
                 continue;
 
             // Проверка вайтлиста компонентов

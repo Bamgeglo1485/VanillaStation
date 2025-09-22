@@ -16,13 +16,13 @@
   components:
     - type: IgniteOnCollide
 
-- type: archonComponent
-  id: Unremoveable
-  desc: Объект намертво соединяется с рукой на ДАННЫЕ УДАЛЕНЫ
-  tag: Item
-  danger: 2
-  components:
-    - type: Unremoveable
+#- type: archonComponent
+#  id: Unremoveable
+#  desc: Объект намертво соединяется с рукой на ДАННЫЕ УДАЛЕНЫ
+#  tag: Item
+#  danger: 2
+#  components:
+#    - type: Unremoveable
 
 - type: archonComponent
   id: Clothing
