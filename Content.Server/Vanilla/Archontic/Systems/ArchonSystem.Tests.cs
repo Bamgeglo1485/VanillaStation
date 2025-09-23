@@ -211,6 +211,19 @@ public sealed partial class ArchonSystem
             content.AppendLine(dataComp.Description);
         }
 
+        var doc = dataComp.Document;
+        TryComp<PaperComponent>(doc, out var docComp);
+
+        if (dataComp.Danger > dataComp.DangerLimit * 1.5 && dataComp.Escape > dataComp.EscapeLimit * 1.5 && doc != null && docComp != null)
+        {
+            SetDocumentClass((uid, dataComp), "[color=#5c0c99]Аполлион[/color]", doc.Value, docComp);
+            SetDocumentStatus((uid, dataComp), "[color=#cc0836]Метка уничтожения[/color]", doc.Value, docComp);
+        }
+        else if (doc != null && docComp != null)
+        {
+            SetDocumentStatus((uid, dataComp), "Постановлен на содержание", doc.Value, docComp);
+        }
+
         if (TryGetRandomComment(mtgComp, out var comment))
             content.AppendLine(comment);
 

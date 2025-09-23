@@ -18,8 +18,8 @@
         enum.PowerDeviceVisualLayers.Powered:
           True: { visible: true }
           False: { visible: false }
-  # - type: Machine
-  #   board: FlatpackerMachineCircuitboard
+  - type: Machine
+    board: ArchonAnalyerMachineCircuitboard
   - type: AmbientSound
     enabled: false
     volume: 5
@@ -47,12 +47,27 @@
   # - type: GuideHelp
   #   guides:
   #   - Xenoarchaeology
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:ChangeConstructionNodeBehavior
+        node: machineFrame
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+  - type: WiresVisuals
+  - type: WiresPanel
 
 - type: entity
   parent: [ BaseMachinePowered, ConstructibleMachine ]
-  id: ArchonBeacon
+  id: MachineArchonBeacon
   name: маяк архонтов
-  description: ПОТОМ
+  description: Устройство, дающее очки исследований, если архонт в пределах 10 метров. Ну, либо ОБНАРУЖЕНО НАРУШЕНИЕ УСЛОВИЙ СДЕРЖИВАНИЯ ОБЪЕКТОВ КЛАССА КЕТЕР И ЕВКЛИД.
   components:
   - type: Transform
     anchored: true
@@ -94,25 +109,12 @@
           True: { visible: true }
           False: { visible: false }
   - type: Machine
-    board: HolopadMachineCircuitboard
+    board: ArchonBeaconMachineCircuitboard
   - type: PointLight
     radius: 1.3
     energy: 1.8
     color: "#afe1fe"
     enabled: false
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 100
-      behaviors:
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MetalBreak
-      - !type:ChangeConstructionNodeBehavior
-        node: machineFrame
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
   - type: ArchonBeacon
   - type: ResearchClient
   - type: ActivatableUI
@@ -122,10 +124,25 @@
     interfaces:
       enum.ResearchClientUiKey.Key:
         type: ResearchClientBoundUserInterface
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 300
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:ChangeConstructionNodeBehavior
+        node: machineFrame
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+  - type: WiresVisuals
+  - type: WiresPanel
 
 - type: entity
   parent: [ BaseMachinePowered, ConstructibleMachine ]
-  id: ArchonMTG
+  id: MachineArchonMTG
   name: генератор заурядных тестов
   description: Искусственный интеллект, точно не ненавидящий человечество, генерирует совершенно безопасные тесты, которые не приведут к нарушению условий содержания.
   components:
@@ -154,24 +171,11 @@
       shader: unshaded
   - type: Appearance
   - type: Machine
-    board: HolopadMachineCircuitboard
+    board: ArchonMTGMachineCircuitboard
   - type: PointLight
     radius: 1.1
     energy: 0.2
     color: "#afe1fe"
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 100
-      behaviors:
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MetalBreak
-      - !type:ChangeConstructionNodeBehavior
-        node: machineFrame
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
   - type: MTG
     commentsDataset: MTGComments
   - type: GhostRole
@@ -181,6 +185,7 @@
     rules: ghost-role-information-nonantagonist-rules
     raffle:
       settings: short
+  - type: GhostTakeoverAvailable
   - type: TypingIndicator
     proto: robot
   - type: Speech
@@ -189,3 +194,18 @@
     sounds:
       Unsexed: UnisexSilicon
     wilhelmProbability: 0
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 60
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:ChangeConstructionNodeBehavior
+        node: machineFrame
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+  - type: WiresVisuals
+  - type: WiresPanel

@@ -22,7 +22,8 @@ using Robust.Shared.IoC;
 
 using Content.Server.Spawners.Components;
 using Content.Server.Destructible;
-
+using Content.Server.Antag;
+using Content.Server.Roles;
 using System.Linq;
 
 namespace Content.Server.Archontic.Systems;
@@ -31,6 +32,7 @@ public sealed partial class ArchonSystem : EntitySystem
 {
 
     [Dependency] private readonly StoryGeneratorSystem _storyGen = default!;
+    [Dependency] private readonly AntagSelectionSystem _antag = default!;
 
     /// <summary>
     /// Базовые действия при появлении Архонта
@@ -74,6 +76,10 @@ public sealed partial class ArchonSystem : EntitySystem
         {
             SetComponents(ent, dataComp, comp, core, tag);
         }
+
+        // Урон
+        if (TryComp<ArchonComponent>(ent, out var archonComp) && comp.RandomMaxHits)
+            archonComp.MaxHits = _random.Next(comp.MinHits, comp.MaxHits);
 
         // Устанавливаем прочность архонта
         if (TryComp<ArchonHealthComponent>(ent, out var health) && core.RandomDestructibility)
@@ -301,6 +307,21 @@ public sealed partial class ArchonSystem : EntitySystem
         var meta = MetaData(ent);
 
         _metaData.SetEntityDescription(ent, story, meta);
+    }
+
+    public void GenerateBriefing(Entity<ArchonBriefingComponent> ent, ref ComponentStartup args)
+    {
+        if (!_storyGen.TryGenerateStoryFromTemplate(ent.Comp.Template, out var story) || ent.Comp.Briefing != null)
+            return;
+
+        _antag.SendBriefing(ent, story, null, null);
+        ent.Comp.Briefing = story;
+    }
+
+    private void OnGetBriefing(EntityUid uid, ArchonBriefingComponent comp, ref GetBriefingEvent args)
+    {
+        if (comp.Briefing != null)
+           args.Append(comp.Briefing);
     }
 
     /// <summary>

@@ -224,11 +224,7 @@ public sealed partial class ArchonSystem : EntitySystem
                     ArchonClass.Thaumiel => "[color=#cc0836]Таумиэль[/color]"
                 };
 
-                content = content.Replace(
-                    $"Класс объекта: {objectClass}",
-                    $"Класс объекта: {adaptedClass}");
-
-                _paperSystem.SetContent(paper, content);
+                SetDocumentClass((uid, dataComp), adaptedClass, paper, paperComp);
             }
         }
 

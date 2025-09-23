@@ -1,0 +1,101 @@
+archon-brief =
+    Вы { $behdesc }, обитающее в { $evdesc }. Вы обожаете { $love }, но ненавидите { $hate }.
+
+archon-brief-behdesc-angry-1 = кровожадное существо, ненавидящее всех
+archon-brief-behdesc-angry-2 = ультражестокое существо, играющее с жертвами
+archon-brief-behdesc-angry-3 = хладнокровный хищник, ведущий скрытную охоту
+archon-brief-behdesc-angry-4 = обычное агрессивное существо, движимое инстинктами
+archon-brief-behdesc-angry-5 = вынужденное действовать агрессивано существо
+archon-brief-behdesc-angry-6 = хищник, выжидающий жертв из тени
+archon-brief-behdesc-angry-7 = ненавидящее человечество существо
+archon-brief-behdesc-angry-8 = существо, которое само незнает почему, но хочет убивать
+
+archon-brief-evdesc-1 = технических туннелях
+archon-brief-evdesc-2 = тёмных местах
+archon-brief-evdesc-3 = светлых местах, вблизи ламп
+archon-brief-evdesc-4 = укромных местах
+archon-brief-evdesc-5 = людных местах
+archon-brief-evdesc-6 = длинных коридорах
+archon-brief-evdesc-7 = космосе
+archon-brief-evdesc-8 = любых местах
+archon-brief-evdesc-9 = безлюдных местах
+
+archon-brief-love-angry-1 = кровь
+archon-brief-love-angry-2 = газированные напитки
+archon-brief-love-angry-3 = натуральные соки
+archon-brief-love-angry-4 = пугать людей
+archon-brief-love-angry-5 = вести охоту
+archon-brief-love-angry-6 = убивать людей
+archon-brief-love-angry-7 = убивать вульп
+archon-brief-love-angry-8 = убивать унатхов
+archon-brief-love-angry-9 = убивать мужчин
+archon-brief-love-angry-10 = убивать женщин
+archon-brief-love-angry-11 = убивать всех
+archon-brief-love-angry-12 = свежее мясо
+archon-brief-love-angry-13 = жареное мясо
+archon-brief-love-angry-14 = воду
+archon-brief-love-angry-15 = боль, как свою, так и чужую
+archon-brief-love-angry-16 = вопросы
+archon-brief-love-angry-17 = тьму
+archon-brief-love-angry-18 = свет
+archon-brief-love-angry-19 = алкоголь
+archon-brief-love-angry-20 = пиво
+archon-brief-love-angry-21 = гулять
+
+archon-brief-hate-angry-1 = воду
+archon-brief-hate-angry-2 = заточение
+archon-brief-hate-angry-3 = тестирования
+archon-brief-hate-angry-4 = убегать
+archon-brief-hate-angry-5 = догонять
+archon-brief-hate-angry-6 = огнестрел
+archon-brief-hate-angry-7 = лестницы
+archon-brief-hate-angry-8 = шаттлы
+archon-brief-hate-angry-9 = электричество
+archon-brief-hate-angry-10 = технику
+archon-brief-hate-angry-11 = лекарства
+archon-brief-hate-angry-12 = клоунов
+archon-brief-hate-angry-13 = службу безопасности
+archon-brief-hate-angry-14 = когда к вам подходят
+archon-brief-hate-angry-15 = когда вас трогают
+archon-brief-hate-angry-16 = когда вас беспокоят
+archon-brief-hate-angry-17 = когда про вас пишут
+archon-brief-hate-angry-18 = когда к вам не обращаются
+archon-brief-hate-angry-19 = когда вам не дают еды
+archon-brief-hate-angry-20 = когда вам приятно
+
+
+archon-brief-behdesc-neutral-1 = хищник, убивающий только тогда, когда голоден
+archon-brief-behdesc-neutral-2 = нейтральное существо
+archon-brief-behdesc-neutral-3 = сверхэмоциональное существо
+archon-brief-behdesc-neutral-4 = не агрессивный, когда вас обеспечивают благами
+archon-brief-behdesc-neutral-5 = агрессивный, когда вас обеспечивают благами
+archon-brief-behdesc-neutral-6 = агрессивный, когда вас заточают
+archon-brief-behdesc-neutral-7 = существо, которое пытается вылечить других от несуществующей болезни
+archon-brief-behdesc-neutral-8 = существо, которое повторяют действия, совершённые в его сторону на других
+
+archon-brief-love-neutral-1 = кровь
+archon-brief-love-neutral-2 = газированные напитки
+archon-brief-love-neutral-3 = натуральные соки
+archon-brief-love-neutral-4 = пугать людей
+archon-brief-love-neutral-5 = вести охоту
+archon-brief-love-neutral-6 = свежее мясо
+archon-brief-love-neutral-7 = жареное мясо
+archon-brief-love-neutral-8 = воду
+archon-brief-love-neutral-9 = боль, как свою, так и чужую
+archon-brief-love-neutral-10 = вопросы
+archon-brief-love-neutral-11 = тьму
+archon-brief-love-neutral-12 = свет
+archon-brief-love-neutral-13 = алкоголь
+archon-brief-love-neutral-14 = пиво
+archon-brief-love-neutral-15 = гулять
+archon-brief-love-neutral-16 = помогать
+archon-brief-love-neutral-17 = убегать
+archon-brief-love-neutral-18 = догонять
+archon-brief-love-neutral-19 = пиццу
+archon-brief-love-neutral-20 = наркотики
+
+archon-brief-behdesc-passive-1 = обожающее всех людей существо
+archon-brief-behdesc-passive-2 = миролюбивое существо
+archon-brief-behdesc-passive-3 = настолько тупое существо, что незнает концепцию вреда другим
+archon-brief-behdesc-passive-4 = многомерное существо, которому плевать на своё состояние
+archon-brief-behdesc-passive-5 = пугливое существо

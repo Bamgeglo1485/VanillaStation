@@ -13,6 +13,8 @@
   desc: Уничтожить объект.
   award: AwardDisc
   ComponentsWhitelist: ArchonHealth
+  minDanger: 6
+  minEscape: 6
 
 - type: archonTest
   id: Breach

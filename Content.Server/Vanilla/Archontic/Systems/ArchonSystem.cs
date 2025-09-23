@@ -33,6 +33,7 @@ using Content.Server.Polymorph.Components;
 using Content.Server.Spawners.Components;
 using Content.Server.Polymorph.Systems;
 using Content.Server.Destructible;
+using Content.Server.Roles;
 
 using System.Linq;
 using System.Text;
@@ -72,6 +73,8 @@ public sealed partial class ArchonSystem : EntitySystem
         /// <summary>
         /// ArchonSystem.Generate
         /// </summary>
+        SubscribeLocalEvent<ArchonBriefingComponent, ComponentStartup>(GenerateBriefing);
+        SubscribeLocalEvent<ArchonBriefingComponent, GetBriefingEvent>(OnGetBriefing);
         SubscribeLocalEvent<ArchonGenerateComponent, MapInitEvent>(OnMapInit);
 
         /// <summary>
@@ -281,6 +284,20 @@ public sealed partial class ArchonSystem : EntitySystem
             content = content.Replace("Статус объекта: Под наблюдением", $"Статус объекта: {status}");
             _paperSystem.SetContent(documentUid, content);
         }
+    }
+
+    private void SetDocumentClass(Entity<ArchonDataComponent> ent, string objclass, EntityUid documentUid, PaperComponent paperComp)
+    {
+        var content = paperComp.Content;
+        var classMatch = ObjectClassRegex.Match(content);
+        var objectClass = classMatch.Groups[1].Value;
+
+        content = content.Replace(
+        $"Класс объекта: {objectClass}",
+        $"Класс объекта: {objclass}");
+
+        _paperSystem.SetContent(documentUid, content);
+
     }
 
     /// <summary>

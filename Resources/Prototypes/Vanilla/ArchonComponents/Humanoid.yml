@@ -29,6 +29,11 @@
       rules: ghost-role-information-antagonist-rules
       raffle:
         settings: short
+      mindRoles:
+      - MindRoleArchonAgressive
+    - type: GhostTakeoverAvailable
+    - type: ArchonBriefing
+      template: ArchonBriefingAngry
   chancedComponents:
     - chance: 0.3
       escape: 3
@@ -53,6 +58,10 @@
           rules: ghost-role-information-freeagent-rules
           raffle:
             settings: short
+          mindRoles:
+          - MindRoleArchonNeutral
+        - type: ArchonBriefing
+          template: ArchonBriefingNeutral
     - chance: 0.2
       escape: 3
       components:
@@ -69,6 +78,10 @@
           rules: ghost-role-information-nonantagonist-rules
           raffle:
             settings: short
+          mindRoles:
+          - MindRoleArchonPassive
+        - type: ArchonBriefing
+          template: ArchonBriefingPassive
 
 # Damage - Способки объектов для убийств
 

@@ -1,0 +1,23 @@
+- type: localizedDataset
+  id: ArchHumGeneralDescription
+  values:
+    prefix: archon-gendesc-humanoid-
+    count: 27
+
+- type: localizedDataset
+  id: ArchHumPhysicalDescription
+  values:
+    prefix: archon-physdesc-humanoid-
+    count: 26
+
+- type: localizedDataset
+  id: ArchBehaviorDescription
+  values:
+    prefix: archon-behdesc-humanoid-
+    count: 20
+
+- type: localizedDataset
+  id: ArchPreludeDescription
+  values:
+    prefix: archon-behdesc-prelude-humanoid-
+    count: 6

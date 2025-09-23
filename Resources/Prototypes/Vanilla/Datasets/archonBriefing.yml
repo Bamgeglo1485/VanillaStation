@@ -1,0 +1,41 @@
+- type: localizedDataset
+  id: ArchBriefingBehaviourDescAngry
+  values:
+    prefix: archon-brief-behdesc-angry-
+    count: 8
+
+- type: localizedDataset
+  id: ArchBriefingBehaviourDescNeutral
+  values:
+    prefix: archon-brief-behdesc-neutral-
+    count: 8
+
+- type: localizedDataset
+  id: ArchBriefingBehaviourDescPassive
+  values:
+    prefix: archon-brief-behdesc-passive-
+    count: 5
+
+- type: localizedDataset
+  id: ArchBriefingEnvironmentDesc
+  values:
+    prefix: archon-brief-evdesc-
+    count: 9
+
+- type: localizedDataset
+  id: ArchBriefingLoveDescAngry
+  values:
+    prefix: archon-brief-love-angry-
+    count: 21
+
+- type: localizedDataset
+  id: ArchBriefingLoveDescNeutral
+  values:
+    prefix: archon-brief-love-neutral-
+    count: 20
+
+- type: localizedDataset
+  id: ArchBriefingHateDescAngry
+  values:
+    prefix: archon-brief-hate-angry-
+    count: 20

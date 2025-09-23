@@ -20,8 +20,14 @@ public sealed class ShowArchonClassSystem : EquipmentHudSystem<ShowArchonClassCo
         base.Initialize();
 
         SubscribeLocalEvent<ShowArchonClassComponent, AfterAutoHandleStateEvent>(OnHandleState);
+        SubscribeLocalEvent<ShowArchonClassComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<ArchonDataComponent, GetStatusIconsEvent>(OnGetStatusIcons);
 
+    }
+
+    private void OnMapInit(Entity<ShowArchonClassComponent> ent, ref MapInitEvent args)
+    {
+        showRealClass = ent.Comp.ShowRealClass;
     }
 
     private void OnHandleState(Entity<ShowArchonClassComponent> ent, ref AfterAutoHandleStateEvent args)

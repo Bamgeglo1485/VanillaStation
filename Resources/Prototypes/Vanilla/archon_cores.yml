@@ -19,6 +19,7 @@
 - type: archonCore
   id: Humanoid
   name: Гуманоид
+  template: ArchonDescHumanoid
   tags:
   - tag: Generic
     min: 2

@@ -42,6 +42,19 @@ public sealed partial class ArchonGenerateComponent : Component
     [DataField]
     public int MaxComponents = 3;
 
+
+    /// <summary>
+    /// Диапазон случайного кол-во максимальных попаданий ХИД пушками.
+    /// </summary>
+    [DataField]
+    public bool RandomMaxHits = true;
+
+    [DataField]
+    public int MaxHits = 4;
+
+    [DataField]
+    public int MinHits = 2;
+
     /// <summary>
     /// Список добавленных компонентов
     /// </summary>
