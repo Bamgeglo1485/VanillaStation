@@ -83,4 +83,15 @@ public sealed partial class ArchonComponent : Component
     [DataField]
     public string AwakeEffect = "EffectArchonDeath";
 
+    /// <summary>
+    /// Сообщит о местоположении, если архонт создан на станции
+    /// </summary>
+    [DataField]
+    public bool Announcement = true;
+
+    /// <summary>
+    /// Проиграл ли он уже оповещение
+    /// </summary>
+    [DataField]
+    public bool AnnouncementPlayed = false;
 }

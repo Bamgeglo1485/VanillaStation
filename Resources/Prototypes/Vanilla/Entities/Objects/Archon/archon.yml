@@ -82,3 +82,8 @@
   - type: Sprite
     sprite: Vanilla/Effects/ArchonEffects.rsi
     state: stasis
+  - type: AmbientSound
+    volume: -8
+    range: 15
+    sound:
+      path: /Audio/Vanilla/Ambience/archon_ambient.ogg

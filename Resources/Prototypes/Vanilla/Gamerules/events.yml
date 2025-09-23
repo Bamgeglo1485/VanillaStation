@@ -13,3 +13,13 @@
       path: /Audio/Vanilla/Adminbuse/MTF_Arrive.ogg
       params:
         volume: 0
+
+- type: entity
+  id: ArchonSpawnGamerule
+  parent: BaseStationEventShortDelay
+  components:
+  - type: GameRule
+  - type: StationEvent
+    weight: 7.5
+    duration: null
+  - type: ArchonSpawnRule

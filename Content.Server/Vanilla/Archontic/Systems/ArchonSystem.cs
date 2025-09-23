@@ -11,6 +11,7 @@ using Content.Shared.Weapons.Melee;
 using Content.Shared.Projectiles;
 using Content.Shared.Interaction;
 using Content.Shared.GameTicking;
+using Content.Shared.Pinpointer;
 using Content.Shared.Damage;
 using Content.Shared.Paper;
 using Content.Shared.Atmos;
@@ -20,19 +21,24 @@ using Content.Shared.Throwing;
 using Content.Shared.Examine;
 using Content.Shared.Hands;
 
+using Robust.Shared.Audio.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Collections;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Robust.Shared.Random;
+using Robust.Shared.Player;
+using Robust.Shared.Audio;
 using Robust.Shared.Maths;
 using Robust.Shared.IoC;
 
 using Content.Server.Polymorph.Components;
 using Content.Server.Spawners.Components;
 using Content.Server.Polymorph.Systems;
+using Content.Server.Station.Systems;
 using Content.Server.Destructible;
+using Content.Server.Pinpointer;
 using Content.Server.Roles;
 
 using System.Linq;
@@ -48,7 +54,9 @@ public sealed partial class ArchonSystem : EntitySystem
     [Dependency] private readonly SharedArchonSystem _archonSystem = default!;
     [Dependency] private readonly PaperSystem _paperSystem = default!;
     [Dependency] private readonly PolymorphSystem _morph = default!;
+    [Dependency] private readonly StationSystem _station = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly NavMapSystem _navMap = default!;
 
     public override void Initialize()
     {
@@ -120,6 +128,7 @@ public sealed partial class ArchonSystem : EntitySystem
                 continue;
 
             ArchonStateUpdate(polyComp.Parent.Value, comp);
+            Announce(polyUid, comp);
         }
 
         while (archonQuery.MoveNext(out var archon, out var comp, out var trans))
@@ -204,6 +213,29 @@ public sealed partial class ArchonSystem : EntitySystem
             else
                 _audio.PlayPvs(comp.ComebackSound, uid);
         }
+    }
+
+    private void Announce(EntityUid uid, ArchonComponent comp)
+    {
+        if (comp.Announcement == false || comp.AnnouncementPlayed)
+            return;
+
+        var trans = Transform(uid);
+
+        EnsureComp<NavMapBeaconComponent>(uid);
+
+        var stationUid = _station.GetStationInMap(trans.MapID);
+        if (stationUid == null)
+            return;
+
+        var msg = Loc.GetString("archon-spawn-announcement",
+        ("location", FormattedMessage.RemoveMarkupOrThrow(_navMap.GetNearestBeaconString((uid, trans)))));
+
+        _chat.DispatchGlobalAnnouncement(msg, playSound: false, colorOverride: Color.Red);
+        _audio.PlayGlobal("/Audio/Vanilla/Announcements/archonDetected.ogg", Filter.Broadcast(), true);
+        _navMap.SetBeaconEnabled(uid, true);
+
+        comp.AnnouncementPlayed = true;
     }
 
     /// <summary>

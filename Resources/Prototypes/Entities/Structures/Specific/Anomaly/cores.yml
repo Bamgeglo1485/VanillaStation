@@ -33,6 +33,11 @@
     timeToDecay: 600
     startPrice: 10000
     endPrice: 200
+    # RAYTEN STARTS
+  - type: TriggerOnSpawn
+  - type: SpawnOnTrigger
+    proto: RandomArchonSpawner
+    # RAYTENDS
 
 - type: entity
   parent: BaseAnomalyCore

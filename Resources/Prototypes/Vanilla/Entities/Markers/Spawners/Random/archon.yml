@@ -1,0 +1,27 @@
+﻿- type: entity
+  id: RandomArchonSpawner
+  name: спавнер рандомных архонтов
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: Vanilla/Interface/Misc/archon_class_research.rsi
+      state: containment
+  - type: RandomSpawner
+    chance: 0.7
+    prototypes:
+    - ArchonItemRandom
+    - ArchonHumanoidRandom
+    rareChance: 0.4
+    ##rarePrototypes:
+    ##- RandomAnomalyInjectorSpawner
+    offset: 0.15
+
+- type: entity
+  id: RandomArchonSpawnerQuaranted
+  name: гарантированный спавнер рандомных архонтов
+  parent: RandomArchonSpawner
+  components:
+  - type: RandomSpawner
+    chance: 1
