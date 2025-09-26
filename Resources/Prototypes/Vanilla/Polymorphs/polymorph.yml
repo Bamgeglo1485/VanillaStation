@@ -13,3 +13,17 @@
     exitPolymorphSound: !type:SoundPathSpecifier
       path: /Audio/Misc/narsie_rises.ogg
     polymorphPopup: SkeletonCurse-popup
+
+- type: polymorph
+  id: ArchonStasis
+  configuration:
+    entity: ArchonStasis
+    forced: true
+    transferName: true
+    revertOnCrit: false
+    revertOnDeath: false
+    polymorphSound: !type:SoundPathSpecifier
+      path: /Audio/Vanilla/Effects/archonStasis.ogg
+    exitPolymorphSound: !type:SoundPathSpecifier
+      path: /Audio/Vanilla/Effects/archonDestasis.ogg
+    polymorphPopup: "Объект погружается в разлом"

@@ -209,7 +209,11 @@
     - Janitor
     - Instruments
     - Equipment
-    - NightVision #RAYTEN
+    - FauxTiles
+    # RAYTEN STARTS
+    - NightVision
+    - ArchonticDevices
+    # RAYTENDS
   - type: EmagLatheRecipes
     emagDynamicPacks:
     - SecurityAmmo
@@ -266,6 +270,9 @@
     - CameraBoards
     - MechBoards
     - ShuttleBoards
+    # RAYTEN STARTS
+    - ArchonticCircuits
+    # RAYTENDS
   - type: EmagLatheRecipes
     emagDynamicPacks:
     - SecurityBoards

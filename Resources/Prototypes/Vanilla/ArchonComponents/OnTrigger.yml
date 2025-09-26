@@ -1,0 +1,99 @@
+- type: archonComponent
+  id: Emp
+  tag: OnTrigger
+  desc: Объект может вызвать ЭМИ
+  escape: 1
+  types:
+    - Luminary
+    - Hylic
+  components:
+    - type: EmpOnTrigger
+    - type: UseDelayOnTrigger
+    - type: UseDelay
+      delay: 90
+    - type: UseDelayTriggerCondition
+
+- type: archonComponent
+  id: Flash
+  desc: Объект может вызвать яркую вспышку
+  tag: OnTrigger
+  escape: 1
+  types:
+    - Hylic
+  components:
+    - type: FlashOnTrigger
+    - type: UseDelayOnTrigger
+    - type: UseDelay
+      delay: 90
+    - type: UseDelayTriggerCondition
+
+- type: archonComponent
+  id: Smoke
+  desc: Объект способен вызывать дым
+  tag: OnTrigger
+  escape: 1
+  types:
+    - Demiurge
+  components:
+    - type: SmokeOnTrigger
+      spreadAmount: 5
+    - type: UseDelayOnTrigger
+    - type: UseDelay
+      delay: 90
+    - type: UseDelayTriggerCondition
+
+- type: archonComponent
+  id: Repulse
+  desc: Объект способен создавать ударную волну
+  tag: OnTrigger
+  escape: 1
+  types:
+    - Pneumatic
+  components:
+    - type: RepulseAttractOnTrigger
+    - type: UseDelayOnTrigger
+    - type: UseDelay
+      delay: 90
+    - type: UseDelayTriggerCondition
+
+- type: archonComponent
+  id: Spawn
+  desc: Объект способен создавать тела
+  tag: OnTrigger
+  danger: 4
+  escape: 2
+  components:
+    - type: SpawnOnTrigger
+      proto: SpawnMobSpiderSalvage
+    - type: RandomizeArchonComponents
+    - type: UseDelayOnTrigger
+    - type: UseDelay
+      delay: 180
+    - type: UseDelayTriggerCondition
+  chancedComponents:
+    - chance: 0.3
+      danger: 6
+      escape: 4
+      components:
+        - type: SpawnOnTrigger
+          proto: SpawnMobXenoHard
+    - chance: 0.3
+      danger: 8
+      escape: 3
+      components:
+        - type: SpawnOnTrigger
+          proto: SpawnMobXenoEasy
+    - chance: 0.3
+      components:
+        - type: SpawnOnTrigger
+          proto: ReagentSlime
+    - chance: 0.3
+      danger: 6
+      escape: 4
+      components:
+        - type: SpawnOnTrigger
+          proto: SalvageSpawnerTreasureValuable
+    - chance: 0.3
+      components:
+        - type: SpawnOnTrigger
+          proto: PuddleBlood

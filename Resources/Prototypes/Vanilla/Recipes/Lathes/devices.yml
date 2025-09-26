@@ -61,3 +61,42 @@
     Plastic: 300
     Gold: 50
     Silver: 50
+
+- type: latheRecipe
+  id: ClothingEyesGlassesArchon
+  result: ClothingEyesGlassesArchon
+  completetime: 3
+  materials:
+    Steel: 200
+    Plastic: 300
+    Glass: 200
+
+- type: latheRecipe
+  id: ClothingEyesGlassesArchonVisor
+  result: ClothingEyesGlassesArchonVisor
+  completetime: 6
+  materials:
+    Steel: 300
+    Plastic: 500
+    Glass: 300
+    Silver: 200
+
+- type: latheRecipe
+  id: ArchonScanner
+  result: ArchonScanner
+  completetime: 5
+  materials:
+    Steel: 300
+    Glass: 200
+
+- type: latheRecipe
+  id: WeaponMicroHid
+  result: WeaponMicroHid
+  completetime: 12
+  materials:
+    Steel: 2000
+    Plastic: 800
+    Glass: 1000
+    Silver: 500
+    Gold: 500
+    Plasma: 200

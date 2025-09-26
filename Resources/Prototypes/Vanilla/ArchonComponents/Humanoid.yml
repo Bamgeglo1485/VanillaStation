@@ -1,0 +1,256 @@
+# AI - Компоненты ИИ, щиткод немного
+
+- type: archonComponent
+  id: HTNAI
+  tag: AI
+  desc: Объект обладает высоким интеллектом
+  types:
+    - Luminary
+  escape: 3
+  danger: 4
+  components:
+    - type: DangerMob
+    - type: InputMover
+    - type: MobMover
+    - type: HTN
+      rootTask:
+        task: SimpleHostileCompound
+      blackboard:
+        NavSmash: !type:Bool
+          true
+    - type: NpcFactionMember
+      factions:
+      - AllHostile
+    - type: CombatMode
+    - type: GhostRole
+      makeSentient: true
+      name: ghost-role-information-archon-angry-name
+      description: ghost-role-information-archon-angry-description
+      rules: ghost-role-information-antagonist-rules
+      raffle:
+        settings: short
+      mindRoles:
+      - MindRoleArchonAgressive
+    - type: GhostTakeoverAvailable
+    - type: ArchonBriefing
+      template: ArchonBriefingAngry
+  chancedComponents:
+    - chance: 0.3
+      escape: 3
+      danger: 3
+      components:
+        - type: HTN
+          rootTask:
+            task: IdleCompound
+        - type: NpcFactionMember
+          factions:
+          - SimpleNeutral
+        - type: CombatMode
+        - type: InteractionPopup
+          successChance: 0.2
+          interactSuccessString: petting-success-soft-floofy
+          interactFailureString: petting-failure-bat
+          interactSuccessSpawn: EffectHearts
+        - type: GhostRole
+          makeSentient: true
+          name: ghost-role-information-archon-neutral-name
+          description: ghost-role-information-archon-neutral-description
+          rules: ghost-role-information-freeagent-rules
+          raffle:
+            settings: short
+          mindRoles:
+          - MindRoleArchonNeutral
+        - type: ArchonBriefing
+          template: ArchonBriefingNeutral
+    - chance: 0.2
+      escape: 3
+      components:
+        - type: HTN
+          rootTask:
+            task: IdleCompound
+        - type: NpcFactionMember
+          factions:
+          - Passive
+        - type: GhostRole
+          makeSentient: true
+          name: ghost-role-information-archon-passive-name
+          description: ghost-role-information-archon-passive-description
+          rules: ghost-role-information-nonantagonist-rules
+          raffle:
+            settings: short
+          mindRoles:
+          - MindRoleArchonPassive
+        - type: ArchonBriefing
+          template: ArchonBriefingPassive
+
+# Damage - Способки объектов для убийств
+
+- type: archonComponent
+  id: Firestarter
+  desc: Объект может воспламенять окружающие тела
+  tag: Damage
+  danger: 3
+  types:
+    - Luminary
+    - Hylic
+  components:
+    - type: Firestarter
+      ignitionRadius: 4
+    - type: NPCUseActionOnTarget
+      actionId: ActionFireStarter
+    - type: FireProtection
+      reduction: 0
+  chancedComponents:
+    - chance: 0.4
+      danger: 5
+      components:
+        - type: Firestarter
+          ignitionRadius: 8
+
+- type: archonComponent
+  id: MeleeIgnite
+  desc: Объект воспламеняет при ударе
+  tag: Damage
+  danger: 2
+  types:
+    - Luminary
+    - Hylic
+  components:
+    - type: IgniteOnMeleeHit
+      fireStacks: 1
+    - type: FireProtection
+      reduction: 0
+  chancedComponents:
+    - chance: 0.4
+      danger: 4
+      components:
+        - type: IgniteOnMeleeHit
+          fireStacks: 2
+
+- type: archonComponent
+  id: MeleeThrow
+  desc: Объект содаёт ударную волну, откидывая при ударе
+  tag: Damage
+  danger: 1
+  escape: 1
+  types:
+    - Luminary
+    - Pneumatic
+  components:
+    - type: MeleeThrowOnHit
+  chancedComponents:
+    - chance: 0.4
+      danger: 2
+      escape: 3
+      components:
+        - type: MeleeThrowOnHit
+          speed: 10
+          unanchorOnHit: true
+          stunTime: 0.1
+
+- type: archonComponent
+  id: Tentacles
+  desc: Объект вызывает из земли щупальца, подобно голиафам
+  tag: Damage
+  danger: 2
+  types:
+    - Luminary
+    - Hylic
+  components:
+    - type: NPCUseActionOnTarget
+      actionId: ActionGoliathTentacle
+
+- type: archonComponent
+  id: Bloodsucker
+  desc: Объект поглощает кровь, и приобладает регенеративными функциями от неё
+  tag: Damage
+  danger: 2
+  types:
+    - Luminary
+    - Hylic
+  components:
+    - type: BloodSucker
+      heal:
+        groups:
+          Brute: -2
+          Burn: -2
+      bloodlessPenalty:
+        types:
+          Heat: 0
+      unitsRestoreToHealPerInterval: 1
+      unitsDecayPerInterval: 0
+  chancedComponents:
+    - chance: 0.4
+      danger: 4
+      components:
+      - type: BloodSucker
+        heal:
+          groups:
+            Brute: -4
+            Burn: -4
+        bloodlessPenalty:
+          types:
+            Heat: 0
+        unitsRestoreToHealPerInterval: 1
+        unitsDecayPerInterval: 0
+
+- type: archonComponent
+  id: HealForDamage
+  desc: Объект забирает клетки у тела при ударе, исцеляясь.
+  tag: Damage
+  danger: 3
+  types:
+    - Luminary
+    - Hylic
+  components:
+    - type: HealForDamage
+      healMultiplier: 1
+  chancedComponents:
+    - chance: 0.4
+      danger: 4
+      components:
+      - type: HealForDamage
+        healMultiplier: 2
+    - chance: 0.1
+      danger: 4
+      components:
+      - type: HealForDamage
+        healMultiplier: 4
+
+# Movement - Способки объектов для передвижения
+
+- type: archonComponent
+  id: Jump
+  desc: Объект обладает способностью совершать прыжки на высокие дистанции
+  tag: Movement
+  escape: 1
+  types:
+    - Luminary
+    - Hylic
+  components:
+    - type: NPCUseActionOnTarget
+      actionId: ActionGravityJump
+
+- type: archonComponent
+  id: Teleport
+  desc: Объект способен создавать точную редспейс воронку
+  tag: Movement
+  escape: 3
+  types:
+    - Demiurge
+    - Archon
+  components:
+    - type: NPCUseActionOnTarget
+      actionId: ActionBlink
+
+- type: archonComponent
+  id: TeleportVoidApplause
+  desc: Объект способен создавать точную редспейс воронку
+  tag: Movement
+  escape: 2
+  types:
+    - Demiurge
+    - Archon
+  components:
+    - type: NPCUseActionOnTarget
+      actionId: ActionVoidApplause

@@ -1,0 +1,48 @@
+- type: storyTemplate
+  id: ArchonDescItem
+  locId: archon-desc-item
+  variables:
+    genDesc: ArchGeneralDescription
+    physDesc: ArchPhysicalDescription
+    spaceDesc: ArchSpaceDescription
+    smellDesc: ArchSmellDescription
+    memDesc: ArchMemeticDescription
+    behaviorDescPrelude: ArchPreludeDescription
+
+- type: storyTemplate
+  id: ArchonDescHumanoid
+  locId: archon-desc-humanoid
+  variables:
+    genDesc: ArchHumGeneralDescription
+    physDesc: ArchHumPhysicalDescription
+    smellDesc: ArchSmellDescription
+    behaviorDesc: ArchBehaviorDescription
+    behaviorDescPrelude: ArchPreludeDescription
+
+
+- type: storyTemplate
+  id: ArchonBriefingAngry
+  locId: archon-brief
+  variables:
+    behdesc: ArchBriefingBehaviourDescAngry
+    evdesc: ArchBriefingEnvironmentDesc
+    love: ArchBriefingLoveDescAngry
+    hate: ArchBriefingHateDescAngry
+
+- type: storyTemplate
+  id: ArchonBriefingNeutral
+  locId: archon-brief
+  variables:
+    behdesc: ArchBriefingBehaviourDescNeutral
+    evdesc: ArchBriefingEnvironmentDesc
+    love: ArchBriefingLoveDescNeutral
+    hate: ArchBriefingHateDescAngry
+
+- type: storyTemplate
+  id: ArchonBriefingPassive
+  locId: archon-brief
+  variables:
+    behdesc: ArchBriefingBehaviourDescPassive
+    evdesc: ArchBriefingEnvironmentDesc
+    love: ArchBriefingLoveDescNeutral
+    hate: ArchBriefingHateDescAngry

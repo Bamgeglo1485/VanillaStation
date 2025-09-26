@@ -1,0 +1,37 @@
+- type: entity
+  parent: BaseItem
+  id: ArchonScanner
+  name: сканер архонтов
+  description: Устройство для сохранения сигнатуры Архонта, с навязчивой рекламой казалось бы секретной организации.
+  components:
+  - type: Sprite
+    sprite: Vanilla/Objects/Specific/Research/ArchonScanner.rsi
+    layers:
+      - state: icon
+      - state: unlit
+        shader: unshaded
+  - type: ArchonScanner
+  - type: Item
+    storedRotation: -90
+  - type: RequiresSkill
+    RequiresResearchLevel: 1
+
+- type: entity
+  parent: ResearchDisk
+  id: AwardDisc
+  name: диск вознаграждения
+  description: 20.000 очков за то, что ты указал нужный класс, хотя он уже известен. Звучит как условность.
+  components:
+  - type: Sprite
+    sprite: Vanilla/Objects/Specific/Research/AwardDisc.rsi
+    state: icon
+  - type: ResearchDisk
+    points: 20000
+
+- type: entity
+  parent: AwardDisc
+  id: AwardDisc5000
+  description: 5.000 очков за то, что ты бросил аномальный кирпич в напарника. Звучит как бизнес.
+  components:
+  - type: ResearchDisk
+    points: 5000

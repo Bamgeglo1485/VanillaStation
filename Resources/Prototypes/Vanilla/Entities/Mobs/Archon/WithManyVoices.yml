@@ -1,0 +1,125 @@
+- type: entity
+  name: многоголосый
+  id: MobWithManyVoicesArchon
+  parent: [ SimpleSpaceMobBase, MobCombat ]
+  description: Это собака или ящерица?
+  components:
+    - type: DangerMob
+    - type: InputMover
+    - type: MobMover
+    - type: NpcFactionMember
+      factions:
+      - SimpleHostile
+    - type: Sprite
+      drawdepth: Mobs
+      sprite: Vanilla/Mobs/Archons/WithManyVoices.rsi
+      layers:
+      - map: [ "enum.DamageStateVisualLayers.Base" ]
+        state: alive
+    - type: CombatMode
+    - type: Physics
+    - type: MobState
+    - type: MobThresholds
+      thresholds:
+        800: Alive
+        900: Dead
+    - type: MovementSpeedModifier
+      baseWalkSpeed: 2
+      baseSprintSpeed: 4.5
+    - type: Stamina
+      critThreshold: 200
+      stunTime: 60
+    - type: DamageStateVisuals
+      states:
+        Alive:
+          Base: alive
+        Dead:
+          Base: dead
+    - type: Butcherable
+      spawned:
+        - id: FoodMeatFish
+          amount: 5
+    - type: MeleeWeapon
+      altDisarm: false
+      angle: 0
+      animation: WeaponArcBite
+      soundHit:
+        path: /Audio/Effects/bite.ogg
+      damage:
+        types:
+          Blunt: 6
+          Slash: 20
+    - type: Muted
+    - type: Tag
+      tags:
+        - DoorBumpOpener
+        - CannotSuicide
+        - WithManyVoices
+    - type: Speech
+      speechVerb: LargeMob
+    - type: Vocal
+      sounds:
+        Unsexed: Alarm939
+    - type: ActiveListener
+      range: 15
+    - type: ParrotListener
+    - type: ParrotMemory
+      learnChance: 1
+    - type: HealForDamage
+    - type: BlindPredator
+    - type: ArchonHealth
+      health: 899
+    - type: Archon
+    - type: ArchonData
+      description: Объект не обладает кожным покровом, а также имеет атрофированную зрительную систему, но также обладает регенеративной способностью при нанесении увечий вблизи жертвы. Объект способен воспроизводить услышанные голоса, ориентируясь при произношении через эхолокацию. Благодаря высоким физическим характеристикам, способен совершать дальные прыжки.
+      class: Keter
+      awakeChance: 0
+      humanoid: true
+      comeback: false
+    - type: Hunger
+      thresholds:
+        Overfed: 250
+        Okay: 200
+        Peckish: 150
+        Starving: 100
+        Dead: 0
+      baseDecayRate: 0.01666666666
+    - type: Prying
+      pryPowered: true
+      force: true
+      speedModifier: 10
+      useSound:
+        path: /Audio/Items/crowbar.ogg
+    - type: JumpAbility
+      action: ActionGravityJump939
+    - type: NPCUseActionOnTarget
+      actionId: ActionEcholocation
+      targetKey: Target
+    - type: Destructible
+      thresholds:
+      - trigger:
+          !type:DamageTrigger
+          damage: 900
+        behaviors:
+        - !type:GibBehavior
+          recursive: false
+    - type: HTN
+      rootTask:
+        task: 939Compound
+      blackboard:
+        NavClimb: !type:Bool
+          true
+        NavInteract: !type:Bool
+          true
+        NavPry: !type:Bool
+          true
+        NavSmash: !type:Bool
+          true
+
+- type: entity
+  id: MobWithManyVoicesArchonUnstasis
+  suffix: Без стазиса
+  parent: MobWithManyVoicesArchon
+  components:
+    - type: Archon
+      stasisDelay: 1

@@ -1,0 +1,40 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "ByMe",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "document"
+        },
+        {
+            "name": "writing"
+        },
+        {
+            "name": "paper_stamp-generic"
+        },
+        {
+            "name": "paper_stamp-expunged"
+        },
+        {
+            "name": "document-unshaded",
+            "delays": [
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ]
+            ]
+        },
+        {
+            "name": "log"
+        },
+        {
+            "name": "log-writing"
+        }
+    ]
+}

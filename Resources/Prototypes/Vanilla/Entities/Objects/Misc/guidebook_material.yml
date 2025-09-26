@@ -1,0 +1,9 @@
+- type: entity
+  id: GuidebookDecorationFALLogo
+  name: Н.З.П
+  description: Найти. Заархивировать. Эээ... Потерять? Погасить?? Не знаю.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Vanilla/Interface/Misc/archon_class_research.rsi
+    state: containment

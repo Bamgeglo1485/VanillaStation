@@ -1,0 +1,60 @@
+- type: entity
+  parent: BasePaper
+  id: SynchronizedDocument
+  name: документ Архонта
+  description: Синхронизированный документ, при его уничтожении объект списывается.
+  components:
+    - type: Tag
+      tags:
+      - Document
+      - Paper
+    - type: Sprite
+      sprite: Vanilla/Objects/Misc/bureaucracy.rsi
+      layers:
+      - state: writing
+        map: ["enum.PaperVisualLayers.Writing"]
+        visible: true
+      - state: document
+      - state: document-unshaded
+        shader: unshaded
+      - state: paper_stamp-generic
+        map: ["enum.PaperVisualLayers.Stamp"]
+        visible: false
+    - type: ArchonDocument
+    - type: Appearance
+    - type: Paper
+      editingDisabled: true
+    - type: PaperLabelType
+    - type: ActivatableUI
+      key: enum.PaperUiKey.Key
+      requiresComplex: false
+    - type: UserInterface
+      interfaces:
+        enum.PaperUiKey.Key:
+          type: PaperBoundUserInterface
+    - type: PaperVisuals
+
+- type: entity
+  name: логи анализатора архонтов
+  id: ArchonAnalyzerLogs
+  parent: Paper
+  description: Мелкий шрифт гласит - «Не используйте изделие в качестве средства гигиены, мы покрыли его свинцом для защиты от забивания канализации.»
+  components:
+  - type: Sprite
+    sprite: Vanilla/Objects/Misc/bureaucracy.rsi
+    layers:
+    - state: log-writing
+      map: ["enum.PaperVisualLayers.Writing"]
+      visible: true
+    - state: log
+    - state: paper_stamp-generic
+      map: ["enum.PaperVisualLayers.Stamp"]
+      visible: false
+  - type: PaperLabelType
+    paperType: ArchonLog
+  - type: PaperVisuals
+    headerImagePath: "/Textures/Vanilla/Interface/Paper/paper_heading_archon_logs.svg.96dpi.png"
+    backgroundImagePath: "/Textures/Interface/Paper/paper_background_default.svg.96dpi.png"
+    backgroundModulate: "#bdbdd8"
+    backgroundPatchMargin: 16.0, 16.0, 16.0, 16.0
+    contentMargin: 32.0, 16.0, 32.0, 0.0

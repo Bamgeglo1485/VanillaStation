@@ -1,0 +1,89 @@
+- type: entity
+  parent: BaseItem
+  id: ArchonItemRandom
+  name: ???
+  description: Неизвестный объект, с довольно странной аурой.
+  suffix: Архонт, Предмет
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Hydroponics/apple.rsi
+    state: produce
+  - type: ArchonData
+  - type: ArchonHealth
+  - type: Archon
+  - type: ArchonGenerate
+    core: Item
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.35
+        density: 50
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: MobCollision
+  - type: RequireProjectileTarget
+  - type: StatusIcon
+  - type: Stamina
+    stunTime: 60
+
+- type: entity
+  parent: ArchonItemRandom
+  id: ArchonItemRandomDestasis
+  suffix: Архонт, Предмет, Без стазиса
+  components:
+  - type: Archon
+    stasisDelay: 1
+
+- type: entity
+  parent: [SimpleSpaceMobBase, MobCombat]
+  id: ArchonHumanoidRandom
+  name: ???
+  description: Неизвестный объект, с довольно странной аурой.
+  suffix: Архонт, Существо
+  components:
+  - type: Archon
+  - type: ArchonData
+  - type: ArchonHealth
+  - type: ArchonGenerate
+    core: Humanoid
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: Mobs/Aliens/Carps/space.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: alive
+  - type: Stamina
+    stunTime: 60
+  - type: Physics
+  - type: StatusIcon
+  - type: ReplacementAccent
+    accent: genericAggressive
+
+- type: entity
+  parent: ArchonHumanoidRandom
+  id: ArchonHumanoidRandomDestasis
+  name: ???
+  description: Неизвестный объект, с довольно странной аурой.
+  suffix: Архонт, Существо, Без стазиса
+  components:
+  - type: Archon
+    stasisDelay: 1
+
+- type: entity
+  parent: BaseItem
+  id: ArchonStasis
+  name: дестабилизрованный архонт
+  description: Архонт, временно потерявший синхронизацию с редспейсом. Его стоит поместить под содержание, пока он не поместил тебя... Прямиком в ад.
+  components:
+  - type: Sprite
+    sprite: Vanilla/Effects/ArchonEffects.rsi
+    state: stasis
+  - type: AmbientSound
+    volume: -8
+    range: 15
+    sound:
+      path: /Audio/Vanilla/Ambience/archon_ambient.ogg

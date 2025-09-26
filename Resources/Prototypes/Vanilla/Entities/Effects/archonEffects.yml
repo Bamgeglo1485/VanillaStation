@@ -1,0 +1,25 @@
+- type: entity
+  id: EffectArchonDeath
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: TimedDespawn
+    lifetime: 2.8
+  - type: Sprite
+    drawdepth: Effects
+    noRot: true
+    layers:
+    - shader: unshaded
+      map: ["enum.EffectLayers.Unshaded"]
+      sprite: Vanilla/Effects/ArchonEffects.rsi
+      state: icon
+  - type: EffectVisuals
+  - type: Tag
+    tags:
+    - HideContextMenu
+  - type: AnimationPlayer
+  - type: TriggerOnSpawn
+  - type: EmitSoundOnTrigger
+    sound:
+      path: /Audio/Vanilla/Effects/archonDeath.ogg
+      params:
+        volume: 5
