@@ -13,16 +13,10 @@ public sealed partial class ArchonGenerateComponent : Component
     public bool RandomType = true;
 
     [DataField]
-    public bool GenerateComponents = true;
+    public bool RandomDestructibility = true;
 
     [DataField]
     public bool TriggerComponents = true;
-
-    /// <summary>
-    /// Ядро архонта
-    /// </summary>
-    [DataField(required: true)]
-    public ProtoId<ArchonCorePrototype> Core;
 
     /// <summary>
     /// Диапазон количества типов
@@ -41,25 +35,6 @@ public sealed partial class ArchonGenerateComponent : Component
 
     [DataField]
     public int MaxComponents = 3;
-
-
-    /// <summary>
-    /// Диапазон случайного кол-во максимальных попаданий ХИД пушками.
-    /// </summary>
-    [DataField]
-    public bool RandomMaxHits = true;
-
-    [DataField]
-    public int MaxHits = 4;
-
-    [DataField]
-    public int MinHits = 2;
-
-    /// <summary>
-    /// Список добавленных компонентов
-    /// </summary>
-    [DataField]
-    public List<string> AddedComponents = new();
 
     /// <summary>
     /// Список прототипов архонта

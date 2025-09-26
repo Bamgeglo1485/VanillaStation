@@ -9,7 +9,7 @@ namespace Content.Shared.Archontic.Components;
 /// Даёт архонту рандомную персону ну блин типо "денис 9 лет любитель пива"
 /// </summary>
 [RegisterComponent, NetworkedComponent]
-public sealed partial class ArchonBriefingComponent : BaseMindRoleComponent
+public sealed partial class ArchonRoleComponent : BaseMindRoleComponent
 {
 
     /// <summary>

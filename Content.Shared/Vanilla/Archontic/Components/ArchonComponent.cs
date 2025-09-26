@@ -29,6 +29,18 @@ public sealed partial class ArchonComponent : Component
     public float AwakeChance = 0.4f;
 
     /// <summary>
+    /// Базовая степень синхронизации, не меняющаяся от стазиса или пробуждения
+    /// </summary>
+    [DataField]
+    public int BaseSyncLevel = 3f;
+
+    /// <summary>
+    /// Базовая степень синхронизации
+    /// </summary>
+    [DataField]
+    public int SyncLevel = 0f;
+
+    /// <summary>
     /// Энтити после полиморфа, то есть стазисный объект
     /// </summary>
     [ViewVariables]
@@ -47,13 +59,7 @@ public sealed partial class ArchonComponent : Component
     public TimeSpan StasisDelay = TimeSpan.FromSeconds(300);
 
     /// <summary>
-    /// Сколько максимум можно получить снаряд ХИД
-    /// </summary>
-    [DataField]
-    public int MaxHits = 3;
-
-    /// <summary>
-    /// Сколько раз в него попадал ХИД снаряд
+    /// Сколько раз он попадал в стазис
     /// </summary>
     [ViewVariables]
     public int StasisHits = 0;

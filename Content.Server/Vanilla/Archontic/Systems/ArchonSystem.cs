@@ -62,41 +62,23 @@ public sealed partial class ArchonSystem : EntitySystem
     {
         base.Initialize();
 
-        /// <summary>
         /// ArchonSystem
-        /// </summary>
-        SubscribeLocalEvent<StasisArchonOnCollideComponent, ProjectileHitEvent>(OnProjectileHit);
-        SubscribeLocalEvent<ArchonDocumentComponent, ComponentShutdown>(OnDocumentDestroy);
-        SubscribeLocalEvent<ArchonDataComponent, ComponentShutdown>(OnArchonDataShutdown);
-        SubscribeLocalEvent<ArchonComponent, ComponentStartup>(OnComponentStartup);
-        SubscribeLocalEvent<ArchonHealthComponent, DamageChangedEvent>(OnDamage);
+        //SubscribeLocalEvent<StasisArchonOnCollideComponent, ProjectileHitEvent>(OnProjectileHit);
+        //SubscribeLocalEvent<ArchonDocumentComponent, ComponentShutdown>(OnDocumentDestroy);
+        //SubscribeLocalEvent<ArchonDataComponent, ComponentShutdown>(OnArchonDataShutdown);
+        //SubscribeLocalEvent<ArchonComponent, ComponentStartup>(OnComponentStartup);
+        //SubscribeLocalEvent<ArchonHealthComponent, DamageChangedEvent>(OnDamage);
 
-        /// <summary>
         /// ArchonSystem.Research
-        /// </summary>
-        SubscribeLocalEvent<ArchonAnalyzerComponent, EntInsertedIntoContainerMessage>(OnItemSlotChanged);
-        SubscribeLocalEvent<ArchonScannerComponent, AfterInteractEvent>(OnInteract);
-        SubscribeLocalEvent<RoundStartedEvent>(OnRoundEnded);
+        //SubscribeLocalEvent<ArchonAnalyzerComponent, EntInsertedIntoContainerMessage>(OnItemSlotChanged);
+        //SubscribeLocalEvent<ArchonScannerComponent, AfterInteractEvent>(OnInteract);
+        //SubscribeLocalEvent<RoundStartedEvent>(OnRoundEnded);
 
-        /// <summary>
         /// ArchonSystem.Generate
-        /// </summary>
-        SubscribeLocalEvent<ArchonBriefingComponent, ComponentStartup>(GenerateBriefing);
-        SubscribeLocalEvent<ArchonBriefingComponent, GetBriefingEvent>(OnGetBriefing);
-        SubscribeLocalEvent<ArchonGenerateComponent, MapInitEvent>(OnMapInit);
+        //SubscribeLocalEvent<ArchonBriefingComponent, ComponentStartup>(GenerateBriefing);
+        //SubscribeLocalEvent<ArchonBriefingComponent, GetBriefingEvent>(OnGetBriefing);
+        //SubscribeLocalEvent<ArchonGenerateComponent, MapInitEvent>(OnMapInit);
 
-        /// <summary>
-        /// ArchonSystem.Tests
-        /// </summary>
-        SubscribeLocalEvent<ArchonDataComponent, HandSelectedEvent>(OnHandSelected);
-        SubscribeLocalEvent<ArchonDataComponent, ActivateInWorldEvent>(OnActivate);
-        SubscribeLocalEvent<ArchonDataComponent, DamageChangedEvent>(OnDamageTest);
-        SubscribeLocalEvent<ArchonDataComponent, ArchonBreachEvent>(OnBreach);
-        SubscribeLocalEvent<ArchonDataComponent, ThrowDoHitEvent>(OnThrowHit);
-        SubscribeLocalEvent<ArchonDataComponent, GotEquippedEvent>(OnEquip);
-        SubscribeLocalEvent<ArchonDataComponent, ExaminedEvent>(OnExamined);
-        SubscribeLocalEvent<ArchonDataComponent, ArchonDeathEvent>(OnDeath);
-        SubscribeLocalEvent<ArchonDataComponent, ThrowEvent>(OnThrow);
     }
 
     private int UpdateSpeed = 2;

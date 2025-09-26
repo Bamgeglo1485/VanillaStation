@@ -15,6 +15,9 @@ public sealed partial class ArchonHealthComponent : Component
     [DataField]
     public float Health = 0f;
 
+    /// <summary>
+    /// Эффект смерти
+    /// </summary>
     [DataField]
-    public bool RandomDestructibility = true;
+    public string DeathEffect = "EffectArchonDeath";
 }

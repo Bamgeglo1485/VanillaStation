@@ -11,16 +11,10 @@ public sealed partial class ArchonDataComponent : Component
 {
 
     /// <summary>
-    /// Списан ли объект
+    /// Активен ли объект
     /// </summary>
     [DataField, AutoNetworkedField]
-    public bool Expunged = false;
-
-    /// <summary>
-    /// Описание объекта, используется при выполнении всех тестов, и если архонт не был сгенерирован
-    /// </summary>
-    [DataField]
-    public string? Description;
+    public bool Active = true;
 
     /// <summary>
     /// Класс архона, его опасность и возможность сбежать. Enum ArchonClass
@@ -35,31 +29,16 @@ public sealed partial class ArchonDataComponent : Component
     public List<ArchonType> Types = new();
 
     /// <summary>
-    /// Гуманоидный ли объект
+    /// Разумен ли объект
     /// </summary>
     [DataField, AutoNetworkedField]
-    public bool Humanoid = false;
+    public bool Sentient = false;
 
     /// <summary>
-    /// Созданы ли тесты для него
-    /// </summary>
-    [DataField]
-    public bool TestsGenerated = false;
-
-    /// <summary>
-    /// Текущие тесты
-    /// </summary>
-    [DataField]
-    public List<string> ActiveTests = new();
-
-    [DataField]
-    public HashSet<string> CompletedTests = new();
-
-    /// <summary>
-    /// Уничтожаемость архона. Enum ArchonDestructibility
+    /// Перерождается ли объект
     /// </summary>
     [DataField, AutoNetworkedField]
-    public ArchonDestructibility Destructibility = new ();
+    public bool Rebirth = false;
 
     /// <summary>
     /// Синхронизированный документ
@@ -74,12 +53,6 @@ public sealed partial class ArchonDataComponent : Component
     public EntityUid? Beacon;
 
     /// <summary>
-    /// К какому ГЗТ привязан
-    /// </summary>
-    [ViewVariables, AutoNetworkedField]
-    public EntityUid? MTG;
-
-    /// <summary>
     /// Уровень опасности
     /// </summary>
     [DataField]
@@ -90,36 +63,6 @@ public sealed partial class ArchonDataComponent : Component
     /// </summary>
     [DataField]
     public int Escape = 0;
-
-    /// <summary>
-    /// Уровень опасности для класса Кетер
-    /// </summary>
-    [DataField]
-    public int DangerLimit = 8;
-
-    /// <summary>
-    /// Уровень опасности для класса Евклид
-    /// </summary>
-    [DataField]
-    public int EscapeLimit = 8;
-
-    /// <summary>
-    /// Тэги для тестов
-    /// </summary>
-    [DataField]
-    public List<string> Tags = new();
-
-    /// <summary>
-    /// Можно ли написать на него документ
-    /// </summary>
-    [DataField]
-    public bool CanBeAnalyzed = false;
-
-    /// <summary>
-    /// Эффект смерти
-    /// </summary>
-    [DataField]
-    public string DeathEffect = "EffectArchonDeath";
 
 }
 
@@ -138,14 +81,6 @@ public enum ArchonType : byte
     Luminary = 2, // Разум
     Demiurge = 3, // Создание
     Archon = 4 // Прочее
-}
-
-public enum ArchonDestructibility : byte
-{
-    Normal, // Прочность от 10 до 200, если разумный стамина 100-200
-    Hard, // От 300 до 700, стамина 400-800
-    Invincible, // от 5000 до 10000
-    Rebirth // После уничтожения перерождается с несколькими новыми компонентами, но после утрачивает эту способность
 }
 
 public enum ArchonState : byte
