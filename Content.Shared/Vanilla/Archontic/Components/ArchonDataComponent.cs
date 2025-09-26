@@ -35,12 +35,6 @@ public sealed partial class ArchonDataComponent : Component
     public bool Sentient = false;
 
     /// <summary>
-    /// Перерождается ли объект
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public bool Rebirth = false;
-
-    /// <summary>
     /// Синхронизированный документ
     /// </summary>
     [ViewVariables, AutoNetworkedField]

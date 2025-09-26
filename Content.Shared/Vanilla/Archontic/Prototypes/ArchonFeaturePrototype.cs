@@ -1,3 +1,5 @@
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
+using Content.Shared.Archontic.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
@@ -7,15 +9,22 @@ namespace Content.Shared.Archontic.Prototypes;
 /// Прототип со свойствами архонта
 /// </summary>
 [Prototype("archonFeature")]
-public sealed partial class ArchonFeaturePrototype : IPrototype
+public sealed partial class ArchonFeaturePrototype : IPrototype, IInheritingPrototype
 {
+
     [IdDataField] public string ID { get; private set; } = default!;
+
+    [ParentDataField(typeof(AbstractPrototypeIdArraySerializer<ArchonFeaturePrototype>))]
+    public string[]? Parents { get; private set; }
+
+    [AbstractDataField]
+    public bool Abstract { get; private set; }
 
     /// <summary>
     /// Тэги для разделения компонентов
     /// </summary>
     [DataField]
-    public List<string> Tag = "Generic";
+    public List<string> Tags = new();
 
     /// <summary>
     /// Описание действия

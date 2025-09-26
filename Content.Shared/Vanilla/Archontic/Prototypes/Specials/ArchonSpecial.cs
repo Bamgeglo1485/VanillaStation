@@ -1,4 +1,4 @@
-namespace Content.Shared.Roles
+namespace Content.Shared.Archontic.Prototypes
 {
     [ImplicitDataDefinitionForInheritors]
     public abstract partial class ArchonSpecial

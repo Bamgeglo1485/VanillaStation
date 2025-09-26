@@ -26,19 +26,25 @@ public sealed partial class ArchonComponent : Component
     /// Шанс выйти в пробуждении при стимуляции
     /// </summary>
     [DataField]
-    public float AwakeChance = 0.4f;
+    public float AwakeChance = 0.5f;
 
     /// <summary>
     /// Базовая степень синхронизации, не меняющаяся от стазиса или пробуждения
     /// </summary>
     [DataField]
-    public int BaseSyncLevel = 3f;
+    public int BaseSyncLevel = 3;
 
     /// <summary>
     /// Базовая степень синхронизации
     /// </summary>
     [DataField]
-    public int SyncLevel = 0f;
+    public int SyncLevel = 0;
+
+    /// <summary>
+    /// максимальный уровень синхрона
+    /// </summary>
+    [DataField]
+    public int MaxSyncLevel = 10;
 
     /// <summary>
     /// Энтити после полиморфа, то есть стазисный объект

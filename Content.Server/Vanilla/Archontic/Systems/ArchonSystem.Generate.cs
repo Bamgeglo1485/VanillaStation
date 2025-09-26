@@ -34,6 +34,4 @@ public sealed partial class ArchonSystem : EntitySystem
     [Dependency] private readonly StoryGeneratorSystem _storyGen = default!;
     [Dependency] private readonly AntagSelectionSystem _antag = default!;
 
-
-
 }

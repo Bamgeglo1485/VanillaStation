@@ -1,3 +1,4 @@
+using Content.Shared.Archontic.Prototypes;
 using Robust.Shared.Prototypes;
 using Robust.Shared.GameStates;
 using Robust.Shared.Utility;
@@ -40,6 +41,6 @@ public sealed partial class ArchonGenerateComponent : Component
     /// Список прототипов архонта
     /// </summary>
     [DataField]
-    public List<ArchonComponentPrototype> AddedPrototypes = new();
+    public List<ArchonFeaturePrototype> AddedPrototypes = new();
 
 }

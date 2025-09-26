@@ -16,6 +16,12 @@ public sealed partial class ArchonHealthComponent : Component
     public float Health = 0f;
 
     /// <summary>
+    /// Перерождается ли объект
+    /// </summary>
+    [DataField]
+    public bool Rebirth = false;
+
+    /// <summary>
     /// Эффект смерти
     /// </summary>
     [DataField]
