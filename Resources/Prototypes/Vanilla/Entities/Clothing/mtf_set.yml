@@ -80,24 +80,30 @@
 - type: entity
   parent: IDCardStandard
   id: MTFSoldierKeyCard
-  name: омни ключ карта МОГ
+  name: ключ карта МОГ
   description: Как то старомодно.
   components:
   - type: Sprite
     sprite: Vanilla/Objects/Misc/id_cards.rsi
     layers:
     - state: icon
-  - type: PresetIdCard
-    job: MTFSoldier
+  - type: IdCard
+    jobTitle: Боец МОГ
+    jobIcon: JobIconFAL
+  - type: Access
+    groups:
+    - AllAccess
+    tags:
+    - CentralCommand
+  - type: Tag
+    tags:
+    - DoorBumpOpener
   - type: Item
     heldPrefix: black
 
 - type: entity
   parent: MTFSoldierKeyCard
   id: MTFCommandosKeyCard
-  components:
-  - type: PresetIdCard
-    job: MTFCommandos
 
 # рюкзаки
 

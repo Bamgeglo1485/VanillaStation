@@ -66,11 +66,11 @@
     - type: HealForDamage
     - type: BlindPredator
     - type: Archon
+      awakeChance: 0
+      comeback: false
     - type: ArchonData
       class: Keter
-      awakeChance: 0
-      humanoid: true
-      comeback: false
+      sentient: true
     - type: Hunger
       thresholds:
         Overfed: 250

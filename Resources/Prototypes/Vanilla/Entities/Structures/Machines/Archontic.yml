@@ -41,7 +41,6 @@
       machine_board: !type:Container
       machine_parts: !type:Container
   - type: ArchonAnalyzer
-    itemSlot: paperSlot
   - type: StaticPrice
     price: 2000
   # - type: GuideHelp
