@@ -1,6 +1,6 @@
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
-using Robust.Shared.Prototypes;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Robust.Shared.Audio;
 
@@ -32,13 +32,32 @@ public sealed partial class ArchonComponent : Component
     /// Базовая степень синхронизации, не меняющаяся от стазиса или пробуждения
     /// </summary>
     [DataField]
-    public int BaseSyncLevel = 3;
+    public int BaseSyncLevel = 2;
 
     /// <summary>
-    /// Базовая степень синхронизации
+    /// До какого уровня максимум дойдёт через время
+    /// </summary>
+    [DataField]
+    public int PeakSyncLevel = 5;
+
+    /// <summary>
+    /// Текущая степень синхронизации
     /// </summary>
     [DataField]
     public int SyncLevel = 0;
+
+    /// <summary>
+    /// За сколько времени восстановится 1 уровень синхронизации
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public TimeSpan SyncLevelRecoverDelay = TimeSpan.FromSeconds(100);
+
+    /// <summary>
+    /// Следующее обновление добавления уровня
+    /// </summary>
+    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
+    [AutoNetworkedField, AutoPausedField]
+    public TimeSpan NextSyncLevelRecover = TimeSpan.Zero;
 
     /// <summary>
     /// максимальный уровень синхрона
@@ -59,10 +78,16 @@ public sealed partial class ArchonComponent : Component
     public string StasisPrototype = "ArchonStasis";
 
     /// <summary>
-    /// Длительность стазиса
+    /// Длительность стазиса при спавне
     /// </summary>
     [DataField, AutoNetworkedField]
-    public TimeSpan StasisDelay = TimeSpan.FromSeconds(300);
+    public TimeSpan SpawnStasisDelay = TimeSpan.FromSeconds(300);
+
+    /// <summary>
+    /// Длительность стазиса при 0 синхронизации
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public TimeSpan StasisDelay = TimeSpan.FromSeconds(100);
 
     /// <summary>
     /// Сколько раз он попадал в стазис
@@ -82,6 +107,12 @@ public sealed partial class ArchonComponent : Component
     /// </summary>
     [DataField]
     public bool Comeback = true;
+
+    /// <summary>
+    /// Перерождается ли объект
+    /// </summary>
+    [DataField]
+    public bool Rebirth = false;
 
     /// <summary>
     /// Звук при камбеке

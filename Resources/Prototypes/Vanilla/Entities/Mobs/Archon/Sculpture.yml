@@ -36,8 +36,6 @@
       thresholds:
         900: Alive
         910: Dead
-    - type: ArchonHealth
-      health: 899
     - type: BlockMovementOnEyeContact
       damage:
         types:

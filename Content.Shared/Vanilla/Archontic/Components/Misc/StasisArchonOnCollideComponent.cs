@@ -18,6 +18,12 @@ public sealed partial class StasisArchonOnCollideComponent : Component
     public int MaxHits = 2;
 
     /// <summary>
+    /// Урон по SyncLevel
+    /// </summary>
+    [ViewVariables]
+    public int SyncLevelDamage = 0;
+
+    /// <summary>
     /// Длительность стазиса
     /// </summary>
     [DataField]

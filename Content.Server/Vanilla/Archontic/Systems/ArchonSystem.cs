@@ -9,17 +9,21 @@ using Content.Shared.Mind.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Vanilla.Warmer;
 using Content.Shared.Weapons.Melee;
+using Content.Shared.Mobs.Systems;
 using Content.Shared.Projectiles;
 using Content.Shared.Interaction;
 using Content.Shared.GameTicking;
 using Content.Shared.Pinpointer;
+using Content.Shared.FixedPoint;
 using Content.Shared.Damage;
 using Content.Shared.Paper;
 using Content.Shared.Atmos;
+using Content.Shared.Mobs;
 
 using Content.Shared.Inventory.Events;
 using Content.Shared.Throwing;
 using Content.Shared.Examine;
+using Content.Shared.Audio;
 using Content.Shared.Hands;
 
 using Robust.Shared.Audio.Systems;
@@ -53,12 +57,15 @@ namespace Content.Server.Archontic.Systems;
 
 public sealed partial class ArchonSystem : EntitySystem
 {
+    [Dependency] private readonly SharedAmbientSoundSystem _ambientSound = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _movement = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly DamageableSystem _damageableSystem = default!;
+    [Dependency] private readonly MobThresholdSystem _mobThresSystem = default!;
     [Dependency] private readonly SharedArchonSystem _archonSystem = default!;
     [Dependency] private readonly SharedPowerReceiverSystem _power = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
+    [Dependency] private readonly MobStateSystem _mobStateSystem = default!;
     [Dependency] private readonly SharedTransformSystem _trans = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
@@ -76,14 +83,13 @@ public sealed partial class ArchonSystem : EntitySystem
 
         /// ArchonSystem
         SubscribeLocalEvent<StasisArchonOnCollideComponent, ProjectileHitEvent>(OnProjectileHit);
-        SubscribeLocalEvent<ArchonHealthComponent, ComponentShutdown>(OnArchonDataShutdown);
+        SubscribeLocalEvent<ArchonComponent, MobStateChangedEvent>(OnMobStateChange);
         SubscribeLocalEvent<ArchonComponent, ComponentStartup>(OnComponentStartup);
-        SubscribeLocalEvent<ArchonHealthComponent, DamageChangedEvent>(OnDamage);
 
         /// ArchonSystem.Research
         //SubscribeLocalEvent<ArchonAnalyzerComponent, EntInsertedIntoContainerMessage>(OnItemSlotChanged);
         //SubscribeLocalEvent<ArchonScannerComponent, AfterInteractEvent>(OnInteract);
-        //SubscribeLocalEvent<RoundStartedEvent>(OnRoundEnded);
+        SubscribeLocalEvent<RoundStartedEvent>(OnRoundEnded);
 
         /// ArchonSystem.Generate
         //SubscribeLocalEvent<ArchonBriefingComponent, ComponentStartup>(GenerateBriefing);
@@ -106,8 +112,9 @@ public sealed partial class ArchonSystem : EntitySystem
 
         NextUpdate = curTime + TimeSpan.FromSeconds(UpdateSpeed);
 
-        var polyQuery = EntityQueryEnumerator<PolymorphedEntityComponent>();
         var archonQuery = EntityQueryEnumerator<ArchonComponent, TransformComponent>();
+        //var analyzerQuery = EntityQueryEnumerator<ArchonAnalyzerComponent>();
+        var polyQuery = EntityQueryEnumerator<PolymorphedEntityComponent>();
 
         while (polyQuery.MoveNext(out var polyUid, out var polyComp))
         {
@@ -120,9 +127,14 @@ public sealed partial class ArchonSystem : EntitySystem
 
         while (archonQuery.MoveNext(out var archon, out var comp, out var trans))
         {
-
             ArchonUpdate(archon, comp, trans);
         }
+
+        //while (analyzerQuery.MoveNext(out var analyzer, out var analyzerComp))
+        //{
+        //    if (analyzerComp.AnalyzeEnd <= curTime && analyzerComp.Analyzing)
+        //        AnalyzerUpdate(analyzer, analyzerComp);
+        //}
     }
 
     private void ArchonStateUpdate(EntityUid uid, ArchonComponent comp)
@@ -139,6 +151,13 @@ public sealed partial class ArchonSystem : EntitySystem
         if (comp.Comeback == true && Transform(uid).GridUid == null)
         {
             Comeback(uid, comp, transComp);
+        }
+
+        if (_gameTiming.CurTime >= comp.NextSyncLevelRecover && comp.SyncLevel < comp.BaseSyncLevel)
+        {
+            comp.NextSyncLevelRecover = _gameTiming.CurTime + comp.SyncLevelRecoverDelay;
+
+            ChangeSyncLevel(uid, comp, 1, comp.BaseSyncLevel);
         }
     }
 
@@ -178,9 +197,15 @@ public sealed partial class ArchonSystem : EntitySystem
     /// </summary>
     public void ForceStasis(EntityUid uid, ArchonComponent comp)
     {
+        if (comp.StasisExit >= _gameTiming.CurTime)
+        {
+            comp.StasisExit = _gameTiming.CurTime + comp.StasisDelay;
+        }
 
         comp.LastState = comp.State;
         comp.State = ArchonState.Stasis;
+
+        ChangeSyncLevel(uid, comp, -10, 0, false);
 
         EnsureComp<PolymorphableComponent>(uid);
 
@@ -198,6 +223,7 @@ public sealed partial class ArchonSystem : EntitySystem
 
         comp.LastState = comp.State;
         comp.State = ArchonState.Basic;
+        comp.SyncLevel++;
 
         _morph.Revert(comp.PolymorphEntity.Value);
     }
@@ -214,9 +240,14 @@ public sealed partial class ArchonSystem : EntitySystem
 
         comp.LastState = comp.State;
         comp.State = ArchonState.Awake;
+        comp.BaseSyncLevel = 10;
 
-        if (TryComp<ArchonHealthComponent>(uid, out var healthComp))
-            healthComp.Health *= 3;
+        ChangeSyncLevel(uid, comp, 10, 10, false);
+
+        if (TryComp<MobThresholdsComponent>(uid, out var thresComp))
+            _mobThresSystem.SetMobStateThreshold(uid,
+                _mobThresSystem.GetThresholdForState(uid, MobState.Dead, thresComp) * 3,
+                MobState.Dead, thresComp);
 
         if (TryComp<StaminaComponent>(uid, out var staminaComp))
             staminaComp.CritThreshold *= 3;
@@ -233,6 +264,37 @@ public sealed partial class ArchonSystem : EntitySystem
     }
 
     /// <summary>
+    /// Изменение кол-во степени синхронизации
+    /// </summary>
+    private void ChangeSyncLevel(EntityUid uid, ArchonComponent comp, int level, int maxLevel = 10, bool checkStasisAwake = true)
+    {
+        if (comp.State == ArchonState.Awake)
+            return;
+
+        comp.SyncLevel = Math.Clamp(comp.SyncLevel + level, 0, maxLevel);
+
+        RevealFeatures(uid, comp);
+
+        if (!checkStasisAwake)
+            return;
+
+        if (comp.SyncLevel >= 10)
+            ForceAwake(uid, comp);
+        else if (comp.SyncLevel <= 0)
+            ForceStasis(uid, comp);
+
+    }
+
+    /// <summary>
+    /// Раскрывает скрытые свойства
+    /// </summary>
+    private void RevealFeatures(EntityUid uid, ArchonComponent comp)
+    {
+        
+
+    }
+
+    /// <summary>
     /// Стазис архонта при спавне
     /// </summary>
     private void OnComponentStartup(EntityUid uid, ArchonComponent comp, ComponentStartup args)
@@ -240,29 +302,26 @@ public sealed partial class ArchonSystem : EntitySystem
         if (comp.State != ArchonState.Stasis)
             return;
 
-        comp.StasisExit = _gameTiming.CurTime + comp.StasisDelay;
+        comp.StasisExit = _gameTiming.CurTime + comp.SpawnStasisDelay;
+        comp.NextSyncLevelRecover = _gameTiming.CurTime + comp.SyncLevelRecoverDelay;
 
         ForceStasis(uid, comp);
     }
 
     /// <summary>
-    /// Действия при получении урона Архонтом, чучут щиткод
+    /// При смерти архонта
     /// </summary>
-    private void OnDamage(Entity<ArchonHealthComponent> ent, ref DamageChangedEvent args)
+    private void OnMobStateChange(Entity<ArchonComponent> ent, ref MobStateChangedEvent args)
     {
-        if (args.DamageDelta is not { } delta)
+        if (_mobStateSystem.IsAlive(ent))
             return;
 
         var comp = ent.Comp;
-        var totalDamage = delta.GetTotal();
 
-        if (comp.Health > totalDamage)
-            return;
-
-        if (comp.Rebirth && TryComp<ArchonComponent>(ent, out var archonComp))
+        if (comp.Rebirth)
         {
             comp.Rebirth = false;
-            ForceAwake(ent, archonComp);
+            ForceAwake(ent, comp);
         }
         else 
         {
@@ -272,17 +331,12 @@ public sealed partial class ArchonSystem : EntitySystem
     }
 
     /// <summary>
-    /// При смерти архонта
+    /// Инициализация смерти архонта
     /// </summary>
-    private void OnArchonDataShutdown(Entity<ArchonHealthComponent> ent, ref ComponentShutdown args)
-    {
-        OnArchonDeath(ent);
-    }
-
-    private void OnArchonDeath(Entity<ArchonHealthComponent> ent)
+    private void OnArchonDeath(Entity<ArchonComponent> ent)
     {
 
-        Spawn(ent.Comp.DeathEffect, Transform(ent).Coordinates);
+        Spawn(ent.Comp.AwakeEffect, Transform(ent).Coordinates);
         RaiseLocalEvent(ent, new ArchonDeathEvent());
 
     }
@@ -303,6 +357,7 @@ public sealed partial class ArchonSystem : EntitySystem
 
         archonComp.StasisHits++;
         archonComp.StasisExit = _gameTiming.CurTime + comp.StasisDelay;
+        archonComp.SyncLevel -= comp.SyncLevelDamage;
 
         ForceStasis(args.Target, archonComp);
     }

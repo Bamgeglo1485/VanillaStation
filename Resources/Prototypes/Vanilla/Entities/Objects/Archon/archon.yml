@@ -9,7 +9,6 @@
     sprite: Objects/Specific/Hydroponics/apple.rsi
     state: produce
   - type: ArchonData
-  - type: ArchonHealth
   - type: Archon
   - type: ArchonGenerate
     core: Item
@@ -29,6 +28,11 @@
   - type: StatusIcon
   - type: Stamina
     stunTime: 60
+  - type: MobState
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      120: Dead
 
 - type: entity
   parent: ArchonItemRandom
@@ -36,7 +40,7 @@
   suffix: Архонт, Предмет, Без стазиса
   components:
   - type: Archon
-    stasisDelay: 1
+    state: Basic
 
 - type: entity
   parent: [SimpleSpaceMobBase, MobCombat]
@@ -47,7 +51,6 @@
   components:
   - type: Archon
   - type: ArchonData
-  - type: ArchonHealth
   - type: ArchonGenerate
     core: Humanoid
   - type: Sprite
@@ -62,6 +65,10 @@
   - type: StatusIcon
   - type: ReplacementAccent
     accent: genericAggressive
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      120: Dead
 
 - type: entity
   parent: ArchonHumanoidRandom
@@ -71,7 +78,7 @@
   suffix: Архонт, Существо, Без стазиса
   components:
   - type: Archon
-    stasisDelay: 1
+    state: Basic
 
 - type: entity
   parent: BaseItem

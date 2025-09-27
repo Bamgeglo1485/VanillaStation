@@ -33,7 +33,7 @@
   - type: MindRole
     antagPrototype: ArchonAntag
     subtype: Архонт
-  - type: ArchonBriefing
+  - type: ArchonRole
     template: ArchonBriefingAngry
 
 - type: entity
@@ -44,7 +44,7 @@
   - type: MindRole
     antagPrototype: ArchonNonAntag
     subtype: Архонт
-  - type: ArchonBriefing
+  - type: ArchonRole
     template: ArchonBriefingNeutral
 
 - type: entity
@@ -55,5 +55,5 @@
   - type: MindRole
     antagPrototype: ArchonNonAntag
     subtype: Архонт
-  - type: ArchonBriefing
+  - type: ArchonRole
     template: ArchonBriefingPassive

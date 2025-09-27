@@ -42,6 +42,5 @@
   cost: 10000
   recipeUnlocks:
   - ClothingEyesGlassesArchonVisor
-  - ArchonMTGMachineCircuitboard
   technologyPrerequisites:
   - ArchonticResearch

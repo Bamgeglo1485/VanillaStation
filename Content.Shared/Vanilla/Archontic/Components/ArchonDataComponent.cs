@@ -31,8 +31,14 @@ public sealed partial class ArchonDataComponent : Component
     /// <summary>
     /// Разумен ли объект
     /// </summary>
-    [DataField, AutoNetworkedField]
+    [DataField]
     public bool Sentient = false;
+
+    /// <summary>
+    /// Зарегистрирован ли объект?
+    /// </summary>
+    [DataField]
+    public bool Registered = false;
 
     /// <summary>
     /// Синхронизированный документ

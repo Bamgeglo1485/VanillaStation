@@ -8,8 +8,3 @@
   parent: [ BaseSilverCircuitboardRecipe, BaseResearchMachineRecipeCategory ]
   id: ArchonBeaconMachineCircuitboard
   result: ArchonBeaconMachineCircuitboard
-
-- type: latheRecipe
-  parent: [ BaseGoldCircuitboardRecipe, BaseResearchMachineRecipeCategory ]
-  id: ArchonMTGMachineCircuitboard
-  result: ArchonMTGMachineCircuitboard
