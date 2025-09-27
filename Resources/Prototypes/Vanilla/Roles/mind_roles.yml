@@ -32,7 +32,7 @@
   components:
   - type: MindRole
     antagPrototype: ArchonAntag
-    subtype: Архонт
+    subtype: roles-antag-archon-name
   - type: ArchonRole
     template: ArchonBriefingAngry
 
@@ -43,7 +43,7 @@
   components:
   - type: MindRole
     antagPrototype: ArchonNonAntag
-    subtype: Архонт
+    subtype: roles-antag-archon-name
   - type: ArchonRole
     template: ArchonBriefingNeutral
 
@@ -54,6 +54,6 @@
   components:
   - type: MindRole
     antagPrototype: ArchonNonAntag
-    subtype: Архонт
+    subtype: roles-antag-archon-name
   - type: ArchonRole
     template: ArchonBriefingPassive

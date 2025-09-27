@@ -39,14 +39,14 @@
     - type: BlockMovementOnEyeContact
       damage:
         types:
-          Blunt: 50
+          Blunt: 40
           Asphyxiation: 30
     - type: Archon
-    - type: ArchonData
-      description: Объект не движется во время поддержания постоянного зрительного контакта, если он нарушен, то объект совершает передвижение со скоростью ДАННЫЕ УДАЛЕНЫ, в основном нанося повреждения в области шеи.
-      awakeChance: 0
-      humanoid: true
       comeback: false
+      awakeChance: 0
+    - type: ArchonData
+      class: Keter
+      sentience: true
     - type: NPCUseActionOnTarget
       actionId: Action173Teleport
     - type: Prying

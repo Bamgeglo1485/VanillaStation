@@ -14,7 +14,7 @@
   - type: Item
     storedRotation: -90
   - type: RequiresSkill
-    RequiresResearchLevel: 1
+    RequiresResearch: true
 
 - type: entity
   parent: ResearchDisk

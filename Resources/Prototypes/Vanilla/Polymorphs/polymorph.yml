@@ -26,4 +26,4 @@
       path: /Audio/Vanilla/Effects/archonStasis.ogg
     exitPolymorphSound: !type:SoundPathSpecifier
       path: /Audio/Vanilla/Effects/archonDestasis.ogg
-    polymorphPopup: "Объект погружается в разлом"
+    polymorphPopup: ArchonStasis-popup

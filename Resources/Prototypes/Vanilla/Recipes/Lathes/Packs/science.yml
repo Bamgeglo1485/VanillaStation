@@ -3,7 +3,6 @@
   recipes:
   - ArchonAnalyerMachineCircuitboard
   - ArchonBeaconMachineCircuitboard
-  - ArchonMTGMachineCircuitboard
 
 - type: latheRecipePack
   id: ArchonticDevices

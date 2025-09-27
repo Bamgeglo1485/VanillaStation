@@ -60,11 +60,11 @@
   id: NearArchontic
   rules:
     - !type:NearbyComponentsRule
-      count: 2
+      count: 1
+      range: 5
       components:
         - type: ArchonAnalyzer
         - type: ArchonBeacon
-        - type: MTG
 
 - type: rules
   id: NearArchon

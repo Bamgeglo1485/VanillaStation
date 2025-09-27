@@ -58,8 +58,6 @@
     - type: Speech
       speechVerb: LargeMob
     - type: Vocal
-      sounds:
-        Unsexed: Alarm939
     - type: ActiveListener
       range: 15
     - type: ParrotListener
@@ -69,7 +67,6 @@
     - type: BlindPredator
     - type: Archon
     - type: ArchonData
-      description: Объект не обладает кожным покровом, а также имеет атрофированную зрительную систему, но также обладает регенеративной способностью при нанесении увечий вблизи жертвы. Объект способен воспроизводить услышанные голоса, ориентируясь при произношении через эхолокацию. Благодаря высоким физическим характеристикам, способен совершать дальные прыжки.
       class: Keter
       awakeChance: 0
       humanoid: true

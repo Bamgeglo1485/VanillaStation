@@ -12,6 +12,9 @@
       state: echo
   - type: InstantAction
     event: !type:DisableBlindlessEvent {}
+  - type: TargetAction
+    range: 80
+    checkCanAccess: false
 
 - type: entity
   parent: BaseAction

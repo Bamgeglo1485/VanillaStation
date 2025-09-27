@@ -11,7 +11,6 @@
   - type: ArchonData
   - type: Archon
   - type: ArchonGenerate
-    core: Item
   - type: Fixtures
     fixtures:
       fix1:
@@ -52,7 +51,6 @@
   - type: Archon
   - type: ArchonData
   - type: ArchonGenerate
-    core: Humanoid
   - type: Sprite
     drawdepth: Mobs
     sprite: Mobs/Aliens/Carps/space.rsi

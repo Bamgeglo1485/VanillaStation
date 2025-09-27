@@ -12,11 +12,11 @@
     prototypes: [MTFSoldier]
   - type: Skill
     MedicineLevel: 3
-    ResearchLevel: 3
     RangeWeaponLevel: 3
     MeleeWeaponLevel: 2
     Piloting: true
     Bureaucracy: true
+    Research: true
 
 - type: entity
   parent: MobEventTeamBase

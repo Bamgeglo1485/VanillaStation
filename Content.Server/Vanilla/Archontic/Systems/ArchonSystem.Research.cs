@@ -100,8 +100,6 @@ public sealed partial class ArchonSystem : EntitySystem
     /// </summary>
     private void OnItemSlotChanged(EntityUid uid, ArchonAnalyzerComponent comp, EntInsertedIntoContainerMessage args)
     {
-        if (args.Container.ID != comp.SlotId)
-            return;
 
         var errors = new List<string> { };
 
