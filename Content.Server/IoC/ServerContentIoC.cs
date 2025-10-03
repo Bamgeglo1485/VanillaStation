@@ -83,5 +83,6 @@ internal static class ServerContentIoC
         deps.Register<DiscordLink>();
         deps.Register<DiscordChatLink>();
         deps.Register<WebhookBans>();// Vanilla station
+        deps.Register<TTSManager>();// корвух
     }
 }
