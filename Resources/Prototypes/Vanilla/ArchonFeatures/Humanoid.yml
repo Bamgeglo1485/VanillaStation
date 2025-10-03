@@ -86,28 +86,6 @@
 # Damage - Способки объектов для убийств
 
 - type: archonComponent
-  id: Firestarter
-  desc: Объект способен воспламенять окружающие тела.
-  tags: [Damage]
-  danger: 3
-  types:
-    - Luminary
-    - Hylic
-  components:
-    - type: Firestarter
-      ignitionRadius: 4
-    - type: NPCUseActionOnTarget
-      actionId: ActionFireStarter
-    - type: FireProtection
-      reduction: 0
-  chancedComponents:
-    - chance: 0.4
-      danger: 5
-      components:
-        - type: Firestarter
-          ignitionRadius: 8
-
-- type: archonComponent
   id: MeleeIgnite
   desc: Объект воспламеняет тела при ударе.
   tags: [Damage]
@@ -218,18 +196,6 @@
         healMultiplier: 4
 
 # Movement - Способки объектов для передвижения
-
-- type: archonComponent
-  id: Jump
-  desc: Объект способен совершать длинные рывки
-  tags: [Movement]
-  escape: 1
-  types:
-    - Luminary
-    - Hylic
-  components:
-    - type: NPCUseActionOnTarget
-      actionId: ActionGravityJump
 
 - type: archonComponent
   id: Teleport

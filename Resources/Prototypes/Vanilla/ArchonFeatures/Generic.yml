@@ -16,20 +16,20 @@
       components:
         - type: RadiationSource
           intensity: 7
-    - type: PointLight
-      enabled: true
-      radius: 4
-      color: "33fff8"
+        - type: PointLight
+          enabled: true
+          radius: 4
+          color: "33fff8"
     - chance: 0.1
       danger: 6
       components:
         - type: RadiationSource
           intensity: 10
-    - type: PointLight
-      enabled: true
-      radius: 10
-      color: "33fff8"
-    - type: SingularityDistortion
+        - type: PointLight
+          enabled: true
+          radius: 10
+          color: "33fff8"
+        - type: SingularityDistortion
 
 - type: archonComponent
   id: Lightning

@@ -48,7 +48,7 @@
   id: DamageOnHolding
   desc: Объект вызывает повреждения при держании на руках.
   tags: [Item]
-  Danger: 3
+  danger: 3
   components:
     - type: DamageOnHolding
       enabled: true

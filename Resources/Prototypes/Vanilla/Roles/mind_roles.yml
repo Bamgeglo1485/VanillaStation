@@ -23,3 +23,37 @@
     exclusiveAntag: true
     subtype: roles-antag-londoner-name
   - type: LondonerRole
+
+# Архонты
+- type: entity
+  parent: BaseMindRoleAntag
+  id: MindRoleArchonAgressive
+  name: Агрессивный Архонт
+  components:
+  - type: MindRole
+    antagPrototype: ArchonAntag
+    subtype: roles-antag-archon-name
+  - type: ArchonRole
+    template: ArchonBriefingAngry
+
+- type: entity
+  parent: MindRoleGhostRoleNeutral
+  id: MindRoleArchonNeutral
+  name: Нейтральный Архонт
+  components:
+  - type: MindRole
+    antagPrototype: ArchonNonAntag
+    subtype: roles-antag-archon-name
+  - type: ArchonRole
+    template: ArchonBriefingNeutral
+
+- type: entity
+  parent: MindRoleGhostRoleFreeAgentHarmless
+  id: MindRoleArchonPassive
+  name: Мирный Архонт
+  components:
+  - type: MindRole
+    antagPrototype: ArchonNonAntag
+    subtype: roles-antag-archon-name
+  - type: ArchonRole
+    template: ArchonBriefingPassive
