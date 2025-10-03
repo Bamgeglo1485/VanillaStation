@@ -29,6 +29,7 @@
       - red
       - yellow
       - violet
+      - apollyon
 
 - type: entity
   parent: AlertKeyUniversal
@@ -73,3 +74,17 @@
     - type: AlertKey
       codeaccess:
       - violet
+
+- type: entity
+  parent: AlertKeyUniversal
+  id: AlertKeyBlack
+  name: чёрный ключ угрозы
+  description: Специальное устройство, предназначенное для установки кода на станции. Работает только на станции.
+  components:
+    - type: Sprite
+      sprite: Vanilla/Objects/Devices/alert_key.rsi
+      layers:
+        - state: black
+    - type: AlertKey
+      codeaccess:
+      - apollyon

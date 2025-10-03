@@ -211,6 +211,7 @@
     - Instruments
     - Equipment
     - NightVision #RAYTEN
+    - ArchonticDevices #RAYTEN
   - type: EmagLatheRecipes
     emagDynamicPacks:
     - SecurityAmmo
@@ -267,6 +268,7 @@
     - CameraBoards
     - MechBoards
     - ShuttleBoards
+    - ArchonticCircuits #RAYTEN
   - type: EmagLatheRecipes
     emagDynamicPacks:
     - SecurityBoards

@@ -1,0 +1,10 @@
+# Archontic
+- type: latheRecipe
+  parent: [ BaseCircuitboardRecipe, BaseResearchMachineRecipeCategory ]
+  id: ArchonAnalyerMachineCircuitboard
+  result: ArchonAnalyerMachineCircuitboard
+
+- type: latheRecipe
+  parent: [ BaseSilverCircuitboardRecipe, BaseResearchMachineRecipeCategory ]
+  id: ArchonBeaconMachineCircuitboard
+  result: ArchonBeaconMachineCircuitboard

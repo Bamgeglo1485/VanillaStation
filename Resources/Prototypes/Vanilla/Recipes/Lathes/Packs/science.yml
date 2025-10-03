@@ -1,0 +1,13 @@
+- type: latheRecipePack
+  id: ArchonticCircuits
+  recipes:
+  - ArchonAnalyerMachineCircuitboard
+  - ArchonBeaconMachineCircuitboard
+
+- type: latheRecipePack
+  id: ArchonticDevices
+  recipes:
+  - ArchonScanner
+  - ClothingEyesGlassesArchon
+  - WeaponMicroHid
+  - ClothingEyesGlassesArchonVisor

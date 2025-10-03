@@ -1,0 +1,29 @@
+{
+    "version": 1,
+    "size": {
+        "x": 9,
+        "y": 8
+    },
+    "license": "CC-BY-SA-3.0",
+    "copyright": "Made by GEGLA",
+    "states": [
+        {
+            "name": "safe"
+        },
+        {
+            "name": "euclid"
+        },
+        {
+            "name": "keter"
+        },
+        {
+            "name": "thaumiel"
+        },
+        {
+            "name": "unknown"
+        },
+        {
+            "name": "awake"
+        }
+    ]
+}
