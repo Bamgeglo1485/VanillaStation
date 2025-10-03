@@ -84,7 +84,7 @@
   id: TriggerOnUse
   desc: Объект возможно использовать
   tags: [ Item, TriggerOn ]
-  requiresAllTags: true
+  requireAllTags: true
   components:
     - type: TriggerOnUse
 

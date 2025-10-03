@@ -178,7 +178,7 @@ public sealed partial class DamageIconPrototype : StatusIconPrototype, IInheriti
 public sealed partial class ArchonClassIconPrototype : StatusIconPrototype, IInheritingPrototype
 {
     /// <inheritdoc />
-    [ParentDataField(typeof(AbstractPrototypeIdArraySerializer<DamageIconPrototype>))]
+    [ParentDataField(typeof(AbstractPrototypeIdArraySerializer<ArchonClassIconPrototype>))]
     public string[]? Parents { get; private set; }
 
     /// <inheritdoc />

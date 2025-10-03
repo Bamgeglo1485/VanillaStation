@@ -32,21 +32,3 @@
         Silver: 4
         Glass: 15
         Steel: 8
-
-- type: entity
-  id: ArchonMTGMachineCircuitboard
-  parent: BaseMachineCircuitboard
-  name: плата ГЗТ
-  description: Печатная плата генератора заурядных тестов.
-  components:
-    - type: Sprite
-      sprite: Vanilla/Objects/Misc/module.rsi
-      state: archontic
-    - type: MachineBoard
-      prototype: MachineArchonMTG
-      stackRequirements:
-        Manipulator: 8
-        Cable: 7
-        Gold: 4
-        Glass: 8
-        Steel: 12

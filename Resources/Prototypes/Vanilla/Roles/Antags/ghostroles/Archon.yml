@@ -1,0 +1,11 @@
+- type: antag
+  id: ArchonAntag
+  name: архонт
+  antagonist: true
+  objective: roles-antag-archon-objective
+
+- type: antag
+  id: ArchonNonAntag
+  name: архонт
+  antagonist: false
+  objective: roles-antag-archon-objective
