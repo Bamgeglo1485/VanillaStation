@@ -1,47 +1,47 @@
-- type: technology
-  id: BasicArchonticResearch
-  name: research-technology-basic-archontic
-  icon:
-    sprite: Vanilla/Interface/Misc/archon_class_research.rsi
-    state: basic
-  discipline: Experimental
-  tier: 1
-  cost: 5000
-  recipeUnlocks:
-  - ArchonScanner
-  - ArchonAnalyerMachineCircuitboard
-  - ArchonBeaconMachineCircuitboard
+#- type: technology
+ # id: BasicArchonticResearch
+ # name: research-technology-basic-archontic
+ # icon:
+ #   sprite: Vanilla/Interface/Misc/archon_class_research.rsi
+ #   state: basic
+ # discipline: Experimental
+ # tier: 1
+ # cost: 5000
+ # recipeUnlocks:
+ # - ArchonScanner
+ # - ArchonAnalyerMachineCircuitboard
+ # - ArchonBeaconMachineCircuitboard
 
 # Tier 2
 
-- type: technology
-  id: ArchonticResearch
-  name: research-technology-containment-archontic
-  icon:
-    sprite: Vanilla/Interface/Misc/archon_class_research.rsi
-    state: containment
-  discipline: Experimental
-  tier: 2
-  cost: 10000
-  recipeUnlocks:
-  - ClothingEyesGlassesArchon
-  - WeaponMicroHid
-  technologyPrerequisites:
-  - BasicArchonticResearch
+#- type: technology
+#  id: ArchonticResearch
+#  name: research-technology-containment-archontic
+#  icon:
+#    sprite: Vanilla/Interface/Misc/archon_class_research.rsi
+#    state: containment
+#  discipline: Experimental
+#  tier: 2
+#  cost: 10000
+#  recipeUnlocks:
+#  - ClothingEyesGlassesArchon
+#  - WeaponMicroHid
+#  technologyPrerequisites:
+#  - BasicArchonticResearch
 
 # Tier 3
 
-- type: technology
-  id: AdvancedArchonticResearch
-  name: research-technology-advanced-archontic
-  icon:
-    sprite: Vanilla/Interface/Misc/archon_class_research.rsi
-    state: advanced
-  discipline: Experimental
-  tier: 3
-  cost: 10000
-  recipeUnlocks:
-  - ClothingEyesGlassesArchonVisor
-  - ArchonMTGMachineCircuitboard
-  technologyPrerequisites:
-  - ArchonticResearch
+#- type: technology
+#  id: AdvancedArchonticResearch
+#  name: research-technology-advanced-archontic
+#  icon:
+#    sprite: Vanilla/Interface/Misc/archon_class_research.rsi
+#    state: advanced
+#  discipline: Experimental
+#  tier: 3
+#  cost: 10000
+#  recipeUnlocks:
+#  - ClothingEyesGlassesArchonVisor
+#  - ArchonMTGMachineCircuitboard
+#  technologyPrerequisites:
+#  - ArchonticResearch
