@@ -284,10 +284,10 @@
     - type: Flammable
       fireSpread: true
       canResistFire: true
-      fireStackFade: 1
+      firestackFade: 1
       fireStacks: 5
       maximumFireStacks: 5
-      minIgnationTemperature: 0
+      minIgnitionTemperature: 0
       minimumFireStacks: 1
       damage:
         types: {}
