@@ -317,6 +317,14 @@
     - type: BlindPredator
 
 - type: archonComponent
+  id: Statue
+  desc: Объект передвигается только при отсутствии прямого зрительного контакта
+  danger: -3
+  tags: [Humanoid]
+  components:
+    - type: BlockMovementOnEyeContact
+
+- type: archonComponent
   id: PeriodicSpawn
   desc: Объект создаёт тела с фиксированным промежутком.
   tags: [Generic, HumanoidBlacklist]
