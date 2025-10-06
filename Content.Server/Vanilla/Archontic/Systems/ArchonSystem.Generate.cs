@@ -75,7 +75,7 @@ public sealed partial class ArchonSystem : EntitySystem
             SetFeatures(ent, dataComp, comp, tag, false);
 
         foreach (var secretTag in comp.SecretTags)
-            SetFeatures(ent, dataComp, comp, tag, true);
+            SetFeatures(ent, dataComp, comp, secretTag, true);
 
         SetRandomDescription(ent);
 
