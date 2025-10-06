@@ -56,7 +56,7 @@ public sealed partial class ArchonComponent : Component
     /// Скрытые компоненты
     /// </summary>
     [DataField]
-    public List<SecretFeatures> SecretFeatures { get; set; }
+    public List<SecretFeatures>? SecretFeatures { get; set; }
 
     /// <summary>
     /// За сколько времени восстановится 1 уровень синхронизации
@@ -149,7 +149,7 @@ public sealed partial class ArchonComponent : Component
 public partial class SecretFeatures
 {
     [DataField]
-    public ComponentRegistry Components { get; set; }
+    public ComponentRegistry? Components { get; set; }
 
     [DataField]
     public int RevealThreshold { get; set; }
