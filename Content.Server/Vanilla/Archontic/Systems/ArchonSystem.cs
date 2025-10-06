@@ -1,7 +1,6 @@
 using Content.Shared.Archontic.Components;
 using Content.Shared.Movement.Components;
 using Content.Shared.Power.EntitySystems;
-using Content.Shared.Archontic.Systems;
 using Content.Shared.Damage.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Mobs.Components;
@@ -62,7 +61,6 @@ public sealed partial class ArchonSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly DamageableSystem _damageableSystem = default!;
     [Dependency] private readonly MobThresholdSystem _mobThresSystem = default!;
-    [Dependency] private readonly SharedArchonSystem _archonSystem = default!;
     [Dependency] private readonly SharedPowerReceiverSystem _power = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
     [Dependency] private readonly MobStateSystem _mobStateSystem = default!;
@@ -109,7 +107,6 @@ public sealed partial class ArchonSystem : EntitySystem
         NextUpdate = curTime + TimeSpan.FromSeconds(UpdateSpeed);
 
         var archonQuery = EntityQueryEnumerator<ArchonComponent, TransformComponent>();
-        //var analyzerQuery = EntityQueryEnumerator<ArchonAnalyzerComponent>();
         var polyQuery = EntityQueryEnumerator<PolymorphedEntityComponent>();
 
         while (polyQuery.MoveNext(out var polyUid, out var polyComp))
@@ -125,12 +122,6 @@ public sealed partial class ArchonSystem : EntitySystem
         {
             ArchonUpdate(archon, comp, trans);
         }
-
-        //while (analyzerQuery.MoveNext(out var analyzer, out var analyzerComp))
-        //{
-        //    if (analyzerComp.AnalyzeEnd <= curTime && analyzerComp.Analyzing)
-        //        AnalyzerUpdate(analyzer, analyzerComp);
-        //}
     }
 
     private void ArchonStateUpdate(EntityUid uid, ArchonComponent comp)
@@ -149,6 +140,7 @@ public sealed partial class ArchonSystem : EntitySystem
             Comeback(uid, comp, transComp);
         }
 
+        // Увеличение уровня синхронизации до базового
         if (_gameTiming.CurTime >= comp.NextSyncLevelRecover && comp.SyncLevel < comp.BaseSyncLevel && comp.State != ArchonState.Stasis)
         {
             comp.NextSyncLevelRecover = _gameTiming.CurTime + comp.SyncLevelRecoverDelay;
@@ -205,7 +197,7 @@ public sealed partial class ArchonSystem : EntitySystem
 
         EnsureComp<PolymorphableComponent>(uid);
 
-        // Используем полиморфы, так как это наиболее лёгкий вариант, иначе нужно заморчиваться в заморозками всякими, в котором я не разбираюсь
+        // Используем полиморфы, так как это наиболее лёгкий вариант, иначе нужно заморчиваться с заморозками всякими, в которых я не разбираюсь
         comp.PolymorphEntity = _morph.PolymorphEntity(uid, comp.StasisPrototype);
     }
 
@@ -248,11 +240,6 @@ public sealed partial class ArchonSystem : EntitySystem
         if (TryComp<StaminaComponent>(uid, out var staminaComp))
             staminaComp.CritThreshold *= 3;
 
-        //if (TryComp<ArchonGenerateComponent>(uid, out var genComp))
-            //SetComponents(uid, dataComp, genComp, "Generic");
-
-        //SetArchonClass(dataComp);
-
         if (TryComp<DamageableComponent>(uid, out var damagComp))
            _damageableSystem.SetAllDamage(uid, damagComp, 0);
 
@@ -286,8 +273,30 @@ public sealed partial class ArchonSystem : EntitySystem
     /// </summary>
     private void RevealFeatures(EntityUid uid, ArchonComponent comp)
     {
-        
+        if (!TryComp<ArchonDataComponent>(uid, out var dataComp))
+            return;
 
+        var syncLevel = comp.SyncLevel;
+
+        foreach (var secretFeature in comp.SecretFeatures)
+        {
+            if (syncLevel >= secretFeature.RevealThreshold && !secretFeature.Revealed)
+            {
+                EntityManager.AddComponents(uid, secretFeature.Components);
+
+                dataComp.Danger += secretFeature.Danger;
+                dataComp.Escape += secretFeature.Escape;
+
+                secretFeature.Revealed = true;
+
+                _popup.PopupEntity("Материя архонта на мгновение переливается", uid);
+
+                SetArchonClass(dataComp);
+                Dirty(uid, dataComp);
+
+                // TODO, при изменении класса запрашивать изменение документа
+            }
+        }
     }
 
     /// <summary>

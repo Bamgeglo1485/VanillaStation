@@ -47,6 +47,18 @@ public sealed partial class ArchonComponent : Component
     public int SyncLevel = 0;
 
     /// <summary>
+    /// Максимальный уровень синхрона
+    /// </summary>
+    [DataField]
+    public int MaxSyncLevel = 10;
+
+    /// <summary>
+    /// Скрытые компоненты
+    /// </summary>
+    [DataField]
+    public List<SecretFeatures> SecretFeatures { get; set; }
+
+    /// <summary>
     /// За сколько времени восстановится 1 уровень синхронизации
     /// </summary>
     [DataField, AutoNetworkedField]
@@ -58,12 +70,6 @@ public sealed partial class ArchonComponent : Component
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
     [AutoNetworkedField, AutoPausedField]
     public TimeSpan NextSyncLevelRecover = TimeSpan.Zero;
-
-    /// <summary>
-    /// максимальный уровень синхрона
-    /// </summary>
-    [DataField]
-    public int MaxSyncLevel = 10;
 
     /// <summary>
     /// Энтити после полиморфа, то есть стазисный объект
@@ -137,4 +143,32 @@ public sealed partial class ArchonComponent : Component
     /// </summary>
     [DataField]
     public bool AnnouncementPlayed = false;
+}
+
+[DataDefinition]
+public partial class SecretFeatures
+{
+    [DataField]
+    public ComponentRegistry Components { get; set; }
+
+    [DataField]
+    public int RevealThreshold { get; set; }
+
+    [DataField]
+    public int Danger { get; set; }
+
+    [DataField]
+    public int Escape { get; set; }
+
+    [DataField]
+    public bool Revealed { get; set; }
+
+    public SecretFeatures(ComponentRegistry components, int revealThreshold, int danger, int escape, bool revealed = false)
+    {
+        Components = new ComponentRegistry(); // Сами компоненты
+        RevealThreshold = 5; // Порог для раскрытия компонента
+        Danger = 0;
+        Escape = 0;
+        Revealed = false;
+    }
 }

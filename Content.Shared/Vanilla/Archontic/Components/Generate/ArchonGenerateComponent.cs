@@ -39,6 +39,12 @@ public sealed partial class ArchonGenerateComponent : Component
     public List<string> AddingTags = new();
 
     /// <summary>
+    /// Тэги для скрытых свойств
+    /// </summary>
+    [DataField(required: true)]
+    public List<string> SecretFeatureTags = new();
+
+    /// <summary>
     /// Диапазон количества типов
     /// </summary>
     [DataField]

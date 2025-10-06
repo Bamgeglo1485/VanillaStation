@@ -1,7 +1,6 @@
 using Content.Shared.Archontic.Components;
 using Content.Shared.Archontic.Prototypes;
 using Content.Shared.Movement.Components;
-using Content.Shared.Archontic.Systems;
 using Content.Shared.Damage.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Mobs.Components;
@@ -73,7 +72,10 @@ public sealed partial class ArchonSystem : EntitySystem
             SetRandomMovementSpeed(ent);
 
         foreach (var tag in comp.AddingTags)
-            SetComponents(ent, dataComp, comp, tag);
+            SetFeatures(ent, dataComp, comp, tag, false);
+
+        foreach (var secretTag in comp.SecretTags)
+            SetFeatures(ent, dataComp, comp, tag, true);
 
         SetRandomDescription(ent);
 
@@ -83,9 +85,9 @@ public sealed partial class ArchonSystem : EntitySystem
     }
 
     /// <summary>
-    /// Добавляет компоненты по тэгам
+    /// Добавляет свойства по тэгам
     /// </summary>
-    public void SetComponents(EntityUid ent, ArchonDataComponent dataComp, ArchonGenerateComponent comp, string addingTag)
+    public void SetFeatures(EntityUid ent, ArchonDataComponent dataComp, ArchonGenerateComponent comp, string addingTag, bool secret)
     {
         var validPrototypes = GetArchonPrototypes(ent, dataComp, comp, addingTag);
         if (validPrototypes.Count == 0)
@@ -103,33 +105,44 @@ public sealed partial class ArchonSystem : EntitySystem
 
             var proto = _random.Pick(availablePrototypes);
 
-            int addingDanger = proto.Danger;
-            int addingEscape = proto.Escape;
-            int additiveDanger = 0;
-            int additiveEscape = 0;
+            int totalDanger = proto.Danger;
+            int totalEscape = proto.Escape;
 
-            EntityManager.AddComponents(ent, proto.Components);
+            AddComponents(ent, dataComp, secret, proto.Components, proto.Danger, proto.Escape);
 
             foreach (var chancedComponent in proto.ChancedComponents)
             {
                 if (_random.Prob(chancedComponent.Chance))
                 {
-                    EntityManager.AddComponents(ent, chancedComponent.Components);
+                    AddComponents(ent, dataComp, secret, chancedComponent.Components, chancedComponent.Danger, chancedComponent.Escape);
 
-                    addingDanger = chancedComponent.Danger;
-                    addingEscape = chancedComponent.Escape;
-                    additiveDanger += chancedComponent.AdditiveDanger;
-                    additiveEscape += chancedComponent.AdditiveEscape;
-
+                    totalDanger += chancedComponent.Danger + chancedComponent.AdditiveDanger;
+                    totalEscape += chancedComponent.Escape + chancedComponent.AdditiveEscape;
                     break;
                 }
             }
 
-            dataComp.Danger += addingDanger + additiveDanger;
-            dataComp.Escape += addingEscape + additiveEscape;
+            dataComp.Danger += totalDanger;
+            dataComp.Escape += totalEscape;
 
             comp.AddedPrototypes.Add(proto);
         }
+    }
+
+    /// <summary>
+    /// Добавляет компоненты по тэгам
+    /// </summary>
+    public void AddComponents(EntityUid ent, ArchonDataComponent dataComp, bool secret, ComponentRegistry components, int danger, int escape)
+    {
+        if (!secret)
+        {
+            EntityManager.AddComponents(ent, components);
+
+            dataComp.Danger += danger;
+            dataComp.Escape += escape;
+        }
+        else if (TryComp<ArchonComponent>(ent, out var archonComp))
+            archonComp.SecretFeatures.Add(new SecretFeatures(components, _random.Next(3, 8), danger, escape, false));
     }
 
     /// <summary>
