@@ -5,7 +5,7 @@
     requirement:
       !type:RoleTimeRequirement
       role: JobCaptain
-      time: 72000 #20 hrs
+      time: 20h
 
 - type: loadoutEffectGroup
   id: SuperMasterCap
@@ -14,7 +14,7 @@
     requirement:
       !type:RoleTimeRequirement
       role: JobCaptain
-      time: 360000 #100 hrs
+      time: 100h
 
 # Jumpsuit
 
