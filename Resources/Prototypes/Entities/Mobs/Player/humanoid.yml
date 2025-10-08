@@ -36,10 +36,8 @@
     - Vox
   components:
     - type: Skill
-      RangeWeaponLevel: 2
-      MeleeWeaponLevel: 1
+      WeaponLevel: 2
       MedicineLevel: 0
-      ChemistryLevel: 2
       EngineeringLevel: 2
       Research: false
       Atmosphere: true

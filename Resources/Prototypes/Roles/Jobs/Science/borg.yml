@@ -19,10 +19,8 @@
   - !type:AddComponentSpecial
     components:
       - type: Skill
-        RangeWeaponLevel: 3
-        MeleeWeaponLevel: 3
+        WeaponLevel: 3
         MedicineLevel: 3
-        ChemistryLevel: 3
         EngineeringLevel: 3
         Research: true
         Atmosphere: true
@@ -48,10 +46,8 @@
   - !type:AddComponentSpecial
     components:
       - type: Skill
-        RangeWeaponLevel: 3
-        MeleeWeaponLevel: 3
+        WeaponLevel: 3
         MedicineLevel: 3
-        ChemistryLevel: 3
         EngineeringLevel: 3
         Research: true
         InstrumentationLevel: 3

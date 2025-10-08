@@ -39,10 +39,8 @@
   name: syndicate medic
   components:
   - type: Skill
-    RangeWeaponLevel: 1
-    MeleeWeaponLevel: 0
+    WeaponLevel: 1
     MedicineLevel: 3
-    ChemistryLevel: 3
     EngineeringLevel: 0
     Research: false
     Atmosphere: false
@@ -60,10 +58,8 @@
   name: syndicate spy
   components:
   - type: Skill
-    RangeWeaponLevel: 1
-    MeleeWeaponLevel: 1
+    WeaponLevel: 1
     MedicineLevel: 0
-    ChemistryLevel: 0
     EngineeringLevel: 2
     Research: false
     Atmosphere: false
@@ -81,10 +77,8 @@
   name: syndicate thief
   components:
   - type: Skill
-    RangeWeaponLevel: 2
-    MeleeWeaponLevel: 3
+    WeaponLevel: 2
     MedicineLevel: 0
-    ChemistryLevel: 0
     EngineeringLevel: 1
     Research: false
     Atmosphere: false
@@ -102,10 +96,8 @@
   suffix: Human, NukeOps
   components:
   - type: Skill
-    RangeWeaponLevel: 3
-    MeleeWeaponLevel: 3
+    WeaponLevel: 3
     MedicineLevel: 3
-    ChemistryLevel: 0
     EngineeringLevel: 0
     Research: false
     Atmosphere: false
