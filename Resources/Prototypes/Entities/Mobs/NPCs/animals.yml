@@ -1527,10 +1527,8 @@
   suffix: syndicate agent
   components:
   - type: Skill
-    RangeWeaponLevel: 0
-    MeleeWeaponLevel: 3
+    WeaponLevel: 3
     MedicineLevel: 1
-    ChemistryLevel: 0
     EngineeringLevel: 0
     Research: false
     Atmosphere: false
@@ -1548,10 +1546,8 @@
   suffix: NukeOps
   components:
   - type: Skill
-    RangeWeaponLevel: 3
-    MeleeWeaponLevel: 3
+    WeaponLevel: 3
     MedicineLevel: 2
-    ChemistryLevel: 0
     EngineeringLevel: 0
     Research: false
     Atmosphere: false
@@ -1715,10 +1711,8 @@
   suffix: syndicate agent
   components:
   - type: Skill
-    RangeWeaponLevel: 0
-    MeleeWeaponLevel: 3
+    WeaponLevel: 3
     MedicineLevel: 1
-    ChemistryLevel: 0
     EngineeringLevel: 0
     Research: false
     Atmosphere: false
@@ -1736,10 +1730,8 @@
   suffix: NukeOps
   components:
   - type: Skill
-    RangeWeaponLevel: 3
-    MeleeWeaponLevel: 3
+    WeaponLevel: 3
     MedicineLevel: 2
-    ChemistryLevel: 0
     EngineeringLevel: 0
     Research: false
     Atmosphere: false

@@ -10,10 +10,8 @@
     RequiresEngineeringLevel: 3
     NeedCraftableSkills: true
   - type: Skill
-    RangeWeaponLevel: 3
-    MeleeWeaponLevel: 3
+    WeaponLevel: 3
     MedicineLevel: 3
-    ChemistryLevel: 3
     EngineeringLevel: 3
     Research: true
     Atmosphere: true

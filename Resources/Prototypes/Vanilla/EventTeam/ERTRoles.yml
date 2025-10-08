@@ -124,10 +124,8 @@
   - type: Loadout
     prototypes: [ERTLeaderLoot]
   - type: Skill
-    RangeWeaponLevel: 3
-    MeleeWeaponLevel: 3
+    WeaponLevel: 3
     MedicineLevel: 1
-    ChemistryLevel: 0
     EngineeringLevel: 1
     Research: false
     Atmosphere: false
@@ -145,10 +143,8 @@
   - type: Loadout
     prototypes: [ERTMedicLoot]
   - type: Skill
-    RangeWeaponLevel: 2
-    MeleeWeaponLevel: 1
+    WeaponLevel: 2
     MedicineLevel: 3
-    ChemistryLevel: 3
     EngineeringLevel: 0
     Research: false
     Atmosphere: false
@@ -166,10 +162,8 @@
   - type: Loadout
     prototypes: [ERTEngineerLoot]
   - type: Skill
-    RangeWeaponLevel: 2
-    MeleeWeaponLevel: 1
+    WeaponLevel: 2
     MedicineLevel: 0
-    ChemistryLevel: 0
     EngineeringLevel: 2
     Research: false
     Atmosphere: true
@@ -187,10 +181,8 @@
   - type: Loadout
     prototypes: [ERTRegularLoot]
   - type: Skill
-    RangeWeaponLevel: 3
-    MeleeWeaponLevel: 3
+    WeaponLevel: 3
     MedicineLevel: 1
-    ChemistryLevel: 0
     EngineeringLevel: 1
     Research: false
     Atmosphere: false
