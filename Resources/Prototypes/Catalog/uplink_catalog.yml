@@ -1415,9 +1415,9 @@
   productEntity: EmpImplanter
   discountCategory: veryRareDiscounts
   discountDownTo:
-    Telecrystal: 1
+    Telecrystal: 3
   cost:
-    Telecrystal: 2
+    Telecrystal: 5
   categories:
     - UplinkImplants
 
