@@ -35,10 +35,12 @@ public sealed partial class ArchonSystem
 
     private void GenerateTests(EntityUid archonUid, ArchonDataComponent dataComp, EntityUid mtgUid, MTGComponent mtgComp)
     {
-        if (dataComp.TestsGenerated)
+        if (dataComp.TestsGenerated && mtgComp.Outputs < mtgComp.MaxOutputs)
         {
             _audio.PlayPvs(mtgComp.DenySound, mtgUid);
             _chat.TrySendInGameICMessage(mtgUid, Loc.GetString("mtg-archon-duplicat"), InGameICChatType.Speak, true);
+
+            mtgComp.Outputs++;
 
             var paper = Spawn(mtgComp.MachineOutput, Transform(mtgUid).Coordinates);
 
@@ -55,11 +57,16 @@ public sealed partial class ArchonSystem
             _paperSystem.SetContent(paper, content.ToString());
             return;
         }
-
-        if (dataComp.Document == null || dataComp.Expunged)
+        else if (mtgComp.Outputs >= mtgComp.MaxOutputs)
         {
             _audio.PlayPvs(mtgComp.DenySound, mtgUid);
-            _chat.TrySendInGameICMessage(mtgUid, Loc.GetString("mtg-archon-nonregistered"), InGameICChatType.Speak, true);
+            _chat.TrySendInGameICMessage(mtgUid, Loc.GetString("mtg-archon-no-paper"), InGameICChatType.Speak, true);
+        }
+
+        if (dataComp.Document != null || dataComp.Expunged)
+        {
+            _audio.PlayPvs(mtgComp.DenySound, mtgUid);
+            _chat.TrySendInGameICMessage(mtgUid, Loc.GetString("mtg-archon-registered"), InGameICChatType.Speak, true);
             return;
         }
 
@@ -134,6 +141,7 @@ public sealed partial class ArchonSystem
                     return false;
             }
         }
+
 
         if (proto.ComponentsBlacklist.Count > 0)
         {

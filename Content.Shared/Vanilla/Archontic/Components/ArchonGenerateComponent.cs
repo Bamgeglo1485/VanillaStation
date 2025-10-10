@@ -28,10 +28,10 @@ public sealed partial class ArchonGenerateComponent : Component
     /// Диапазон количества типов
     /// </summary>
     [DataField]
-    public int MinTypes = 2;
+    public int MinTypes = 1;
 
     [DataField]
-    public int MaxTypes = 3;
+    public int MaxTypes = 2;
 
     /// <summary>
     /// Диапазон количества добавляемых компонентов

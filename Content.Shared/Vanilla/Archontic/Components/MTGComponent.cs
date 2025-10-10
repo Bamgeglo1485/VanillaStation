@@ -19,7 +19,16 @@ public sealed partial class MTGComponent : Component
     /// Максимум выдаваемых тестов
     /// </summary>
     [DataField]
-    public int MaxTests = 3;
+    public int MaxTests = 4;
+
+    /// <summary>
+    /// Максимум перевыдач тестов, чтобы не спамили
+    /// </summary>
+    [DataField]
+    public int MaxOutputs = 10;
+
+    [DataField]
+    public int Outputs = 0;
 
     /// <summary>
     /// Комментарий который будет печатать на отчётах ИИ ГЗТ, должен быть указан Датасет

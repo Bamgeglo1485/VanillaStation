@@ -19,6 +19,7 @@
   parent: BaseStationEventShortDelay
   components:
   - type: GameRule
+    minPlayers: 12
   - type: StationEvent
     weight: 7.5
     duration: null

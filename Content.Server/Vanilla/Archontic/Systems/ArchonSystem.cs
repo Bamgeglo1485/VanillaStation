@@ -329,7 +329,6 @@ public sealed partial class ArchonSystem : EntitySystem
         $"Класс объекта: {objclass}");
 
         _paperSystem.SetContent(documentUid, content);
-
     }
 
     /// <summary>

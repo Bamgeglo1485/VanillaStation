@@ -142,6 +142,11 @@ public sealed partial class ArchonSystem : EntitySystem
             return;
         }
 
+        if (dataComp.TestsGenerated == false || dataComp.CompletedTests.Count < 3)
+        {
+            errors.Add("Вы должны выполнить хотя бы 3 теста.");
+        }
+
         if (!TryComp<PaperComponent>(args.Entity, out var paperComp))
         {
             _container.RemoveEntity(uid, args.Entity);
