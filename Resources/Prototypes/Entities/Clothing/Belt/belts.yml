@@ -82,7 +82,7 @@
     capacity: 14
 
 - type: entity
-  parent: [ ClothingBeltStorageBase, BaseMagicalContraband ]
+  parent: [ ClothingBeltStorageBase, MagicalContraband ]
   id: ClothingBeltWand
   name: wand belt
   description: A belt designed to hold various rods of power. A veritable fanny pack of exotic magic.
