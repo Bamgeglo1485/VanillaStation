@@ -195,6 +195,14 @@
       - type: HealForDamage
         healMultiplier: 4
 
+- type: archonComponent
+  id: Blind
+  desc: Объект имеет атрофированные зрительные органы.
+  danger: -2
+  tags: [Damage]
+  components:
+    - type: BlindPredator
+
 # Movement - Способки объектов для передвижения
 
 - type: archonComponent
@@ -220,3 +228,14 @@
   components:
     - type: NPCUseActionOnTarget
       actionId: ActionVoidApplause
+
+- type: archonComponent
+  id: Sculpture
+  desc: Объект передвигается только при отсутствии прямого зрительного контакта
+  danger: -3
+  tags: [Movement]
+  components:
+    - type: BlockMovementOnEyeContact
+      damage:
+        types:
+          Blunt: 50

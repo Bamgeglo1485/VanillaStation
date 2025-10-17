@@ -42,7 +42,7 @@
   name: Нейтральный Архонт
   components:
   - type: MindRole
-    antagPrototype: ArchonNonAntag
+    antagPrototype: ArchonAntag
     subtype: roles-antag-archon-name
   - type: ArchonRole
     template: ArchonBriefingNeutral
@@ -53,7 +53,7 @@
   name: Мирный Архонт
   components:
   - type: MindRole
-    antagPrototype: ArchonNonAntag
+    antagPrototype: ArchonAntag
     subtype: roles-antag-archon-name
   - type: ArchonRole
     template: ArchonBriefingPassive

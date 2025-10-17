@@ -19,6 +19,6 @@ public sealed partial class ArchonRoleComponent : BaseMindRoleComponent
     public ProtoId<StoryTemplatePrototype> Template;
 
     [DataField]
-    public string? Briefing;
+    public string? Briefing { get; set; }
 
 }

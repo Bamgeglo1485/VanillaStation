@@ -30,19 +30,19 @@ public sealed partial class ArchonGenerateComponent : Component
     /// Тэги для подбора свойств
     /// </summary>
     [DataField(required: true)]
-    public List<string> Tags;
+    public List<ArchonTag> Tags;
 
     /// <summary>
     /// Тэги по которым выбирают свойства
     /// </summary>
     [DataField(required: true)]
-    public List<string> AddingTags = new();
+    public List<ArchonTag> AddingTags = new();
 
     /// <summary>
     /// Тэги для скрытых свойств
     /// </summary>
-    [DataField(required: true)]
-    public List<string> SecretTags = new();
+    [DataField]
+    public List<ArchonTag> SecretTags = new();
 
     /// <summary>
     /// Диапазон количества типов
@@ -52,15 +52,6 @@ public sealed partial class ArchonGenerateComponent : Component
 
     [DataField]
     public int MaxTypes = 3;
-
-    /// <summary>
-    /// Диапазон количества добавляемых компонентов
-    /// </summary>
-    [DataField]
-    public int MinComponents = 2;
-
-    [DataField]
-    public int MaxComponents = 3;
 
     /// <summary>
     /// Список прототипов архонта
@@ -74,4 +65,32 @@ public sealed partial class ArchonGenerateComponent : Component
     [DataField]
     public ProtoId<StoryTemplatePrototype> Template;
 
+}
+
+[DataDefinition]
+public partial class ArchonTag
+{
+
+    [DataField(required: true)]
+    public List<string> Tags;
+
+    [DataField]
+    public int MinComps;
+
+    [DataField]
+    public int MaxComps;
+
+    public ArchonTag()
+    {
+        Tags = new();
+        MinComps = 1;
+        MaxComps = 3;
+    }
+
+    public ArchonTag(List<string> tags, int minComps, int maxComps)
+    {
+        Tags = tags;
+        MinComps = minComps;
+        MaxComps = maxComps;
+    }
 }

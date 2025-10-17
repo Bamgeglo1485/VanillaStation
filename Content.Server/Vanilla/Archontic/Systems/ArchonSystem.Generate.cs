@@ -71,29 +71,37 @@ public sealed partial class ArchonSystem : EntitySystem
         if (comp.RandomMovementSpeed)
             SetRandomMovementSpeed(ent);
 
-        foreach (var tag in comp.AddingTags)
-            SetFeatures(ent, dataComp, comp, tag, false);
+        foreach (var archonTag in comp.AddingTags)
+        {
+            foreach (var tag in archonTag.Tags)
+            {
+                SetFeatures(ent, dataComp, comp, tag, false, archonTag.MinComps, archonTag.MaxComps);
+            }
+        }
 
-        foreach (var secretTag in comp.SecretTags)
-            SetFeatures(ent, dataComp, comp, secretTag, true);
+        foreach (var archonTag in comp.SecretTags)
+        {
+            foreach (var tag in archonTag.Tags)
+            {
+                SetFeatures(ent, dataComp, comp, tag, true, archonTag.MinComps, archonTag.MaxComps);
+            }
+        }
 
         SetRandomDescription(ent);
-
         SetArchonClass(dataComp);
-
         Dirty(ent, dataComp);
     }
 
     /// <summary>
     /// Добавляет свойства по тэгам
     /// </summary>
-    public void SetFeatures(EntityUid ent, ArchonDataComponent dataComp, ArchonGenerateComponent comp, string addingTag, bool secret)
+    public void SetFeatures(EntityUid ent, ArchonDataComponent dataComp, ArchonGenerateComponent comp, string addingTag, bool secret, int minComps, int maxComps)
     {
         var validPrototypes = GetArchonPrototypes(ent, dataComp, comp, addingTag);
         if (validPrototypes.Count == 0)
             return;
 
-        var count = _random.Next(comp.MinComponents, comp.MaxComponents + 1);
+        var count = _random.Next(minComps, maxComps + 1);
         for (var i = 0; i < count; i++)
         {
             var availablePrototypes = validPrototypes
@@ -146,7 +154,9 @@ public sealed partial class ArchonSystem : EntitySystem
         }
         else if (TryComp<ArchonComponent>(ent, out var archonComp))
         {
-            if (archonComp?.SecretFeatures != null && components != null)
+            archonComp.SecretFeatures ??= new List<SecretFeatures>();
+
+            if (components != null)
             {
                 archonComp.SecretFeatures.Add(new SecretFeatures(
                     components: components,
@@ -166,9 +176,13 @@ public sealed partial class ArchonSystem : EntitySystem
     {
         var prototypes = new List<ArchonComponentPrototype>();
 
+        var allArchonTags = genComp.Tags
+            .SelectMany(archonTag => archonTag.Tags)
+            .ToList();
+
         foreach (var proto in _prototypeManager.EnumeratePrototypes<ArchonComponentPrototype>())
         {
-            if (!CheckTagsCompatibility(proto.Tags, genComp.Tags, proto.RequireAllTags, addingTag))
+            if (!CheckTagsCompatibility(proto.Tags, allArchonTags, proto.RequireAllTags, addingTag))
                 continue;
 
             if (proto.Types.Count > 0 && !proto.Types.Any(type => dataComp.Types.Contains(type)))

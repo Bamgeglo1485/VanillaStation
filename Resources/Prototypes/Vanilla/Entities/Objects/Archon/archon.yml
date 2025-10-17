@@ -12,8 +12,17 @@
   - type: Archon
   - type: ArchonGenerate
     template: ArchonDescItem
-    tags: ["Generic", "HumanoidBlacklist", "TriggerOn", "OnTrigger", "Item"]
-    addingTags: ["Generic", "TriggerOn", "OnTrigger", "Item"]
+    tags:
+    - tags: ["Generic", "HumanoidBlacklist", "TriggerOn", "OnTrigger", "Item"]
+    addingTags:
+    - tags: ["Generic", "HumanoidBlacklist"]
+    - tags: ["TriggerOn", "OnTrigger", "Item"]
+      minComps: 1
+      maxComps: 1
+    secretTags:
+    - tags: ["Generic", "HumanoidBlacklist"]
+      minComps: 1
+      maxComps: 2
   - type: Fixtures
     fixtures:
       fix1:
@@ -57,8 +66,17 @@
   - type: ArchonData
   - type: ArchonGenerate
     template: ArchonDescHumanoid
-    tags: ["Generic","Humanoid", "AI", "Damage", "Movement"]
-    addingTags: ["Generic","Humanoid","AI", "Damage", "Movement"]
+    tags:
+    - tags: ["Generic","Humanoid", "AI", "Damage", "Movement"]
+    addingTags:
+    - tags: ["Generic","Humanoid"]
+    - tags: ["AI", "Damage", "Movement"]
+      minComps: 1
+      maxComps: 1
+    secretTags:
+    - tags: ["Generic","Humanoid"]
+      minComps: 1
+      maxComps: 2
   - type: Sprite
     drawdepth: Mobs
     sprite: Mobs/Aliens/Carps/space.rsi
