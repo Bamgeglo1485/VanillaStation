@@ -136,13 +136,27 @@ public sealed partial class ArchonSystem : EntitySystem
     {
         if (!secret)
         {
-            EntityManager.AddComponents(ent, components);
+            if (components != null)
+            {
+                EntityManager.AddComponents(ent, components);
+            }
 
             dataComp.Danger += danger;
             dataComp.Escape += escape;
         }
         else if (TryComp<ArchonComponent>(ent, out var archonComp))
-            archonComp.SecretFeatures.Add(new SecretFeatures(components, _random.Next(3, 8), danger, escape, false));
+        {
+            if (archonComp?.SecretFeatures != null && components != null)
+            {
+                archonComp.SecretFeatures.Add(new SecretFeatures(
+                    components: components,
+                    revealThreshold: _random.Next(3, 8),
+                    danger: danger,
+                    escape: escape,
+                    revealed: false
+                ));
+            }
+        }
     }
 
     /// <summary>

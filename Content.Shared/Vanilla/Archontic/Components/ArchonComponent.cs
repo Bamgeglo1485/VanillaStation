@@ -163,12 +163,21 @@ public partial class SecretFeatures
     [DataField]
     public bool Revealed { get; set; }
 
-    public SecretFeatures(ComponentRegistry components, int revealThreshold, int danger, int escape, bool revealed = false)
+    public SecretFeatures()
     {
-        Components = new ComponentRegistry(); // Сами компоненты
-        RevealThreshold = 5; // Порог для раскрытия компонента
+        Components = new ComponentRegistry();
+        RevealThreshold = 5;
         Danger = 0;
         Escape = 0;
         Revealed = false;
+    }
+
+    public SecretFeatures(ComponentRegistry components, int revealThreshold, int danger, int escape, bool revealed = false)
+    {
+        Components = components;
+        RevealThreshold = revealThreshold;
+        Danger = danger;
+        Escape = escape;
+        Revealed = revealed;
     }
 }

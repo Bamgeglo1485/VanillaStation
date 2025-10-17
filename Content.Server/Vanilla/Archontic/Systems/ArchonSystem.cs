@@ -277,9 +277,16 @@ public sealed partial class ArchonSystem : EntitySystem
             return;
 
         var syncLevel = comp.SyncLevel;
+        bool revealedAny = false;
+
+        if (comp.SecretFeatures == null || comp.SecretFeatures.Count == 0)
+            return;
 
         foreach (var secretFeature in comp.SecretFeatures)
         {
+            if (secretFeature.Components == null)
+                continue;
+
             if (syncLevel >= secretFeature.RevealThreshold && !secretFeature.Revealed)
             {
                 EntityManager.AddComponents(uid, secretFeature.Components);
@@ -288,14 +295,17 @@ public sealed partial class ArchonSystem : EntitySystem
                 dataComp.Escape += secretFeature.Escape;
 
                 secretFeature.Revealed = true;
+                revealedAny = true;
 
                 _popup.PopupEntity("Материя архонта на мгновение переливается", uid);
-
-                SetArchonClass(dataComp);
-                Dirty(uid, dataComp);
-
-                // TODO, при изменении класса запрашивать изменение документа
             }
+        }
+
+        if (revealedAny)
+        {
+            SetArchonClass(dataComp);
+            Dirty(uid, dataComp);
+            Dirty(uid, comp);
         }
     }
 
