@@ -774,7 +774,16 @@
           - SurplusBundle
 
 # Deception
-
+- type: listing
+  id: UplinkSyndicateIDCard
+  name: uplink-syndicate-id-card-name
+  description: uplink-syndicate-id-card-desc
+  productEntity: SyndicateIDCard
+  cost:
+    Telecrystal: 1
+  categories:
+  - UplinkDeception
+  
 - type: listing
   id: UplinkAgentIDCard
   name: uplink-agent-id-card-name
@@ -782,9 +791,9 @@
   productEntity: AgentIDCard
   discountCategory: veryRareDiscounts
   discountDownTo:
-    Telecrystal: 1
-  cost:
     Telecrystal: 3
+  cost:
+    Telecrystal: 5
   categories:
   - UplinkDeception
 

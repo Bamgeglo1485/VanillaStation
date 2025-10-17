@@ -72,3 +72,7 @@ ent-FoodBreadTwoSlice = два ломтика
     .desc = Классика.
 ent-MobBreadDog = хлебака
     .desc = Это хлеб. Это собака. Это... хлебака?
+ent-FoodBreadNutriBatard = нутри-батард
+    .desc = Приятного аппетита!
+ent-FoodBreadCottonNutriBatard = хлопковый нутри-батард
+    .desc = Приятного аппетита!

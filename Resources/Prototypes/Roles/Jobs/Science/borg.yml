@@ -8,7 +8,7 @@
   requirements:
   - !type:RoleTimeRequirement
     role: JobBorg
-    time: 18000  # 5 hrs
+    time: 5h
   canBeAntag: false
   icon: JobIconStationAi
   supervisors: job-supervisors-rd
@@ -19,10 +19,8 @@
   - !type:AddComponentSpecial
     components:
       - type: Skill
-        RangeWeaponLevel: 3
-        MeleeWeaponLevel: 3
+        WeaponLevel: 3
         MedicineLevel: 3
-        ChemistryLevel: 3
         EngineeringLevel: 3
         Research: true
         Atmosphere: true
@@ -38,7 +36,7 @@
   playTimeTracker: JobBorg
   requirements:
     - !type:OverallPlaytimeRequirement
-      time: 72000 #20 hrs
+      time: 10h
   canBeAntag: false
   icon: JobIconBorg
   supervisors: job-supervisors-rd
@@ -48,10 +46,8 @@
   - !type:AddComponentSpecial
     components:
       - type: Skill
-        RangeWeaponLevel: 3
-        MeleeWeaponLevel: 3
+        WeaponLevel: 3
         MedicineLevel: 3
-        ChemistryLevel: 3
         EngineeringLevel: 3
         Research: true
         InstrumentationLevel: 3

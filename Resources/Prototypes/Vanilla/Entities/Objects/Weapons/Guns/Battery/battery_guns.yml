@@ -5,6 +5,8 @@
   abstract: true
   description: Высокотехнологичное оружие созданное правоохранительной организацией Sibyl System, предназначенное специально для борьбы с преступностью.
   components:
+  - type: StealTarget
+    stealGroup: OfficerHandgun
   - type: PortableDangerScanner
   - type: SiliconLawProvider
     laws: SibylSystemLaw
@@ -61,17 +63,17 @@
   - type: Dominator
     fireModes:
     - proto: DominatorNonLethalShot
-      fireCost: 80
+      fireCost: 40
       isHitscan: true
     - proto: DominatorNonLethalShot
-      fireCost: 80
+      fireCost: 40
       isHitscan: true
     - proto: DominatorLethalShot
-      fireCost: 125
+      fireCost: 60
       isHitscan: true
   - type: Battery
-    maxCharge: 2000
-    startingCharge: 2000
+    maxCharge: 1000
+    startingCharge: 1000
 
 - type: entity
   name: доминатор
@@ -81,7 +83,10 @@
   components:
   - type: HitscanBatteryAmmoProvider
     proto: DominatorNonLethalShot
-    fireCost: 80
+    fireCost: 40
+  - type: Tag
+    tags:
+      - SecBeltEquip
   - type: Item
     size: Small
     shape:
@@ -132,17 +137,17 @@
   - type: Dominator
     fireModes:
     - proto: AssaultDominatorNonLethalShot
-      fireCost: 30
+      fireCost: 15
       isHitscan: true
     - proto: AssaultDominatorNonLethalShot
-      fireCost: 30
+      fireCost: 15
       isHitscan: true
     - proto: AssaultDominatorLethalShot
-      fireCost: 50
+      fireCost: 25
       isHitscan: true
   - type: Battery
-    maxCharge: 3000
-    startingCharge: 3000
+    maxCharge: 1500
+    startingCharge: 1500
 
 - type: entity
   name: микро H.I.D

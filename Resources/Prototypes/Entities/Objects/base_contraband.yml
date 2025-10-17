@@ -142,6 +142,15 @@
     allowedDepartments: [ Engineering ]
 
 - type: entity
+  id: FirstScienceContraband
+  parent: BaseRestrictedContraband
+  abstract: true
+  components:
+  - type: Contraband
+    severity: FirstLevelRestricted
+    allowedDepartments: [ Science ]
+
+- type: entity
   id: SecondScienceContraband
   parent: BaseRestrictedContraband
   abstract: true
@@ -278,6 +287,7 @@
     allowedDepartments: [ Medical, Science ]
 
 # contraband restricted by job by some degree
+
 - type: entity
   id: FirstSecurityBartenderContraband
   parent: BaseRestrictedContraband
@@ -309,6 +319,16 @@
     allowedJobs: [ Bartender, Zookeeper ]
 
 - type: entity
+  id: FirstSecurityBartenderMusicianContraband
+  parent: BaseRestrictedContraband
+  abstract: true
+  components:
+  - type: Contraband
+    severity: FirstLevelRestricted
+    allowedDepartments: [ Security ]
+    allowedJobs: [ Bartender, Musician ]
+
+- type: entity
   id: FirstSecurityLawyerContraband
   parent: BaseRestrictedContraband
   abstract: true
@@ -337,6 +357,15 @@
   - type: Contraband
     severity: FirstLevelRestricted
     allowedJobs: [ Janitor ]
+
+- type: entity
+  id: ChefContraband
+  parent: BaseRestrictedContraband
+  abstract: true
+  components:
+  - type: Contraband
+    severity: FirstLevelRestricted
+    allowedJobs: [ Chef ]
 
 # for ~objective items
 - type: entity

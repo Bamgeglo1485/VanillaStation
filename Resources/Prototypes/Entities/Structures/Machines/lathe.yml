@@ -136,6 +136,7 @@
   - type: EmagLatheRecipes
     emagStaticPacks:
     - SecurityAmmoStatic
+    - SyndicateAmmoStatic
   - type: BlueprintReceiver
     whitelist:
       tags:
@@ -409,9 +410,14 @@
     - SecurityAmmo
     - SecurityWeapons
     - SecurityDisablers
-    - SecurityDominators
-    - NightVision #RAYTEN
-    - ThermalVision  #RAYTEN
+    #RAYTEN-start
+    - NightVision
+    - ThermalVision
+    - DominatorWeaponry
+    #RAYTEN-end
+  - type: EmagLatheRecipes
+    emagStaticPacks:
+    - SyndicateAmmoStatic
   - type: MaterialStorage
     whitelist:
       tags:
@@ -448,6 +454,9 @@
       runningState: icon
       staticPacks:
       - SecurityAmmoStatic
+    - type: EmagLatheRecipes
+      emagStaticPacks:
+      - SyndicateAmmoStatic
     - type: MaterialStorage
       whitelist:
         tags:
@@ -592,6 +601,10 @@
     staticPacks:
     - BioGenIngredientsStatic
     - BioGenMaterialsStatic
+  - type: EmagLatheRecipes
+    emagStaticPacks:
+    - BioGenEmagStatic
+    - HostileCubesStatic
 
 - type: entity
   parent: BaseLathe

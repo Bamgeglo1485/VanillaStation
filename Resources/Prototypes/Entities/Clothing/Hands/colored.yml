@@ -306,10 +306,8 @@
     inhandVisuals:
       left:
       - state: inhand-left
-        color: "#535353"
       right:
       - state: inhand-right
-        color: "#535353"
   - type: Clothing
     sprite: Clothing/Hands/Gloves/Color/black.rsi
   - type: Butcherable
@@ -322,7 +320,7 @@
 # Insulated Gloves (Yellow Gloves)
 # Currently can not be greyscaled without looking like shit.
 - type: entity
-  parent: ClothingHandsBase
+  parent: [ClothingHandsBase, FirstEngineeringContraband]
   id: ClothingHandsGlovesColorYellow
   name: insulated gloves
   description: These gloves will protect the wearer from electric shocks.
