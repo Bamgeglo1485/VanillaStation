@@ -45,6 +45,9 @@
     thresholds:
       0: Alive
       120: Dead
+  - type: PointLight
+    radius: 0
+    energy: 0
 
 - type: entity
   parent: ArchonItemRandom
@@ -93,6 +96,9 @@
     thresholds:
       0: Alive
       120: Dead
+  - type: PointLight
+    radius: 0
+    energy: 0
 
 - type: entity
   parent: ArchonHumanoidRandom
