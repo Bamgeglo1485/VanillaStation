@@ -1,0 +1,83 @@
+- type: entity
+  parent: Mobsecuritron
+  id: MobBeepsky
+  name: Офицер Бипски
+  description: особенный секьюритрон, вооружённый дубинкой, доминатором и неутомимой решимостью ловить преступников. Его колёсики скрипят, но закон — вечен.
+  components:
+  - type: DatasetVocalizer
+    dataset: BeepskyAds
+
+
+- type: entity
+  parent: MobSiliconBase
+  id: Mobsecuritron
+  name: Секьюритрон
+  description: Бип буп. Вы арестованы
+  components:
+  - type: Sprite
+    sprite: Vanilla/Mobs/Silicon/Bots/securitron.rsi
+    state: securitron
+  - type: Skill
+    WeaponLevel: 3
+  - type: NpcFactionMember
+    factions:
+    - NanoTrasen
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 2.5
+    baseSprintSpeed: 4.5
+  - type: HTN
+    rootTask:
+      task: SecuritronCompound
+    blackboard:
+      FollowCloseRange: !type:Single
+        2.0
+      FollowRange: !type:Single
+        3.0
+  - type: InteractionPopup
+    interactSuccessString: petting-success-cleanbot
+    interactFailureString: petting-failure-cleanbot
+    interactSuccessSound:
+      path: /Audio/Ambience/Objects/periodic_beep.ogg
+  # голос
+  - type: Vocalizer
+  - type: Speech
+  - type: SecurityMarker
+  - type: DatasetVocalizer
+    dataset: SecuritronAds
+  - type: Hands
+    hands:
+      hand_right1:
+        location: Right
+      hand_left1:
+        location: Left
+    sortedHands:
+    - hand_right1
+    - hand_left1
+  - type: DoAfter
+  # оружие
+  - type: CombatMode
+  - type: Stunbaton
+    energyPerUse: 50
+  - type: MeleeWeapon
+    angle: 60
+    animation: WeaponArcThrust
+    damage:
+      types:
+        Blunt: 0
+    hidden: true
+  - type: StaminaDamageOnHit
+    damage: 35
+    sound: /Audio/Weapons/egloves.ogg
+  - type: Gun
+    fireRate: 0.5
+    soundGunshot:
+      path: /Audio/Vanilla/Weapons/Guns/Gunshots/dominator.ogg
+  - type: HitscanBatteryAmmoProvider
+    proto: DominatorLethalShot
+    fireCost: 125
+  - type: Battery
+    maxCharge: 2000
+    startingCharge: 2000
+  - type: BatterySelfRecharger
+    autoRecharge: true
+    autoRechargeRate: 5

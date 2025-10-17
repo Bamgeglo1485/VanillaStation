@@ -10,10 +10,8 @@
   parent: EventHumanoidMindShielded
   components:
     - type: Skill
-      RangeWeaponLevel: 0
-      MeleeWeaponLevel: 0
+      WeaponLevel: 0
       MedicineLevel: 0
-      ChemistryLevel: 0
       EngineeringLevel: 0
       Research: false
       Atmosphere: false
@@ -115,10 +113,8 @@
   parent: EventHumanoidMindShielded
   components:
     - type: Skill
-      RangeWeaponLevel: 3
-      MeleeWeaponLevel: 3
+      WeaponLevel: 3
       MedicineLevel: 0
-      ChemistryLevel: 0
       EngineeringLevel: 0
       Research: false
       Atmosphere: false
@@ -180,10 +176,8 @@
   parent: EventHumanoid
   components:
     - type: Skill
-      RangeWeaponLevel: 2
-      MeleeWeaponLevel: 2
+      WeaponLevel: 2
       MedicineLevel: 2
-      ChemistryLevel: 0
       EngineeringLevel: 0
       Research: false
       Atmosphere: false
@@ -225,10 +219,8 @@
   parent: EventHumanoid
   components:
     - type: Skill
-      RangeWeaponLevel: 0
-      MeleeWeaponLevel: 0
+      WeaponLevel: 0
       MedicineLevel: 0
-      ChemistryLevel: 1
       EngineeringLevel: 3
       Research: false
       Atmosphere: true
@@ -280,10 +272,8 @@
   parent: EventHumanoid
   components:
     - type: Skill
-      RangeWeaponLevel: 0
-      MeleeWeaponLevel: 0
+      WeaponLevel: 0
       MedicineLevel: 3
-      ChemistryLevel: 3
       EngineeringLevel: 1
       Research: false
       Atmosphere: false
@@ -385,10 +375,8 @@
   parent: EventHumanoid
   components:
     - type: Skill
-      RangeWeaponLevel: 0
-      MeleeWeaponLevel: 0
+      WeaponLevel: 0
       MedicineLevel: 0
-      ChemistryLevel: 0
       EngineeringLevel: 3
       Research: false
       Atmosphere: true
@@ -430,10 +418,8 @@
   parent: EventHumanoid
   components:
     - type: Skill
-      RangeWeaponLevel: 0
-      MeleeWeaponLevel: 0
+      WeaponLevel: 0
       MedicineLevel: 0
-      ChemistryLevel: 0
       EngineeringLevel: 0
       Research: false
       Atmosphere: false

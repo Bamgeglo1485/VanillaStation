@@ -217,7 +217,7 @@ public sealed partial class ZombieSystem
             //Rayten-start
             if(!TryComp<SkillComponent>(target, out var skill))
                 skill = EnsureComp<SkillComponent>(target);
-            skill.MeleeWeaponLevel = SkillLevel.Expert;
+            skill.WeaponLevel = SkillLevel.Expert;
             //Rayten-end
 
             // humanoid zombies get to pry open doors and shit

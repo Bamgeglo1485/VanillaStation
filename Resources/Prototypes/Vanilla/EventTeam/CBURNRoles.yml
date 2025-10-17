@@ -52,10 +52,8 @@
   - type: Loadout
     prototypes: [MobCBURNRegularLoot]
   - type: Skill
-    RangeWeaponLevel: 3
-    MeleeWeaponLevel: 3
+    WeaponLevel: 3
     MedicineLevel: 3
-    ChemistryLevel: 3
     EngineeringLevel: 0
     Research: true
     Atmosphere: true
@@ -82,10 +80,8 @@
   - type: Loadout
     prototypes: [MobCBURNRegularLoot]
   - type: Skill
-    RangeWeaponLevel: 2
-    MeleeWeaponLevel: 2
+    WeaponLevel: 2
     MedicineLevel: 3
-    ChemistryLevel: 3
     EngineeringLevel: 0
     Research: true
     Atmosphere: true
