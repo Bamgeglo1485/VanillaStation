@@ -84,6 +84,7 @@ public sealed partial class ArchonSystem : EntitySystem
         SubscribeLocalEvent<StasisArchonOnCollideComponent, ProjectileHitEvent>(OnProjectileHit);
         SubscribeLocalEvent<ArchonComponent, MobStateChangedEvent>(OnMobStateChange);
         SubscribeLocalEvent<ArchonComponent, ComponentStartup>(OnComponentStartup);
+        SubscribeLocalEvent<ArchonComponent, ComponentShutdown>(OnComponentShutdown);
 
         /// ArchonSystem.Generate
         SubscribeLocalEvent<ArchonRoleComponent, ComponentStartup>(GenerateBriefing);
@@ -321,6 +322,17 @@ public sealed partial class ArchonSystem : EntitySystem
         comp.NextSyncLevelRecover = _gameTiming.CurTime + comp.SyncLevelRecoverDelay;
 
         ForceStasis(uid, comp);
+    }
+
+    /// <summary>
+    /// При удалении архонта
+    /// </summary>
+    private void OnComponentShutdown(EntityUid uid, ArchonComponent comp, ComponentShutdown args)
+    {
+        if (comp.PolymorphEntity == null)
+            return;
+
+        QueueDel(comp.PolymorphEntity);
     }
 
     /// <summary>
