@@ -20,7 +20,7 @@ public sealed partial class ShyGuyComponent : Component
 
     [AutoNetworkedField]
     [DataField]
-    public TimeSpan RagingDelay = TimeSpan.FromSeconds(50);
+    public TimeSpan RagingDelay = TimeSpan.FromSeconds(26);
 
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
     [AutoNetworkedField, AutoPausedField]
