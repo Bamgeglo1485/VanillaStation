@@ -1,6 +1,6 @@
 - type: entity
   name: многоголосый
-  id: MobWithManyVoicesArchon
+  id: MobWithManyVoicesArchon939
   parent: [ SimpleSpaceMobBase, MobCombat ]
   description: Это собака или ящерица?
   components:
@@ -30,13 +30,18 @@
     - type: MobThresholds
       thresholds:
         0: Alive
-        400: Dead
+        500: Dead
+    - type: SlowOnDamage
+      speedModifierThresholds:
+        300: 0.7
+        400: 0.4
+        450: 0.2
     - type: MovementSpeedModifier
       baseWalkSpeed: 2
       baseSprintSpeed: 4.5
     - type: Stamina
       critThreshold: 200
-      stunTime: 60
+      stunTime: 30
     - type: DamageStateVisuals
       states:
         Alive:

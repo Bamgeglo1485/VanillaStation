@@ -42,6 +42,43 @@
         - !type:HTNPrimitiveTask
           operator: !type:WaitOperator
             key: IdleTime
+
+- type: htnCompound
+  id: 096IdleCompound
+  branches:
+    - tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:WaitOperator
+            key: IdleTime
+          preconditions:
+            - !type:KeyExistsPrecondition
+              key: IdleTime
+            - !type:ShyGuyStatePrecondition
+              state: Calm
+              key: IdleTime
+    - preconditions:
+        - !type:BuckledPrecondition
+          isBuckled: false
+        - !type:PulledPrecondition
+          isPulled: false
+      tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:PickAccessibleOperator
+            rangeKey: AggroVisionRadius
+
+        - !type:HTNPrimitiveTask
+          operator: !type:MoveToOperator
+            pathfindInPlanning: false
+
+        - !type:HTNPrimitiveTask
+          operator: !type:RandomOperator
+            targetKey: IdleTime
+            minKey: 0
+            maxKey: 1
+
+        - !type:HTNPrimitiveTask
+          operator: !type:WaitOperator
+            key: IdleTime
           preconditions:
             - !type:KeyExistsPrecondition
               key: IdleTime
