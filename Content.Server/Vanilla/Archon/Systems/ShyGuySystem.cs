@@ -100,13 +100,9 @@ public sealed class ShyGuySystem : EntitySystem
         }
 
         _popup.PopupEntity("Он начинает трястись в конвульсиях...", uid, PopupType.SmallCaution);
-        _popup.PopupClient("Беги", target.Value, target.Value, PopupType.LargeCaution);
 
         if (comp.RagingSound != null)
             _audio.PlayPvs(comp.RagingSound, uid);
-
-        if (comp.StingerSound != null)
-            _audio.PlayLocal(comp.StingerSound, target.Value, target.Value);
     }
 
     public void Calm(EntityUid uid, ShyGuyComponent comp)
