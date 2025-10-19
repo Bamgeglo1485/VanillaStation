@@ -4,3 +4,6 @@ ent-StatusEffectStutter = заикание
     .desc = { ent-SpeechStatusEffectBase.desc }
 ent-StatusEffectSlurred = невнятная речь
     .desc = { ent-SpeechStatusEffectBase.desc }
+ent-StatusEffectScrambled = запутанный
+    .desc = { ent-SpeechStatusEffectBase.desc }
+
