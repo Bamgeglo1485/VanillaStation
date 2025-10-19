@@ -29,6 +29,9 @@ public sealed class SharedShyGuySystem : EntitySystem
         if (!HasComp<MobStateComponent>(args.User))
             return;
 
+        if (comp.Targets.Contains(args.User.Value))
+            return;
+
         if (comp.StingerSound != null)
             _audio.PlayLocal(comp.StingerSound, args.User.Value, args.User.Value);
 

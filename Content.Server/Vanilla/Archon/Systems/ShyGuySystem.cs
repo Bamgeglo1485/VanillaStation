@@ -1,3 +1,6 @@
+using Content.Server.NPC.Systems;
+using Content.Server.NPC;
+
 using Content.Shared.Vanilla.Archon;
 using Content.Shared.Jittering;
 using Content.Shared.Popups;
@@ -5,6 +8,11 @@ using Content.Shared.Audio;
 
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Timing;
+using Robust.Shared.Map;
+
+using Robust.Server.GameObjects;
+
+using System.Numerics;
 
 namespace Content.Server.Vanilla.Archon;
 
@@ -15,6 +23,7 @@ public sealed class ShyGuySystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly NPCSystem _npc = default!;
 
     private TimeSpan _nextUpdate = TimeSpan.Zero;
 
@@ -60,7 +69,7 @@ public sealed class ShyGuySystem : EntitySystem
 
                     if (comp.Targets.Count == 0)
                     {
-                        //Calm(uid, comp);
+                        Calm(uid, comp);
 
                         if (comp.CalmAmbient != null)
                             _ambient.SetSound(uid, comp.CalmAmbient);
@@ -79,6 +88,18 @@ public sealed class ShyGuySystem : EntitySystem
         if (!TryComp<ShyGuyComponent>(shyGuy, out var comp))
             return;
 
+        if (user == null)
+            return;
+
+        if (!comp.Targets.Contains(user))
+        {
+            comp.Targets.Add(user);
+        }
+        else
+            return;
+
+        Dirty(shyGuy, comp);
+
         Rage(shyGuy, comp, user);
     }
 
@@ -90,14 +111,7 @@ public sealed class ShyGuySystem : EntitySystem
         comp.RagingEnd = _timing.CurTime + comp.RagingDelay;
         comp.State = ShyGuyState.Raging;
 
-        AddTarget(uid, target.Value, comp);
-
         _ambient.SetAmbience(uid, false);
-
-        if (target.HasValue && !comp.Targets.Contains(target.Value))
-        {
-            comp.Targets.Add(target.Value);
-        }
 
         _popup.PopupEntity("Он начинает трястись в конвульсиях...", uid, PopupType.SmallCaution);
 
@@ -115,22 +129,16 @@ public sealed class ShyGuySystem : EntitySystem
         comp.RagingEnd = TimeSpan.Zero;
     }
 
-    public void AddTarget(EntityUid uid, EntityUid target, ShyGuyComponent? comp = null)
+    public void AddTarget(EntityUid uid, EntityUid target)
     {
-        if (!Resolve(uid, ref comp))
-            return;
-
         if (!comp.Targets.Contains(target))
         {
             comp.Targets.Add(target);
         }
     }
 
-    public void RemoveTarget(EntityUid uid, EntityUid target, ShyGuyComponent? comp = null)
+    public void RemoveTarget(EntityUid uid, EntityUid target)
     {
-        if (!Resolve(uid, ref comp))
-            return;
-
         if (comp.Targets.Contains(target))
         {
             comp.Targets.Remove(target);
