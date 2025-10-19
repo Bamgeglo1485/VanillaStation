@@ -1174,9 +1174,9 @@
   # RAYTEN STARTS
       - !type:HealthChange
         conditions:
-        - !type:OrganType
-          type: Skrell
-        - !type:TotalDamage
+        - !type:MetabolizerTypeCondition
+          type: [ Skrell ]
+        - !type:TotalDamageCondition
           max: 25
         damage:
           groups:
@@ -1184,11 +1184,6 @@
             Burn: -0.7
           types:
             Poison: -0.5
-      - !type:ChemCleanBloodstream
-        conditions:
-        - !type:OrganType
-          type: Skrell
-        cleanseRate: 1
     # RAYTEN ENDS
   reactiveEffects:
     Extinguish:
@@ -1382,8 +1377,12 @@
     Medicine:
       metabolismRate: 3 # rayten
       effects:
-      - !type:ChemDamageBrainWorm
-        amount: 1
+      # rayten-start
+      - !type:DamageBrainWorm
+        damage:
+          types:
+            Poison: 1
+      # rayten-end
       - !type:PopupMessage
         conditions:
         - !type:ReagentCondition

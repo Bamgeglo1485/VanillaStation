@@ -216,7 +216,7 @@
 # Hitscan
 - type: entity
   parent: BasicHitscan
-  id: DominatorLethalShot
+  id: RailPiercer
   components:
   - type: HitscanBasicDamage
     damage:

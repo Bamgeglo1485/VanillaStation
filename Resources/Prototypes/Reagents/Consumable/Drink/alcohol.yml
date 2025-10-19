@@ -210,19 +210,21 @@
   # RAYTEN STARTS
       - !type:HealthChange
         conditions:
-        - !type:OrganType
-          type: Skrell
+        - !type:MetabolizerTypeCondition
+          type: [ Skrell ]
         damage:
           types:
             Poison: 0.4
-      - !type:ChemVomit
+      - !type:Vomit
         conditions:
-        - !type:OrganType
-          type: Skrell
-        - !type:ReagentThreshold
+        - !type:MetabolizerTypeCondition
+          type: [ Skrell ]
+        - !type:ReagentCondition
+          reagent: Ethanol
           min: 2
         probability: 0.5
     # RAYTEN ENDS
+    
 - type: reagent
   id: Gin
   name: reagent-name-gin

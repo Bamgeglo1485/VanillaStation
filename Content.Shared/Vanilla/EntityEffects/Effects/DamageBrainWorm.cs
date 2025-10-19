@@ -1,7 +1,11 @@
 using Content.Shared.Damage;
+using Content.Shared.Damage.Prototypes;
+using Content.Shared.FixedPoint;
 using Content.Shared.EntityEffects;
+using Content.Shared.Localizations;
 using Content.Shared.Vanilla.Entities.BrainWorm;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Maths;
 
 namespace Content.Shared.Vanilla.EntityEffects.Effects;
 
@@ -17,29 +21,54 @@ public sealed partial class DamageBrainWormEntityEffectSystem : EntityEffectSyst
     {
         if (TryComp<BrainWormHostComponent>(entity, out var hostcomp))
         {
-            DamageSpecifier dmg = new()
-            {
-                DamageDict = new()
-                {
-                    { "Poison", args.Effect.Amount }
-                }
-            };
             _dmg.TryChangeDamage(
                 hostcomp.HostedBrainWorm,
-                dmg);
+                args.Effect.Damage);
         }
     }
 }
 
-/// <inheritdoc cref="EntityEffect"/>
 public sealed partial class DamageBrainWorm : EntityEffectBase<DamageBrainWorm>
 {
-    /// <summary>
-    /// Сколько урона наносим червю.
-    /// </summary>
-    [DataField("amount")]
-    public float Amount = 0.5f;
+    [DataField(required: true)]
+    public DamageSpecifier Damage = default!;
 
     public override string EntityEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
-        => Loc.GetString("reagent-effect-guidebook-brainworm-damage", ("amount", Amount));
+    {
+        var damages = new List<string>();
+
+        var damageSpec = new DamageSpecifier(Damage);
+        var damageableSystem = entSys.GetEntitySystem<DamageableSystem>();
+        var universalReagentDamageModifier = damageableSystem.UniversalReagentDamageModifier;
+        var universalReagentHealModifier = damageableSystem.UniversalReagentHealModifier;
+
+        damageSpec = damageableSystem.ApplyUniversalAllModifiers(damageSpec);
+
+        foreach (var (type, amount) in damageSpec.DamageDict)
+        {
+            if (amount == FixedPoint2.Zero)
+                continue;
+
+            var localizedType = prototype.Index<DamageTypePrototype>(type).LocalizedName;
+            var isHealing = amount < 0;
+            var modifier = isHealing ? universalReagentHealModifier : universalReagentDamageModifier;
+
+            damages.Add(Loc.GetString(
+                "health-change-display",
+                ("kind", localizedType),
+                ("amount", MathF.Abs(amount.Float() * modifier)),
+                ("deltasign", isHealing ? -1 : 1)
+            ));
+        }
+        var damageList = ContentLocalizationManager.FormatList(damages);
+
+        if (damages.Count == 0)
+        {
+            return Loc.GetString("entity-effect-guidebook-brainworm-damage-none");
+        }
+
+        return Loc.GetString("entity-effect-guidebook-brainworm-damage-detailed",
+            ("changes", damageList));
+    }
+
 }

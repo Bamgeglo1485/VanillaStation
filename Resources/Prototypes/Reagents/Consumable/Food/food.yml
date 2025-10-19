@@ -69,16 +69,17 @@
   # RAYTEN STARTS
       - !type:HealthChange
         conditions:
-        - !type:OrganType
-          type: Skrell
+        - !type:MetabolizerTypeCondition
+          type: [ Skrell ]
         damage:
           types:
             Poison: 0.4
-      - !type:ChemVomit
+      - !type:Vomit
         conditions:
-        - !type:OrganType
-          type: Skrell
-        - !type:ReagentThreshold
+        - !type:MetabolizerTypeCondition
+          type: [ Skrell ]
+        - !type:ReagentCondition
+          reagent: Protein
           min: 2
         probability: 0.8
     # RAYTEN ENDS
