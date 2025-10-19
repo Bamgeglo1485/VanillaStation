@@ -15,4 +15,4 @@ force-say-send-button = Сказать
 health-analyzer-window-entity-brainwormed-text = [color=red]В мозгу пациента обнаружен мозговой червь![/color]
 entity-effect-guidebook-brainworm-damage-detailed = Наносит { $changes } мозговому червю
 entity-effect-guidebook-brainworm-damage-none = Не наносит урон мозговому червю
-reagent-effect-guidebook-brainworm-damage = Наносит { $amount } ед. Яды мозговому червю.
+

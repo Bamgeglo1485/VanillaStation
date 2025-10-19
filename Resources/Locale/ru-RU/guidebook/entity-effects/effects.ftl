@@ -121,22 +121,22 @@ entity-effect-guidebook-status-effect =
             { $chance ->
                 [1] Вызывает
                *[other] вызвать
-            } { LOC($key) } как минимум на { NATURALFIXED($time, 3) } {$time} с. без накопления
+            } { LOC($key) } как минимум на { NATURALFIXED($time, 3) } { $time } с. без накопления
         [add]
             { $chance ->
                 [1] Вызывает
                *[other] вызвать
-            } { LOC($key) } как минимум на { NATURALFIXED($time, 3) } {$time} с. с накоплением
+            } { LOC($key) } как минимум на { NATURALFIXED($time, 3) } { $time } с. с накоплением
         [set]
             { $chance ->
                 [1] Вызывает
                *[other] вызвать
-            } { LOC($key) } как минимум на { NATURALFIXED($time, 3) } {$time} с. без накопления
+            } { LOC($key) } как минимум на { NATURALFIXED($time, 3) } { $time } с. без накопления
        *[remove]
             { $chance ->
                 [1] Убирает
                *[other] убрать
-            } { NATURALFIXED($time, 3) } {$time} с. эффекта { LOC($key) }
+            } { NATURALFIXED($time, 3) } { $time } с. эффекта { LOC($key) }
     } { $delay ->
         [0] немедленно
        *[other] после задержки в { NATURALFIXED($delay, 3) } { MANY("секунду", $delay) }
@@ -173,22 +173,22 @@ entity-effect-guidebook-knockdown =
             { $chance ->
                 [1] Вызывает
                *[other] вызвать
-            } { LOC($key) } как минимум на { NATURALFIXED($time, 3) } {$time} с. без накопления
+            } { LOC($key) } как минимум на { NATURALFIXED($time, 3) } { $time } с. без накопления
         [add]
             { $chance ->
                 [1] Вызывает
                *[other] вызвать
-            } опрокидывание как минимум на { NATURALFIXED($time, 3) } {$time} с. с накоплением
+            } опрокидывание как минимум на { NATURALFIXED($time, 3) } { $time } с. с накоплением
        *[set]
             { $chance ->
                 [1] Вызывает
                *[other] вызвать
-            } опрокидывание как минимум на { NATURALFIXED($time, 3) } {$time} с. без накопления
+            } опрокидывание как минимум на { NATURALFIXED($time, 3) } { $time } с. без накопления
         [remove]
             { $chance ->
                 [1] Убирает
                *[other] убрать
-            } { NATURALFIXED($time, 3) } {$time} с. эффекта опрокидывания
+            } { NATURALFIXED($time, 3) } { $time } с. эффекта опрокидывания
     }
 entity-effect-guidebook-set-solution-temperature-effect =
     { $chance ->
@@ -242,7 +242,7 @@ entity-effect-guidebook-adjust-reagent-group =
     } { NATURALFIXED($amount, 2) }u реагентов из группы { $group } { $deltasign ->
         [1] в растворе
        *[-1] из раствора
-    } 
+    }
 entity-effect-guidebook-adjust-temperature =
     { $chance ->
         [1]
@@ -258,7 +258,7 @@ entity-effect-guidebook-adjust-temperature =
     } { POWERJOULES($amount) } тепла { $deltasign ->
         [1] в теле, в котором находится
        *[-1] из тела, в котором находится
-    } 
+    }
 entity-effect-guidebook-chem-cause-disease =
     { $chance ->
         [1] Вызывает
@@ -319,7 +319,7 @@ entity-effect-guidebook-electrocute =
     { $chance ->
         [1] Поражает электричеством
        *[other] поразить электричеством
-    } цель на { NATURALFIXED($time, 3) } {$time} с.
+    } цель на { NATURALFIXED($time, 3) } { $time } с.
 entity-effect-guidebook-emote =
     { $chance ->
         [1] Заставит
@@ -380,12 +380,12 @@ entity-effect-guidebook-paralyze =
     { $chance ->
         [1] Парализует
        *[other] парализовать
-    } цель как минимум на { NATURALFIXED($time, 3) } {$time} с.
+    } цель как минимум на { NATURALFIXED($time, 3) } { $time } с.
 entity-effect-guidebook-movespeed-modifier =
     { $chance ->
         [1] Изменяет
        *[other] изменить
-    } скорость движения на { NATURALFIXED($sprintspeed, 3) }x как минимум на { NATURALFIXED($time, 3) } {$time} с.
+    } скорость движения на { NATURALFIXED($sprintspeed, 3) }x как минимум на { NATURALFIXED($time, 3) } { $time } с.
 entity-effect-guidebook-reset-narcolepsy =
     { $chance ->
         [1] Временно подавляет
@@ -415,12 +415,12 @@ entity-effect-guidebook-reduce-rotting =
     { $chance ->
         [1] Восстанавливает
        *[other] восстановить
-    } {$time} с. гниение
+    } { $time } с. гниение
 entity-effect-guidebook-area-reaction =
     { $chance ->
         [1] Вызывает
        *[other] вызвать
-    } дымовую или пенную реакцию на {$duration} с.
+    } дымовую или пенную реакцию на { $duration } с.
 entity-effect-guidebook-add-to-solution-reaction =
     { $chance ->
         [1] Вызывает
