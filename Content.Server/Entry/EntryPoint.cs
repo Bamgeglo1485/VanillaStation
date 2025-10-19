@@ -47,6 +47,7 @@ namespace Content.Server.Entry
         [Dependency] private readonly ContentLocalizationManager _loc = default!;
         [Dependency] private readonly ContentNetworkResourceManager _netResMan = default!;
         [Dependency] private readonly DiscordChatLink _discordChatLink = default!;
+        [Dependency] private readonly WebhookBans _webhookbans = default!;
         [Dependency] private readonly DiscordLink _discordLink = default!;
         [Dependency] private readonly EuiManager _euiManager = default!;
         [Dependency] private readonly GhostKickManager _ghostKick = default!;
@@ -179,6 +180,9 @@ namespace Content.Server.Entry
             _connection.PostInit();
             _multiServerKick.Initialize();
             _cvarCtrl.Initialize();
+            //rayten-start
+            _webhookbans.Initialize();
+            //rayten-end
         }
 
         public override void Update(ModUpdateLevel level, FrameEventArgs frameEventArgs)
