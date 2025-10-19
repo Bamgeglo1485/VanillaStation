@@ -128,20 +128,4 @@ public sealed class ShyGuySystem : EntitySystem
         comp.Targets.Clear();
         comp.RagingEnd = TimeSpan.Zero;
     }
-
-    public void AddTarget(EntityUid uid, EntityUid target)
-    {
-        if (!comp.Targets.Contains(target))
-        {
-            comp.Targets.Add(target);
-        }
-    }
-
-    public void RemoveTarget(EntityUid uid, EntityUid target)
-    {
-        if (comp.Targets.Contains(target))
-        {
-            comp.Targets.Remove(target);
-        }
-    }
 }
