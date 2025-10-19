@@ -56,7 +56,7 @@
           Heat: 1
     - type: TileEntityEffect
       effects:
-      - !type:FlammableReaction
+      - !type:Flammable
         multiplier: 1
         multiplierOnExisting: 0.3
       - !type:Ignite
