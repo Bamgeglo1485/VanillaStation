@@ -16,13 +16,15 @@ public sealed class ShyGuySystem : SharedShyGuySystem
     {
         if (!HasComp<MobStateComponent>(args.User))
             return;
+        RaiseNetworkEvent(new ShyGuyGazeEvent(GetNetEntity(uid), GetNetEntity(args.User)));
+        
+        if (comp.State != ShyGuyState.Calm)
+            return;
 
         if (comp.StingerSound != null)
             _audio.PlayLocal(comp.StingerSound, args.User, args.User);
 
         _popup.PopupClient("Беги", args.User, args.User, PopupType.LargeCaution);
-
-        RaiseNetworkEvent(new ShyGuyGazeEvent(GetNetEntity(uid), GetNetEntity(args.User)));
     }
 
 }

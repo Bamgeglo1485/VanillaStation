@@ -98,6 +98,8 @@
       speedModifier: 10
       useSound:
         path: /Audio/Items/crowbar.ogg
+    - type: SleepOnTemperature
+      randomTemp: false
     - type: JumpAbility
       action: ActionGravityJump939
     - type: ActionGrant

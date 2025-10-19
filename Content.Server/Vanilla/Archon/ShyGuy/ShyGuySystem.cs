@@ -1,8 +1,16 @@
+using Content.Server.NPC.Systems;
+using Content.Server.NPC;
+
 using Content.Shared.Vanilla.Archon.ShyGuy;
 using Content.Shared.Jittering;
 using Content.Shared.Audio;
 using Content.Shared.Popups;
 using Robust.Shared.Timing;
+using Robust.Shared.Map;
+
+using Robust.Server.GameObjects;
+
+using System.Numerics;
 
 namespace Content.Server.Vanilla.Archon.ShyGuy;
 
@@ -11,6 +19,7 @@ public sealed class ShyGuySystem : SharedShyGuySystem
     [Dependency] private readonly SharedAmbientSoundSystem _ambient = default!;
     [Dependency] private readonly SharedJitteringSystem _jitter = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly NPCSystem _npc = default!;
 
     private TimeSpan _nextUpdate = TimeSpan.Zero;
 
@@ -46,16 +55,16 @@ public sealed class ShyGuySystem : SharedShyGuySystem
 
                         if (comp.RageAmbient != null)
                             _ambient.SetSound(uid, comp.RageAmbient);
+                            
                         _ambient.SetAmbience(uid, true);
                     }
                     break;
-
                 case ShyGuyState.Rage:
                     _jitter.AddJitter(uid, 10, 10);
 
                     if (comp.Targets.Count == 0)
                     {
-                        //Calm(uid, comp);
+                        Calm(uid, comp);
 
                         if (comp.CalmAmbient != null)
                             _ambient.SetSound(uid, comp.CalmAmbient);
@@ -74,6 +83,18 @@ public sealed class ShyGuySystem : SharedShyGuySystem
         if (!TryComp<ShyGuyComponent>(shyGuy, out var comp))
             return;
 
+        if (user == null)
+            return;
+
+        if (!comp.Targets.Contains(user))
+        {
+            comp.Targets.Add(user);
+        }
+        else
+            return;
+
+        Dirty(shyGuy, comp);
+
         Rage(shyGuy, comp, user);
     }
 
@@ -85,14 +106,7 @@ public sealed class ShyGuySystem : SharedShyGuySystem
         comp.RagingEnd = _timing.CurTime + comp.RagingDelay;
         comp.State = ShyGuyState.Raging;
 
-        AddTarget(uid, target.Value, comp);
-
         _ambient.SetAmbience(uid, false);
-
-        if (target.HasValue && !comp.Targets.Contains(target.Value))
-        {
-            comp.Targets.Add(target.Value);
-        }
 
         _popup.PopupEntity("Он начинает трястись в конвульсиях...", uid, PopupType.SmallCaution);
 
@@ -108,27 +122,5 @@ public sealed class ShyGuySystem : SharedShyGuySystem
         comp.State = ShyGuyState.Calm;
         comp.Targets.Clear();
         comp.RagingEnd = TimeSpan.Zero;
-    }
-
-    public void AddTarget(EntityUid uid, EntityUid target, ShyGuyComponent? comp = null)
-    {
-        if (!Resolve(uid, ref comp))
-            return;
-
-        if (!comp.Targets.Contains(target))
-        {
-            comp.Targets.Add(target);
-        }
-    }
-
-    public void RemoveTarget(EntityUid uid, EntityUid target, ShyGuyComponent? comp = null)
-    {
-        if (!Resolve(uid, ref comp))
-            return;
-
-        if (comp.Targets.Contains(target))
-        {
-            comp.Targets.Remove(target);
-        }
     }
 }

@@ -10,6 +10,7 @@ namespace Content.Shared.Vanilla.Archon.ShyGuy;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState, AutoGenerateComponentPause]
 public sealed partial class ShyGuyComponent : Component
 {
+
     [AutoNetworkedField]
     [DataField]
     public List<EntityUid> Targets = new();
@@ -20,7 +21,7 @@ public sealed partial class ShyGuyComponent : Component
 
     [AutoNetworkedField]
     [DataField]
-    public TimeSpan RagingDelay = TimeSpan.FromSeconds(26);
+    public TimeSpan RagingDelay = TimeSpan.FromSeconds(35);
 
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
     [AutoNetworkedField, AutoPausedField]
@@ -36,7 +37,7 @@ public sealed partial class ShyGuyComponent : Component
     public SoundSpecifier? RageAmbient = new SoundPathSpecifier("/Audio/Vanilla/Ambience/096rage.ogg");
 
     [DataField]
-    public SoundSpecifier? CalmAmbient = new SoundPathSpecifier("/Audio/Vanilla/Ambience/096cry");
+    public SoundSpecifier? CalmAmbient = new SoundPathSpecifier("/Audio/Vanilla/Ambience/096cry.ogg");
 }
 
 public enum ShyGuyState : byte

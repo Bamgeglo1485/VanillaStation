@@ -21,7 +21,7 @@
     - type: Sprite
       drawdepth: Mobs
       sprite: Vanilla/Mobs/Archons/Sculpture.rsi
-      state: alive
+      state: classic
     - type: CombatMode
     - type: Physics
     - type: MovementSpeedModifier

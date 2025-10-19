@@ -80,7 +80,7 @@
         path: /Audio/Vanilla/Ambience/096cry.ogg
     - type: HTN
       rootTask:
-        task: IdleCompound
+        task: 096Compound
       blackboard:
         NavClimb: !type:Bool
           true
