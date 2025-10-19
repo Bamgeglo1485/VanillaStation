@@ -5,7 +5,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Robust.Shared.Audio;
 
-namespace Content.Shared.Vanilla.Archon;
+namespace Content.Shared.Vanilla.Archon.ShyGuy;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState, AutoGenerateComponentPause]
 public sealed partial class ShyGuyComponent : Component
@@ -41,16 +41,16 @@ public sealed partial class ShyGuyComponent : Component
 
 public enum ShyGuyState : byte
 {
-    Calm, 
-    Raging, 
+    Calm,
+    Raging,
     Rage
 }
 
 public sealed class OutlineHoverEvent : EntityEventArgs
 {
-    public EntityUid? User { get; set; }
+    public EntityUid User { get; set; }
 
-    public OutlineHoverEvent(EntityUid? user)
+    public OutlineHoverEvent(EntityUid user)
     {
         User = user;
     }

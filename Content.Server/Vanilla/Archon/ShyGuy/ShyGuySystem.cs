@@ -1,19 +1,15 @@
-using Content.Shared.Vanilla.Archon;
+using Content.Shared.Vanilla.Archon.ShyGuy;
 using Content.Shared.Jittering;
-using Content.Shared.Popups;
 using Content.Shared.Audio;
-
-using Robust.Shared.Audio.Systems;
+using Content.Shared.Popups;
 using Robust.Shared.Timing;
 
-namespace Content.Server.Vanilla.Archon;
+namespace Content.Server.Vanilla.Archon.ShyGuy;
 
-public sealed class ShyGuySystem : EntitySystem
+public sealed class ShyGuySystem : SharedShyGuySystem
 {
     [Dependency] private readonly SharedAmbientSoundSystem _ambient = default!;
     [Dependency] private readonly SharedJitteringSystem _jitter = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
 
     private TimeSpan _nextUpdate = TimeSpan.Zero;
@@ -21,7 +17,6 @@ public sealed class ShyGuySystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-
         SubscribeNetworkEvent<ShyGuyGazeEvent>(OnGaze);
     }
 

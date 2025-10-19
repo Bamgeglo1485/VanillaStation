@@ -4,7 +4,7 @@ using Content.Client.Interactable.Components;
 using Content.Client.Viewport;
 using Content.Shared.CCVar;
 using Content.Shared.Interaction;
-using Content.Shared.Vanilla.Archon; // RAYTEN
+using Content.Shared.Vanilla.Archon.ShyGuy;
 using Robust.Client.Graphics;
 using Robust.Client.Input;
 using Robust.Client.Player;
@@ -163,8 +163,8 @@ public sealed class InteractionOutlineSystem : EntitySystem
             outline.OnMouseEnter(_lastHoveredEntity.Value, inRange, renderScale);
 
             // RAYTEN STARTS
-            var enterEvent = new OutlineHoverEvent(localSession.AttachedEntity);
-            RaiseLocalEvent(_lastHoveredEntity.Value, enterEvent);
+            if (localSession.AttachedEntity.HasValue)
+                RaiseLocalEvent(_lastHoveredEntity.Value, new OutlineHoverEvent(localSession.AttachedEntity.Value));
             // RAYTENDS
         }
     }
