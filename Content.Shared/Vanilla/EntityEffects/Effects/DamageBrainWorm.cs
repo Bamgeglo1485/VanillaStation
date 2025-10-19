@@ -5,7 +5,34 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Vanilla.EntityEffects.Effects;
 
-public sealed partial class ChemDamageBrainWorm : EntityEffect
+/// <summary>
+/// Наносит урон мозговому червю в теле носителя
+/// </summary>
+/// <inheritdoc cref="EntityEffectSystem{T,TEffect}"/>
+public sealed partial class DamageBrainWormEntityEffectSystem : EntityEffectSystem<MetaDataComponent, DamageBrainWorm>
+{
+    [Dependency] private readonly DamageableSystem _dmg = default!;
+
+    protected override void Effect(Entity<MetaDataComponent> entity, ref EntityEffectEvent<DamageBrainWorm> args)
+    {
+        if (TryComp<BrainWormHostComponent>(entity, out var hostcomp))
+        {
+            DamageSpecifier dmg = new()
+            {
+                DamageDict = new()
+                {
+                    { "Poison", args.Effect.Amount }
+                }
+            };
+            _dmg.TryChangeDamage(
+                hostcomp.HostedBrainWorm,
+                dmg);
+        }
+    }
+}
+
+/// <inheritdoc cref="EntityEffect"/>
+public sealed partial class DamageBrainWorm : EntityEffectBase<DamageBrainWorm>
 {
     /// <summary>
     /// Сколько урона наносим червю.
@@ -13,28 +40,6 @@ public sealed partial class ChemDamageBrainWorm : EntityEffect
     [DataField("amount")]
     public float Amount = 0.5f;
 
-    protected override string? ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
+    public override string EntityEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
         => Loc.GetString("reagent-effect-guidebook-brainworm-damage", ("amount", Amount));
-
-    public override void Effect(EntityEffectBaseArgs args)
-    {
-        var entMan = args.EntityManager;
-        var sysMan = entMan.EntitySysManager;
-        var damageable = sysMan.GetEntitySystem<DamageableSystem>();
-
-        // проверяем — это червь?
-        if (entMan.TryGetComponent<BrainWormHostComponent>(args.TargetEntity, out var hostcomp))
-        {
-            DamageSpecifier dmg = new()
-            {
-                DamageDict = new()
-                {
-                    { "Poison", Amount }
-                }
-            };
-            damageable.TryChangeDamage(
-                hostcomp.HostedBrainWorm,
-                dmg);
-        }
-    }
 }

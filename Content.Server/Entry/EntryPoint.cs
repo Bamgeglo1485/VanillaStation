@@ -151,17 +151,17 @@ namespace Content.Server.Entry
                 file = _res.UserData.OpenWriteText(resPath.WithName("react_" + dest));
                 ReactionJsonGenerator.PublishJson(file);
                 file.Flush();
-                // Corvax-Wiki-Start
-                file = _res.UserData.OpenWriteText(resPath.WithName("entity_" + dest));
-                EntityJsonGenerator.PublishJson(file);
-                file.Flush();
-                file = _res.UserData.OpenWriteText(resPath.WithName("mealrecipes_" + dest));
-                MealsRecipesJsonGenerator.PublishJson(file);
-                file.Flush();
-                file = _res.UserData.OpenWriteText(resPath.WithName("healthchangereagents_" + dest));
-                HealthChangeReagentsJsonGenerator.PublishJson(file);
-                file.Flush();
-                // Corvax-Wiki-End
+                // // Corvax-Wiki-Start
+                // file = _res.UserData.OpenWriteText(resPath.WithName("entity_" + dest));
+                // EntityJsonGenerator.PublishJson(file);
+                // file.Flush();
+                // file = _res.UserData.OpenWriteText(resPath.WithName("mealrecipes_" + dest));
+                // MealsRecipesJsonGenerator.PublishJson(file);
+                // file.Flush();
+                // file = _res.UserData.OpenWriteText(resPath.WithName("healthchangereagents_" + dest));
+                // HealthChangeReagentsJsonGenerator.PublishJson(file);
+                // file.Flush();
+                // // Corvax-Wiki-End
                 Dependencies.Resolve<IBaseServer>().Shutdown("Data generation done");
                 return;
             }
