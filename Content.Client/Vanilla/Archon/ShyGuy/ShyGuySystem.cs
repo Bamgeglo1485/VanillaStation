@@ -2,6 +2,7 @@ using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Vanilla.Archon.ShyGuy;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
+using Content.Shared.Examine;
 using Content.Shared.Popups;
 
 namespace Content.Client.Vanilla.Archon;
@@ -10,6 +11,7 @@ public sealed class ShyGuySystem : SharedShyGuySystem
 {
 
     [Dependency] private readonly MobStateSystem _mobStateSystem = default!;
+    [Dependency] private readonly ExamineSystemShared _examine = default!;
 
     public override void Initialize()
     {

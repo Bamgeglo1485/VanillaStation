@@ -4,7 +4,6 @@ using Content.Server.NPC;
 using Content.Shared.Vanilla.Archon.ShyGuy;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Jittering;
-using Content.Shared.Examine;
 using Content.Shared.Damage;
 using Content.Shared.Popups;
 using Content.Shared.Audio;
@@ -23,7 +22,6 @@ public sealed class ShyGuySystem : SharedShyGuySystem
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
     [Dependency] private readonly SharedAmbientSoundSystem _ambient = default!;
     [Dependency] private readonly SharedJitteringSystem _jitter = default!;
-    [Dependency] private readonly ExamineSystemShared _examine = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly NPCSystem _npc = default!;
 
