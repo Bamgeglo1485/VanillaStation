@@ -4,6 +4,7 @@ using Content.Server.NPC;
 using Content.Shared.Vanilla.Archon.ShyGuy;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Jittering;
+using Content.Shared.Examine;
 using Content.Shared.Damage;
 using Content.Shared.Popups;
 using Content.Shared.Audio;

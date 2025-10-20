@@ -2,7 +2,6 @@ using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Vanilla.Archon.ShyGuy;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
-using Content.Shared.Examine;
 using Content.Shared.Popups;
 
 namespace Content.Client.Vanilla.Archon;
@@ -20,26 +19,28 @@ public sealed class ShyGuySystem : SharedShyGuySystem
 
     private void OnLook(EntityUid uid, ShyGuyComponent comp, OutlineHoverEvent args)
     {
-        if (!HasComp<MobStateComponent>(args.User))
+        var user = args.User;
+
+        if (!HasComp<MobStateComponent>(user))
             return;
 
         if (TryComp<BlindableComponent>(user, out var blind) && blind.IsBlind == true)
             return;
 
-        if (!_mobStateSystem.IsAlive(user) || !_mobStateSystem.IsAlive(shyGuy))
+        if (!_mobStateSystem.IsAlive(user) || !_mobStateSystem.IsAlive(uid))
             return;
 
-        if (!_examine.InRangeUnOccluded(user, shyGuy, 16f))
+        if (!_examine.InRangeUnOccluded(user, uid, 16f))
             return;
 
-        if (comp.Targets.Contains(args.User))
+        if (comp.Targets.Contains(user))
             return;
 
-        RaiseNetworkEvent(new ShyGuyGazeEvent(GetNetEntity(uid), GetNetEntity(args.User)));
+        RaiseNetworkEvent(new ShyGuyGazeEvent(GetNetEntity(uid), GetNetEntity(user)));
 
         if (comp.StingerSound != null)
-            _audio.PlayLocal(comp.StingerSound, args.User, args.User);
+            _audio.PlayLocal(comp.StingerSound, user, user);
 
-        _popup.PopupClient("Беги", args.User, PopupType.LargeCaution);
+        _popup.PopupClient("Беги", user, PopupType.LargeCaution);
     }
 }
