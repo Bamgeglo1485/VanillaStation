@@ -44,12 +44,13 @@
     - type: MeleeWeapon
       altDisarm: false
       angle: 0
+      attackRate: 2
       animation: WeaponArcBite
       soundHit:
         path: /Audio/Effects/bite.ogg
       damage:
         types:
-          Blunt: 50
+          Blunt: 25
           Structural: 50
     - type: Muted
     - type: ShyGuy

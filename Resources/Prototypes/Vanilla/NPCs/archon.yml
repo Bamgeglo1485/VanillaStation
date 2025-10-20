@@ -85,6 +85,8 @@
   branches:
     - tasks:
         - !type:HTNCompoundTask
+          task: 096ChaseCompound
+        - !type:HTNCompoundTask
           task: 096IdleCompound
 
 - type: htnCompound

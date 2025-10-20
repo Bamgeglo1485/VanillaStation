@@ -2,9 +2,12 @@ using Content.Server.NPC.Systems;
 using Content.Server.NPC;
 
 using Content.Shared.Vanilla.Archon.ShyGuy;
+using Content.Shared.Movement.Systems;
 using Content.Shared.Jittering;
-using Content.Shared.Audio;
+using Content.Shared.Damage;
 using Content.Shared.Popups;
+using Content.Shared.Audio;
+
 using Robust.Shared.Timing;
 using Robust.Shared.Map;
 
@@ -16,8 +19,10 @@ namespace Content.Server.Vanilla.Archon.ShyGuy;
 
 public sealed class ShyGuySystem : SharedShyGuySystem
 {
+    [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
     [Dependency] private readonly SharedAmbientSoundSystem _ambient = default!;
     [Dependency] private readonly SharedJitteringSystem _jitter = default!;
+    [Dependency] private readonly ExamineSystemShared _examine = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly NPCSystem _npc = default!;
 
@@ -26,6 +31,8 @@ public sealed class ShyGuySystem : SharedShyGuySystem
     public override void Initialize()
     {
         base.Initialize();
+
+        SubscribeLocalEvent<ShyGuyComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMoveSpeed);
         SubscribeNetworkEvent<ShyGuyGazeEvent>(OnGaze);
     }
 
@@ -62,14 +69,32 @@ public sealed class ShyGuySystem : SharedShyGuySystem
                 case ShyGuyState.Rage:
                     _jitter.AddJitter(uid, 10, 10);
 
-                    if (comp.Targets.Count == 0)
+                    if (!Exists(comp.Targets[0]) || (TryComp<DamageableComponent>(comp.Targets[0], out var damage) &&
+                        damage.TotalDamage >= comp.DamageToCalm) || curTime >= comp.TargetChaseEnd)
                     {
-                        Calm(uid, comp);
 
-                        if (comp.CalmAmbient != null)
-                            _ambient.SetSound(uid, comp.CalmAmbient);
-                        _ambient.SetAmbience(uid, true);
+                        comp.Targets.RemoveAt(0);
+
+                        if (comp.Targets.Count == 0)
+                        {
+                            Calm(uid, comp);
+
+                            if (comp.CalmAmbient != null)
+                                _ambient.SetSound(uid, comp.CalmAmbient);
+                            _ambient.SetAmbience(uid, true);
+
+                            _movementSpeed.RefreshMovementSpeedModifiers(uid);
+                        }
+
+                        comp.TargetChaseEnd = comp.OneTargetChaseTime + curTime;
+
                     }
+
+                    _npc.SetBlackboard(uid, NPCBlackboard.FollowTarget, new EntityCoordinates(comp.Targets[0], Vector2.Zero));
+                    _npc.SetBlackboard(uid, "Target", comp.Targets[0]);
+
+                    _movementSpeed.RefreshMovementSpeedModifiers(uid);
+
                     break;
             }
         }
@@ -81,9 +106,6 @@ public sealed class ShyGuySystem : SharedShyGuySystem
         var user = GetEntity(ev.User);
 
         if (!TryComp<ShyGuyComponent>(shyGuy, out var comp))
-            return;
-
-        if (user == null)
             return;
 
         if (!comp.Targets.Contains(user))
@@ -103,8 +125,13 @@ public sealed class ShyGuySystem : SharedShyGuySystem
         if (comp.State != ShyGuyState.Calm || target == null)
             return;
 
-        comp.RagingEnd = _timing.CurTime + comp.RagingDelay;
+        var curTime = _timing.CurTime;
+
+        comp.RagingEnd = curTime + comp.RagingDelay;
         comp.State = ShyGuyState.Raging;
+
+        if (comp.Targets[0] == target)
+            comp.TargetChaseEnd = comp.RagingEnd + comp.OneTargetChaseTime;
 
         _ambient.SetAmbience(uid, false);
 
@@ -122,5 +149,15 @@ public sealed class ShyGuySystem : SharedShyGuySystem
         comp.State = ShyGuyState.Calm;
         comp.Targets.Clear();
         comp.RagingEnd = TimeSpan.Zero;
+
+        RemCompDeferred<JitteringComponent>(uid);
+    }
+
+    private void OnRefreshMoveSpeed(EntityUid uid, ShyGuyComponent component, RefreshMovementSpeedModifiersEvent args)
+    {
+        if (component.State != ShyGuyState.Rage)
+            return;
+
+        args.ModifySpeed(component.WalkModifier, component.SprintModifier);
     }
 }
