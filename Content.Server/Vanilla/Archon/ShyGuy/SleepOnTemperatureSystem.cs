@@ -1,5 +1,4 @@
-using Content.Server.Temperature.Components;
-
+using Content.Shared.Temperature.Components;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Vanilla.Archon;
 using Content.Shared.Bed.Sleep;
