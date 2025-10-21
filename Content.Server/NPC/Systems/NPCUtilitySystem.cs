@@ -6,7 +6,6 @@ using Content.Server.NPC.Queries.Curves;
 using Content.Server.NPC.Queries.Queries;
 using Content.Server.Vanilla.NPC.Queries.Queries;
 using Content.Server.Nutrition.Components;
-using Content.Server.Temperature.Components;
 using Content.Shared.Vanilla.Archon.ShyGuy;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Damage;
@@ -32,6 +31,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Content.Shared.Atmos.Components;
 using System.Linq;
+using Content.Shared.Temperature.Components;
 
 namespace Content.Server.NPC.Systems;
 
