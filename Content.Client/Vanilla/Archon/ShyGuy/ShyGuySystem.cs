@@ -1,17 +1,10 @@
-using Content.Shared.Eye.Blinding.Components;
-using Content.Shared.Vanilla.Archon.ShyGuy;
-using Content.Shared.Mobs.Components;
-using Content.Shared.Mobs.Systems;
-using Content.Shared.Examine;
 using Content.Shared.Popups;
+using Content.Shared.Vanilla.Archon.ShyGuy;
 
 namespace Content.Client.Vanilla.Archon;
 
 public sealed class ShyGuySystem : SharedShyGuySystem
 {
-
-    [Dependency] private readonly MobStateSystem _mobStateSystem = default!;
-    [Dependency] private readonly ExamineSystemShared _examine = default!;
 
     public override void Initialize()
     {
@@ -23,26 +16,14 @@ public sealed class ShyGuySystem : SharedShyGuySystem
     {
         var user = args.User;
 
-        if (!HasComp<MobStateComponent>(user))
+        if (!IsReachable(uid, user, comp))
             return;
 
-        if (TryComp<BlindableComponent>(user, out var blind) && blind.IsBlind == true)
-            return;
-
-        if (!_mobStateSystem.IsAlive(user) || !_mobStateSystem.IsAlive(uid))
-            return;
-
-        if (!_examine.InRangeUnOccluded(user, uid, 16f))
-            return;
-
-        if (comp.Targets.Contains(user))
-            return;
+        comp.Targets.Add(user);
+        _audio.PlayLocal(comp.StingerSound, user, user);
+        _popup.PopupClient("Беги", user, PopupType.LargeCaution);
 
         RaiseNetworkEvent(new ShyGuyGazeEvent(GetNetEntity(uid), GetNetEntity(user)));
-
-        if (comp.StingerSound != null)
-            _audio.PlayLocal(comp.StingerSound, user, user);
-
-        _popup.PopupClient("Беги", user, PopupType.LargeCaution);
     }
+    //туду оверлей
 }

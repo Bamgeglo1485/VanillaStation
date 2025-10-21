@@ -15,7 +15,7 @@
     - tasks:
         - !type:HTNPrimitiveTask
           operator: !type:UtilityOperator
-            proto: NearbyMeleeTargets
+            proto: NearbyObserversQuery
         - !type:HTNPrimitiveTask
           operator: !type:MoveToOperator
             pathfindInPlanning: true
@@ -24,15 +24,22 @@
             pathfindKey: TargetPathfind
             rangeKey: RotateSpeed
 
+# ИИ работает, если скромник в рейдже, иначе он просто стоит на месте и ниче не делает
 - type: htnCompound
   id: 096ChaseCompound
   branches:
-    - tasks:
+    - preconditions:
+        - !type:InRagePrecondition
+          isRage: true
+      tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:UtilityOperator
+            proto: NearbyObserversTargets
         - !type:HTNPrimitiveTask
           operator: !type:MoveToOperator
             pathfindInPlanning: true
             removeKeyOnFinish: false
-            targetKey: FollowTarget
+            targetKey: TargetCoordinates
             pathfindKey: TargetPathfind
             rangeKey: MeleeRange
         - !type:HTNCompoundTask
@@ -78,6 +85,28 @@
         - !type:HTNPrimitiveTask
           operator: !type:MeleeOperator
             targetKey: Target
-          preconditions:
-            - !type:KeyExistsPrecondition
+            targetState: Dead
+          services:
+            - !type:UtilityService
+              id: MeleeService
+              proto: NearbyObserversTargets
               key: Target
+
+# Перебираем всех кто находится в списке посмотревших и определяем среди них самого вкусного
+- type: utilityQuery
+  id: NearbyObserversTargets
+  query:
+    - !type:NearbyObserversQuery
+  considerations:
+    - !type:TargetIsAliveCon
+      curve: !type:BoolCurve
+    - !type:TargetDistanceCon
+      curve: !type:PresetCurve
+        preset: TargetDistance
+    - !type:TargetHealthCon
+      curve: !type:PresetCurve
+        preset: TargetHealth
+    - !type:TargetAccessibleCon
+      curve: !type:BoolCurve
+    - !type:TargetInLOSOrCurrentCon
+      curve: !type:BoolCurve

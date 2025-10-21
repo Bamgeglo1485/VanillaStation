@@ -1,12 +1,9 @@
-using Content.Server.NPC.Systems;
-using Content.Server.NPC;
-
 using Content.Shared.Vanilla.Archon.ShyGuy;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Jittering;
 using Content.Shared.Damage;
-using Content.Shared.Popups;
 using Content.Shared.Audio;
+using Content.Shared.CombatMode.Pacification;
 
 using Robust.Shared.Timing;
 using Robust.Shared.Map;
@@ -23,7 +20,6 @@ public sealed class ShyGuySystem : SharedShyGuySystem
     [Dependency] private readonly SharedAmbientSoundSystem _ambient = default!;
     [Dependency] private readonly SharedJitteringSystem _jitter = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly NPCSystem _npc = default!;
 
     private TimeSpan _nextUpdate = TimeSpan.Zero;
 
@@ -34,7 +30,6 @@ public sealed class ShyGuySystem : SharedShyGuySystem
         SubscribeLocalEvent<ShyGuyComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMoveSpeed);
         SubscribeNetworkEvent<ShyGuyGazeEvent>(OnGaze);
     }
-
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
@@ -47,58 +42,16 @@ public sealed class ShyGuySystem : SharedShyGuySystem
         _nextUpdate = curTime + TimeSpan.FromSeconds(1);
 
         var query = EntityQueryEnumerator<ShyGuyComponent>();
-
         while (query.MoveNext(out var uid, out var comp))
         {
-            switch (comp.State)
-            {
-                case ShyGuyState.Raging:
-                    _jitter.AddJitter(uid, 20, 20);
+            if (curTime >= comp.TargetChaseEnd)
+                SetCalm(uid, comp);
 
-                    if (curTime >= comp.RagingEnd)
-                    {
-                        comp.State = ShyGuyState.Rage;
-
-                        if (comp.RageAmbient != null)
-                            _ambient.SetSound(uid, comp.RageAmbient);
-                            
-                        _ambient.SetAmbience(uid, true);
-                    }
-                    break;
-                case ShyGuyState.Rage:
-                    _jitter.AddJitter(uid, 10, 10);
-
-                    if (!Exists(comp.Targets[0]) || (TryComp<DamageableComponent>(comp.Targets[0], out var damage) &&
-                        damage.TotalDamage >= comp.DamageToCalm) || curTime >= comp.TargetChaseEnd)
-                    {
-
-                        comp.Targets.RemoveAt(0);
-
-                        if (comp.Targets.Count == 0)
-                        {
-                            Calm(uid, comp);
-
-                            if (comp.CalmAmbient != null)
-                                _ambient.SetSound(uid, comp.CalmAmbient);
-                            _ambient.SetAmbience(uid, true);
-
-                            _movementSpeed.RefreshMovementSpeedModifiers(uid);
-                        }
-
-                        comp.TargetChaseEnd = comp.OneTargetChaseTime + curTime;
-
-                    }
-
-                    _npc.SetBlackboard(uid, NPCBlackboard.FollowTarget, new EntityCoordinates(comp.Targets[0], Vector2.Zero));
-                    _npc.SetBlackboard(uid, "Target", comp.Targets[0]);
-
-                    _movementSpeed.RefreshMovementSpeedModifiers(uid);
-
-                    break;
-            }
+            if (comp.State == ShyGuyState.Preparing && curTime >= comp.PreparingEnd)
+                SetRage(uid, comp);
         }
     }
-
+    
     private void OnGaze(ShyGuyGazeEvent ev)
     {
         var shyGuy = GetEntity(ev.ShyGuy);
@@ -107,49 +60,65 @@ public sealed class ShyGuySystem : SharedShyGuySystem
         if (!TryComp<ShyGuyComponent>(shyGuy, out var comp))
             return;
 
-        if (!comp.Targets.Contains(user))
-        {
-            comp.Targets.Add(user);
-        }
-        else
+        //клиенту доверяй но проверяй
+        if (!IsReachable(shyGuy, user, comp))
             return;
 
+        comp.Targets.Add(user);
         Dirty(shyGuy, comp);
-
-        Rage(shyGuy, comp, user);
+        SetPreparing(shyGuy, comp);
+        var baseTime = comp.PreparingEnd > _timing.CurTime ? comp.PreparingEnd : _timing.CurTime;
+        comp.TargetChaseEnd = baseTime + comp.OneTargetChaseTime;
     }
 
-    public void Rage(EntityUid uid, ShyGuyComponent comp, EntityUid? target = null)
+    public void SetPreparing(EntityUid uid, ShyGuyComponent comp)
     {
-        if (comp.State != ShyGuyState.Calm || target == null)
+        if (comp.State != ShyGuyState.Calm)
             return;
 
-        var curTime = _timing.CurTime;
+        comp.PreparingEnd = _timing.CurTime + comp.PreparingTime;
+        comp.State = ShyGuyState.Preparing;
 
-        comp.RagingEnd = curTime + comp.RagingDelay;
-        comp.State = ShyGuyState.Raging;
-
-        if (comp.Targets[0] == target)
-            comp.TargetChaseEnd = comp.RagingEnd + comp.OneTargetChaseTime;
-
+        _jitter.AddJitter(uid, 20, 20);
         _ambient.SetAmbience(uid, false);
-
-        _popup.PopupEntity("Он начинает трястись в конвульсиях...", uid, PopupType.SmallCaution);
-
-        if (comp.RagingSound != null)
-            _audio.PlayPvs(comp.RagingSound, uid);
+        _audio.PlayPvs(comp.PreparingSound, uid);
     }
 
-    public void Calm(EntityUid uid, ShyGuyComponent comp)
+    public void SetCalm(EntityUid uid, ShyGuyComponent comp)
     {
         if (comp.State == ShyGuyState.Calm)
             return;
-
+        EnsureComp<PacifiedComponent>(uid);
         comp.State = ShyGuyState.Calm;
-        comp.Targets.Clear();
-        comp.RagingEnd = TimeSpan.Zero;
+        comp.PreparingEnd = TimeSpan.Zero;
+        comp.TargetChaseEnd = _timing.CurTime;
 
+        _movementSpeed.RefreshMovementSpeedModifiers(uid);
         RemCompDeferred<JitteringComponent>(uid);
+        comp.Targets.Clear();
+
+        if (comp.CalmAmbient != null)
+        {
+            _ambient.SetSound(uid, comp.CalmAmbient);
+            _ambient.SetAmbience(uid, true);
+        }
+    }
+
+    public void SetRage(EntityUid uid, ShyGuyComponent comp)
+    {
+        if (comp.State == ShyGuyState.Rage)
+            return;
+
+        _jitter.AddJitter(uid, 10, 10);
+
+        comp.State = ShyGuyState.Rage;
+        _movementSpeed.RefreshMovementSpeedModifiers(uid);
+        RemComp<PacifiedComponent>(uid);
+        if (comp.RageAmbient != null)
+        {
+            _ambient.SetSound(uid, comp.RageAmbient);
+            _ambient.SetAmbience(uid, true);
+        }
     }
 
     private void OnRefreshMoveSpeed(EntityUid uid, ShyGuyComponent component, RefreshMovementSpeedModifiersEvent args)
