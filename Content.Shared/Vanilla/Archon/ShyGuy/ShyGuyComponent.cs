@@ -13,6 +13,7 @@ public sealed partial class ShyGuyComponent : Component
     public List<EntityUid> Targets = new();
 
     [DataField]
+    [AutoNetworkedField]
     public ShyGuyState State = ShyGuyState.Calm;
 
     // Длительность промежутка между спокойным состоянием и погоней за целью

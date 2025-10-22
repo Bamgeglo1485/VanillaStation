@@ -51,7 +51,7 @@ public sealed class ShyGuySystem : SharedShyGuySystem
                 SetRage(uid, comp);
         }
     }
-    
+
     private void OnGaze(ShyGuyGazeEvent ev)
     {
         var shyGuy = GetEntity(ev.ShyGuy);
@@ -82,6 +82,7 @@ public sealed class ShyGuySystem : SharedShyGuySystem
         _jitter.AddJitter(uid, 20, 20);
         _ambient.SetAmbience(uid, false);
         _audio.PlayPvs(comp.PreparingSound, uid);
+        Dirty(uid, comp);
     }
 
     public void SetCalm(EntityUid uid, ShyGuyComponent comp)
@@ -102,6 +103,7 @@ public sealed class ShyGuySystem : SharedShyGuySystem
             _ambient.SetSound(uid, comp.CalmAmbient);
             _ambient.SetAmbience(uid, true);
         }
+        Dirty(uid, comp);
     }
 
     public void SetRage(EntityUid uid, ShyGuyComponent comp)
@@ -119,6 +121,7 @@ public sealed class ShyGuySystem : SharedShyGuySystem
             _ambient.SetSound(uid, comp.RageAmbient);
             _ambient.SetAmbience(uid, true);
         }
+        Dirty(uid, comp);
     }
 
     private void OnRefreshMoveSpeed(EntityUid uid, ShyGuyComponent component, RefreshMovementSpeedModifiersEvent args)
