@@ -22,6 +22,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 using Robust.Shared.Random;
 using Robust.Shared.Maths;
+using Robust.Shared.Map;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -120,7 +121,7 @@ public sealed class PocketDimensionSystem : EntitySystem
                 _popup.PopupEntity("П О Д Н И М А Й С Я", uid, PopupType.SmallCaution);
 
                 var coords = new EntityCoordinates(Transform(uid).MapUid, new Vector2(0, 0));
-                _trans.SetCoordinates(uid, coords);
+                _transform.SetCoordinates(uid, coords);
 
                 if (TryComp<DamageableComponent>(uid, out var damagComp))
                     _damageableSystem.SetAllDamage(uid, damagComp, 0);
