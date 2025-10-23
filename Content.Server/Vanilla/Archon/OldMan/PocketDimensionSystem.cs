@@ -25,6 +25,7 @@ using Robust.Shared.Maths;
 using Robust.Shared.Map;
 
 using System.Collections.Generic;
+using System.Numerics;
 using System.Linq;
 
 namespace Content.Server.Vanilla.Archon.OldMan;
@@ -116,11 +117,18 @@ public sealed class PocketDimensionSystem : EntitySystem
 
                 TeleportToPlayer(uid, comp, Transform(uid));
             }
-            else
+            else 
             {
+
+                var mapUid = Transform(uid).MapUid;
+
+                if (mapUid == null)
+                    return;
+
                 _popup.PopupEntity("П О Д Н И М А Й С Я", uid, PopupType.SmallCaution);
 
-                var coords = new EntityCoordinates(Transform(uid).MapUid, new Vector2(0, 0));
+                var coords = new EntityCoordinates(mapUid.Value, new Vector2(0, 0));
+
                 _transform.SetCoordinates(uid, coords);
 
                 if (TryComp<DamageableComponent>(uid, out var damagComp))
