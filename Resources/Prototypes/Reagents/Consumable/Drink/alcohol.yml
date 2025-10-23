@@ -225,8 +225,6 @@
         probability: 0.5
     # RAYTEN ENDS
 
-        boozePower: 20
-
 - type: reagent
   id: Gin
   name: reagent-name-gin
