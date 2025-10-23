@@ -81,8 +81,6 @@ public sealed class ShyGuySystem : SharedShyGuySystem
                             if (comp.CalmAmbient != null)
                                 _ambient.SetSound(uid, comp.CalmAmbient);
                             _ambient.SetAmbience(uid, true);
-
-                            _movementSpeed.RefreshMovementSpeedModifiers(uid);
                         }
 
                         comp.TargetChaseEnd = comp.OneTargetChaseTime + curTime;
