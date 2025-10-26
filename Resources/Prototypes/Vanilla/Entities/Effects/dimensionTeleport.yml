@@ -1,5 +1,6 @@
 ﻿- type: entity
   id: PocketDimensionExitTeleport
+  parent: BaseStructure
   categories: [ HideSpawnMenu ]
   description: Наконец-то, выход!.. Или нет...
   name: тёмный портал

@@ -3,7 +3,7 @@
   id: MobArchonOldMan106
   name: ???
   description: Довольно страшный старик. Он полностью покрыт разлагающейся жидкостью, а от самого него исходит ужасный запах гнили.
-  suffix: SCP
+  suffix: Не спавнить, неиграбельный
   components:
   - type: Sprite
     sprite: Vanilla/Mobs/Archons/OldMan.rsi
@@ -121,6 +121,7 @@
 
 - type: entity
   id: Lusha
+  parent: BaseStructure
   name: чёрная лужа
   description: Лучше не наступать на неё.
   components:

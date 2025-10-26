@@ -134,7 +134,7 @@ public sealed class OldManSystem : EntitySystem
         var targetCoords = Transform(comp.Target.Value).Coordinates;
         comp.TeleportCoordinates = targetCoords;
         var anim = Spawn(comp.SpawnAnimation, targetCoords);
-        _popup.PopupEntity("Он начинает выходить из под пола...", anim, PopupType.LargeCaution);
+        _popup.PopupEntity("Оно начинает выходить из под пола...", anim, PopupType.LargeCaution);
 
         comp.AnimationShown = true;
         comp.AnimationStartTime = _timing.CurTime;
@@ -157,9 +157,6 @@ public sealed class OldManSystem : EntitySystem
 
         if (comp.SpawnSound != null)
             _audio.PlayPvs(comp.SpawnSound, uid);
-
-        _npc.SetBlackboard(uid, NPCBlackboard.FollowTarget, new EntityCoordinates(target.Value, Vector2.Zero));
-        _npc.SetBlackboard(uid, "Target", target.Value);
 
         Dirty(uid, comp);
     }
@@ -203,7 +200,7 @@ public sealed class OldManSystem : EntitySystem
         var waitTime = _random.NextFloat(comp.MinWaitTime, comp.MaxWaitTime);
         comp.NextChaseStart = _timing.CurTime + TimeSpan.FromSeconds(waitTime);
 
-        _popup.PopupEntity("Он начинает уходить под пол", uid, PopupType.Medium);
+        _popup.PopupEntity("Оно начинает уходить под пол", uid, PopupType.Medium);
 
         Spawn(comp.DespawnAnimation, Transform(uid).Coordinates);
 

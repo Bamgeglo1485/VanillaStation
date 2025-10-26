@@ -18,7 +18,7 @@ public sealed partial class PocketDimensionComponent : Component
     public string FakeTeleportPrototype = "PocketDimensionExitTeleportFake";
 
     [DataField]
-    public int TeleportsAmount = 6;
+    public int TeleportsAmount = 3;
 
     [DataField]
     public int FakeTeleportsAmount = 6;
