@@ -7,6 +7,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.FixedPoint;
 using Content.Shared.Overlays;
 using Content.Shared.Humanoid;
+using Content.Shared.Examine;
 using Content.Shared.Damage;
 using Content.Shared.Popups;
 using Content.Shared.Audio;
@@ -29,6 +30,7 @@ namespace Content.Server.Vanilla.Archon.OldMan;
 public sealed class OldManSystem : EntitySystem
 {
     [Dependency] private readonly SharedTransformSystem _trans = default!;
+    [Dependency] private readonly ExamineSystemShared _examine = default!;
     [Dependency] private readonly MapLoaderSystem _mapLoader = default!;
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
@@ -95,9 +97,26 @@ public sealed class OldManSystem : EntitySystem
 
         while (query.MoveNext(out var uid, out var comp))
         {
-            if (!comp.InDimension && curTime >= comp.ChaseEnd)
+
+            if ((!comp.InDimension && curTime >= comp.ChaseEnd)
+                || (comp.Target == null && comp.InDimension == false)
+                || comp.Target != null && !HasComp<TransformComponent>(comp.Target.Value))
             {
                 ReturnToDimension(uid, comp);
+                continue;
+            }
+
+            if (comp.Target != null && Transform(comp.Target.Value).GridUid == null)
+            {
+                ReturnToDimension(uid, comp);
+                continue;
+            }
+
+            if (comp.Target != null && Transform(uid).GridUid != null && !_examine.InRangeUnOccluded(uid, comp.Target.Value, 23f))
+            {
+                ReturnToDimension(uid, comp, false);
+                comp.AnimationStartTime = curTime;
+
                 continue;
             }
 
@@ -179,6 +198,9 @@ public sealed class OldManSystem : EntitySystem
             if (HasComp<DimensionVictimComponent>(entity))
                 continue;
 
+            if (Transform(entity).GridUid == null)
+                continue;
+
             var totalDamage = damageable.TotalDamage.Float();
 
             if (totalDamage > highestDamage)
@@ -191,18 +213,23 @@ public sealed class OldManSystem : EntitySystem
         return target;
     }
 
-    private void ReturnToDimension(EntityUid uid, OldManComponent comp)
+    private void ReturnToDimension(EntityUid uid, OldManComponent comp, bool cleanData = true)
     {
-        comp.InDimension = true;
-        comp.Target = null;
-        comp.AnimationShown = false;
 
-        var waitTime = _random.NextFloat(comp.MinWaitTime, comp.MaxWaitTime);
-        comp.NextChaseStart = _timing.CurTime + TimeSpan.FromSeconds(waitTime);
+        comp.AnimationShown = false;
+        comp.InDimension = true;
+
+        if (cleanData == true)
+        {
+            comp.Target = null;
+
+            var waitTime = _random.NextFloat(comp.MinWaitTime, comp.MaxWaitTime);
+            comp.NextChaseStart = _timing.CurTime + TimeSpan.FromSeconds(waitTime);
+        }
 
         _popup.PopupEntity("Оно начинает уходить под пол", uid, PopupType.Medium);
 
-        Spawn(comp.DespawnAnimation, Transform(uid).Coordinates);
+        Spawn(comp.DespawnAnimation, _transform.ToMapCoordinates((Transform(uid).Coordinates));
 
         TeleportToDimension(uid, comp);
 
