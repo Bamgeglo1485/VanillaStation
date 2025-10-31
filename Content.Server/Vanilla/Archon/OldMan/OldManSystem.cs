@@ -130,11 +130,6 @@ public sealed class OldManSystem : EntitySystem
             {
                 PreChase(uid, comp);
             }
-
-            if (!comp.InDimension && comp.Target != null)
-            {
-                _npc.SetBlackboard(uid, NPCBlackboard.FollowTarget, new EntityCoordinates(comp.Target.Value, Vector2.Zero));
-            }
         }
     }
 
@@ -229,7 +224,7 @@ public sealed class OldManSystem : EntitySystem
 
         _popup.PopupEntity("Оно начинает уходить под пол", uid, PopupType.Medium);
 
-        Spawn(comp.DespawnAnimation, _transform.ToMapCoordinates((Transform(uid).Coordinates));
+        Spawn(comp.DespawnAnimation, _trans.ToMapCoordinates((Transform(uid).Coordinates)));
 
         TeleportToDimension(uid, comp);
 

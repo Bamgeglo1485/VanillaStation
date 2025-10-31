@@ -33,7 +33,7 @@
       path: /Audio/Vanilla/Effects/Archon/106breathing.ogg
   - type: HTN
     rootTask:
-      task: 106Compound
+      task: MeleeCombatCompound
   - type: Fixtures
     fixtures:
       fix1:
@@ -41,15 +41,12 @@
           !type:PhysShapeCircle
           radius: 0.25
         density: 1
-        hard: False
         restitution: 0
         friction: 0.4
         mask:
         - SmallMobMask
         layer:
         - SmallMobLayer
-  - type: MobCollision
-    fixtureId: fix1
   - type: NpcFactionMember
     factions:
     - SimpleHostile
@@ -72,6 +69,9 @@
     intervalSeconds: 0.5
     minimumEntitiesSpawned: 1
     maximumEntitiesSpawned: 2
+  - type: NPCUseActionIfPossible
+    actionId: Action106Jump
+    targetKey: Target
 
 - type: entity
   id: OldManSpawn
@@ -161,3 +161,56 @@
         reagents:
         - ReagentId: VentCrud
           Quantity: 70
+
+- type: entity
+  name: ???
+  parent: [ BaseSimpleMob, MobCombat ]
+  id: OldManJump
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
+    layers:
+    - state: magicm_cyan
+      shader: unshaded
+      color: Black
+  - type: MovementSpeedModifier
+    baseSprintSpeed: 3
+    baseWalkSpeed: 3
+  - type: RepeatingTrigger
+    delay: 0.1
+  - type: SpawnOnTrigger
+    proto: OldManJumpTrack
+  - type: HTN
+    rootTask:
+      task: MeleeCombatCompound
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.25
+        density: 1
+        hard: false
+        mask:
+        - SmallMobMask
+        layer:
+        - SmallMobLayer
+  - type: NpcFactionMember
+    factions:
+    - SimpleHostile
+
+- type: entity
+  categories: [ HideSpawnMenu ]
+  id: OldManJumpTrack
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
+    layers:
+    - state: magicm_cyan
+      shader: unshaded
+      color: Black
+  - type: TimedDespawn
+    lifetime: .5
+  - type: TriggerOnSpawn
+  - type: SpawnOnTrigger
+    proto: DecalSpawnerBurns

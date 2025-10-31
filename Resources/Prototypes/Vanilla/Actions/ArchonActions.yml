@@ -48,3 +48,19 @@
     range: 2
   - type: EntityTargetAction
     event: !type:ScragEvent
+
+- type: entity
+  parent: BaseActionPolymorph
+  id: Action106Jump
+  name: Разлагающий прыжок
+  description: Перемещает вас под пол станции для свободного передвижения.
+  components:
+  - type: Magic
+  - type: Action
+    useDelay: 40
+    icon:
+      sprite: Objects/Magic/magicactions.rsi
+      state: jaunt
+  - type: InstantAction
+    event: !type:PolymorphActionEvent
+      protoId: 106Jump
