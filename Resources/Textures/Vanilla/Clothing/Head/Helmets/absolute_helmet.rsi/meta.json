@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Sprited by @mishutka09, fix digi sprites by DreamlyJack",
+  "copyright": "Geglo",
   "size": {
     "x": 32,
     "y": 32
@@ -11,11 +11,11 @@
       "name": "icon"
     },
     {
-        "name": "equipped-FEET",
+        "name": "equipped-HELMET",
         "directions": 4
     },
     {
-        "name": "equipped-FEET-unlit",
+        "name": "equipped-HELMET-unlit",
         "directions": 4
     }
   ]
