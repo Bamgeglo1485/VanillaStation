@@ -9,7 +9,7 @@
   - type: Clothing
     sprite: Vanilla/Clothing/Hands/Gloves/absolute_gloves.rsi
     clothingVisuals:
-      outerClothing:
+      gloves:
       - state: equipped-HAND
       - state: equipped-HAND-unlit
         shader: unshaded

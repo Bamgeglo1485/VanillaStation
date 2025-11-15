@@ -9,9 +9,9 @@
   - type: Clothing
     sprite: Vanilla/Clothing/Shoes/Boots/absoluteboots.rsi
     clothingVisuals:
-      outerClothing:
-      - state: equipped-FOOT
-      - state: equipped-FOOT-unlit
+      shoes:
+      - state: equipped-FEET
+      - state: equipped-FEET-unlit
         shader: unshaded
   - type: ClothingSpeedModifier
     walkModifier: 1.5

@@ -18,7 +18,7 @@
   - type: Clothing
     sprite: Vanilla/Clothing/Back/Backpacks/absolutepack.rsi
     clothingVisuals:
-      outerClothing:
+      back:
       - state: equipped-BACKPACK
       - state: equipped-BACKPACK-unlit
         shader: unshaded
