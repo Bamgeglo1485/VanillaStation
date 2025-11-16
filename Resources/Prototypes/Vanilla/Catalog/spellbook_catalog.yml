@@ -33,7 +33,6 @@
   name: Остановка времени
   description: Позволяет остановить время на 5 секунд в малом радиусе.
   productAction: ActionTimeStop5Radius
-  productUpgradeId: SpellbookTimeStopUpdate
   cost:
     WizCoin: 2
   categories:
