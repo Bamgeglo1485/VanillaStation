@@ -1,0 +1,27 @@
+- type: entity
+  parent: BaseItem
+  id: TimeStopper
+  name: замораживатель времени
+  description: Временные часы нулевой точки, который останавливает относительное движение всех атомов кроме фотонов в ограниченном радиусе.
+  suffix: 5 секунд
+  components:
+  - type: Sprite
+    sprite: Vanilla/Objects/Devices/timestopper.rsi
+    layers:
+    - state: icon
+    - state: unlit
+      shader: unshaded
+  - type: ToggleClothing
+    action: ActionTimeStop
+    mustEquip: false
+  - type: Construction
+    graph: TimeStopperGraph
+    node: end
+
+- type: entity
+  parent: TimeStopper
+  id: TimeStopper10Sec
+  suffix: 10 секунд
+  components:
+  - type: ToggleClothing
+    action: ActionTimeStop10Sec

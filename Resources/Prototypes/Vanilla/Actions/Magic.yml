@@ -58,7 +58,7 @@
     sentence: action-speech-self-splode
 
 - type: entity
-  id: ActionTimeStop5Sec
+  id: ActionTimeStop
   name: Остановить время
   description: Za Warudo!
   components:
@@ -75,18 +75,24 @@
       prototype: TimeStop5sec
 
 - type: entity
-  id: ActionTimeStop10Sec
-  name: Остановить время
-  description: Za Warudo!
+  parent: ActionTimeStop
+  id: ActionTimeStop5Sec
   components:
   - type: Action
     useDelay: 30
-    itemIconStyle: BigAction
-    priority: -20
-    icon:
-      sprite: Vanilla/Objects/Devices/timestopper.rsi
-      state: icon
-    raiseOnAction: true
+  - type: InstantAction
+    event: !type:TimeStopEvent
+      prototype: TimeStop5sec
+  - type: SpeakOnAction
+    sentence: action-speech-time-stop
+
+- type: entity
+  id: ActionTimeStop10Sec
+  components:
+  - type: Action
+    useDelay: 30
   - type: InstantAction
     event: !type:TimeStopEvent
       prototype: TimeStop10sec
+  - type: SpeakOnAction
+    sentence: action-speech-time-stop

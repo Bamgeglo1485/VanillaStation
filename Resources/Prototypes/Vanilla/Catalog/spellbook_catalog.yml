@@ -27,3 +27,30 @@
       - SpellbookSploder
   - !type:ListingLimitedStockCondition
     stock: 1
+
+- type: listing
+  id: SpellbookTimeStop
+  name: Остановка времени
+  description: Позволяет остановить время на 5 секунд в малом радиусе.
+  productAction: ActionTimeStop5Sec
+  productUpgradeId: SpellbookTimeStopUpdate
+  cost:
+    WizCoin: 2
+  categories:
+  - SpellbookOffensive
+  conditions:
+  - !type:ListingLimitedStockCondition
+    stock: 1
+
+- type: listing
+  id: SpellbookTimeStopUpdate
+  name: Улучшение остановки времени
+  description: Увеличивает длительность остановки до 10 секунд.
+  productAction: ActionTimeStop10Sec
+  cost:
+    WizCoin: 2
+  categories:
+  - SpellbookOffensive
+  conditions:
+  - !type:ListingLimitedStockCondition
+    stock: 1

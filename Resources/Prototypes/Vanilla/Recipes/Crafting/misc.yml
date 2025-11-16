@@ -17,8 +17,8 @@
   objectType: Item
 
 - type: construction
-  id: GorgeousPortalGun
-  graph: GorgeousPortalGunGraph
+  id: TimeStopper
+  graph: TimeStopperGraph
   startNode: start
   targetNode: end
   RequiresEngineeringLevel: 3
