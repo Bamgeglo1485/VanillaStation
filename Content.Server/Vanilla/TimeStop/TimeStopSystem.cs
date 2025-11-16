@@ -64,6 +64,8 @@ public sealed class TimeStopSystem : EntitySystem
 
             foreach (var ent in entities)
             {
+                if (!Exists(ent) || Deleted(ent))
+                    continue;
 
                 if (ent == uid || comp.TimeStoppedEntities.Contains(ent) || ent == Transform(uid).ParentUid || comp.TimeStopIgnored.Contains(ent))
                     continue;
@@ -118,6 +120,9 @@ public sealed class TimeStopSystem : EntitySystem
 
     public void FreezeEntity(EntityUid entity, PhysicsComponent physics, TimeStopFieldComponent field)
     {
+        if (!Exists(entity) || Deleted(entity))
+            return;
+
         var timeStopped = AddComp<TimeStoppedComponent>(entity);
         timeStopped.BodyType = physics.BodyType;
         timeStopped.LinearVelocity = physics.LinearVelocity;
@@ -134,6 +139,9 @@ public sealed class TimeStopSystem : EntitySystem
 
     public void UnfreezeEntity(EntityUid entity, TimeStoppedComponent comp)
     {
+        if (!Exists(entity) || Deleted(entity))
+            return;
+
         comp.Enabled = false;
 
         _physics.SetBodyType(entity, comp.BodyType);
