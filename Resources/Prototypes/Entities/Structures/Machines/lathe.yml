@@ -207,7 +207,10 @@
     - Janitor
     - Instruments
     - Equipment
-    - NightVision #RAYTEN
+    # RAYTEN STARTS
+    - NightVision
+    - AtmosManipulating
+    # RAYTENDS
   - type: EmagLatheRecipes
     emagDynamicPacks:
     - SecurityAmmo

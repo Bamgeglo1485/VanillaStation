@@ -83,3 +83,23 @@
     soundFailToActivate:
       path: /Audio/Machines/button.ogg
   - type: Appearance
+
+
+- type: entity
+  parent: LocalAtmosGenerator
+  id: LocalAtmosGeneratorWeak
+  name: генератор локального атмос-поля
+  description: Устройство, создающее локальное атмосферное поле и позволяющее находиться в вакууме, но к сожалению поле состоит не из кислорода. Наиболее эффективен с микрореакторной батареей.
+  suffix: РНД
+  components:
+  - type: PowerCellDraw
+    drawRate: 12
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        startingItem: null
+        disableEject: false
+        whitelist:
+          tags:
+            - PowerCell
