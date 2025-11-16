@@ -123,6 +123,9 @@ public sealed class TimeStopSystem : EntitySystem
         if (!Exists(entity) || Deleted(entity))
             return;
 
+        if (!HasComp<PhysicsComponent>(entity))
+            return;
+
         var timeStopped = AddComp<TimeStoppedComponent>(entity);
         timeStopped.BodyType = physics.BodyType;
         timeStopped.LinearVelocity = physics.LinearVelocity;
@@ -140,6 +143,9 @@ public sealed class TimeStopSystem : EntitySystem
     public void UnfreezeEntity(EntityUid entity, TimeStoppedComponent comp)
     {
         if (!Exists(entity) || Deleted(entity))
+            return;
+
+        if (!HasComp<PhysicsComponent>(entity))
             return;
 
         comp.Enabled = false;
