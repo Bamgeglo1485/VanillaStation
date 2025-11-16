@@ -6,7 +6,7 @@
   components:
   - type: Sprite
     sprite: /Textures/Vanilla/Effects/timestop.rsi
-    drawdepth: 10000
+    drawdepth: Overlays
     layers:
     - state: 5sec
       shader: unshaded
@@ -14,7 +14,7 @@
   - type: TimeStopField
   - type: PointLight
     color: Blue
-    radius: 5
+    radius: 3
     energy: 4
     netsync: false
   - type: TimedDespawn
@@ -36,7 +36,7 @@
   - type: TimeStopField
   - type: PointLight
     color: Blue
-    radius: 10
+    radius: 3
     energy: 4
     netsync: false
   - type: TimedDespawn
@@ -44,3 +44,26 @@
   - type: TriggerOnSpawn
   - type: EmitSoundOnTrigger
     sound: /Audio/Vanilla/Effects/10secTimeStop.ogg
+
+- type: entity
+  id: TimeStop5Radius
+  categories: [ HideSpawnMenu ]
+  parent: TimeStop10sec
+  components:
+  - type: Sprite
+    layers:
+    - state: 10sec
+      shader: unshaded
+  - type: ScaleVisuals
+    scale: 2, 2
+  - type: TimeStopField
+  - type: PointLight
+    color: Blue
+    radius: 5
+    energy: 4
+    netsync: false
+  - type: TimedDespawn
+    lifetime: 5.3
+  - type: TriggerOnSpawn
+  - type: EmitSoundOnTrigger
+    sound: /Audio/Vanilla/Effects/5secTimeStop.ogg
