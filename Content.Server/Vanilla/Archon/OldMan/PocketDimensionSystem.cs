@@ -1,4 +1,5 @@
 using Content.Shared.Vanilla.Archon.OldMan;
+using Content.Shared.Damage.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Damage.Systems;
