@@ -3,6 +3,7 @@ using Content.Server.NPC;
 
 using Content.Shared.Vanilla.Archon.OldMan;
 using Content.Shared.Weapons.Melee.Events;
+using Content.Shared.Damage.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.FixedPoint;
 using Content.Shared.Overlays;
