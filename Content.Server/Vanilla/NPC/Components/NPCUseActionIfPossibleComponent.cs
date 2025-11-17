@@ -14,7 +14,7 @@ public sealed partial class NPCUseActionIfPossibleComponent : Component
     public string? TargetKey; // Будет использовать акшн проверяя также присутствие таргета
 
     [DataField(required: true)]
-    public EntProtoId<TargetActionComponent> ActionId;
+    public EntProtoId<InstantActionComponent> ActionId;
 
     [DataField]
     public EntityUid? ActionEnt;
