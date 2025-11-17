@@ -33,6 +33,7 @@
 
 - type: entity
   id: PocketDimensionExitTeleportFake
+  parent: PocketDimensionExitTeleport
   categories: [ HideSpawnMenu ]
   components:
   - type: DimensionEscapeTeleport
