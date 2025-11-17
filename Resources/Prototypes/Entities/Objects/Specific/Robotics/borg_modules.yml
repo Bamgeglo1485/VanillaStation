@@ -1343,7 +1343,7 @@
 
 # mothership module
 - type: entity
-  parent: [ BaseXenoborgModuleGeneric, BaseProviderBorgModule, BaseXenoborgContraband ]
+  parent: [ BaseXenoborgModuleGeneric, BaseProviderBorgModule, XenoborgContraband ]
   id: MothershipModule
   name: mothership module
   description: A module that helps the mothership borg brains and install other modules.
