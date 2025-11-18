@@ -128,9 +128,6 @@
   - type: Sprite
     sprite: Vanilla/Mobs/Archons/OldMan.rsi
     state: lusha
-  - type: TriggerOnSpawn
-  - type: SpawnOnTrigger
-    proto: PuddleVentCrud
   - type: Fixtures
     fixtures:
       fix1:
@@ -140,6 +137,9 @@
         density: 190
         layer:
         - None
+  - type: ConditionalSpawner
+    prototypes:
+    - PuddleVentCrud
   - type: Destructible
     thresholds:
     - trigger:
