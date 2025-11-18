@@ -289,8 +289,10 @@ public sealed class PocketDimensionSystem : EntitySystem
         if (!TryComp<DimensionVictimComponent>(subject, out var victim))
             return;
 
-        if (!comp.Fake)
+        if (!comp.Fake && !comp.TeleportToPlayer)
             TeleportToWarpPoint(subject, victim, Transform(subject));
+        else if (!comp.Fake && comp.TeleportToPlayer)
+            TeleportToPlayer(uid, comp, Transform(subject))
         else
             QueueDel(uid);
     }

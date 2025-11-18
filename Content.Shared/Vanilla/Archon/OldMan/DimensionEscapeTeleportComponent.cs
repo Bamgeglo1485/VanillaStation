@@ -7,4 +7,7 @@ public sealed partial class DimensionEscapeTeleportComponent : Component
 {
     [DataField]
     public bool Fake = false;
+
+    [DataField]
+    public bool TeleportToPlayer = false;
 }
