@@ -292,7 +292,7 @@ public sealed class PocketDimensionSystem : EntitySystem
         if (!comp.Fake && !comp.TeleportToPlayer)
             TeleportToWarpPoint(subject, victim, Transform(subject));
         else if (!comp.Fake && comp.TeleportToPlayer)
-            TeleportToPlayer(uid, comp, Transform(subject));
+            TeleportToPlayer(uid, victim, Transform(subject));
         else
             QueueDel(uid);
     }
