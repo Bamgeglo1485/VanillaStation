@@ -8,7 +8,6 @@ using Content.Server.Vanilla.NPC.Queries.Queries;
 using Content.Server.Nutrition.Components;
 using Content.Shared.Vanilla.Archon.ShyGuy;
 using Content.Shared.Chemistry.EntitySystems;
-using Content.Shared.Damage;
 using Content.Shared.Examine;
 using Content.Shared.Fluids.Components;
 using Content.Shared.Inventory;
@@ -31,6 +30,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Content.Shared.Atmos.Components;
 using System.Linq;
+using Content.Shared.Damage.Components;
 using Content.Shared.Temperature.Components;
 
 namespace Content.Server.NPC.Systems;
@@ -188,7 +188,7 @@ public sealed class NPCUtilitySystem : EntitySystem
                     return 0f;
 
                 var nutrition = _ingestion.TotalNutrition(targetUid, owner);
-                if (nutrition <= 1.0f)
+                if (nutrition == 0.0f)
                     return 0f;
 
                 return 1f;
