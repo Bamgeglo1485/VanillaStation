@@ -4,6 +4,7 @@ using Content.Shared.Movement.Systems;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs.Systems;
+using Content.Shared.FixedPoint;
 using Content.Shared.Pinpointer;
 using Content.Shared.Jittering;
 using Content.Shared.Humanoid;
@@ -134,7 +135,7 @@ public sealed class PocketDimensionSystem : EntitySystem
                 _transform.SetCoordinates(uid, coords);
 
                 if (TryComp<DamageableComponent>(uid, out var damagComp))
-                    _damageableSystem.SetAllDamage((uid, damagComp), 0);
+                    _damageableSystem.SetAllDamage(uid, damagComp, 0);
             }
         }
     }

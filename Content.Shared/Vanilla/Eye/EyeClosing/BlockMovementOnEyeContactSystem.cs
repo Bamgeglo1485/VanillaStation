@@ -52,7 +52,7 @@ public sealed partial class BlockMovementOnEyeContactSystem : EntitySystem
             }
         }
     }
-
+    
     private bool CheckForObservers(EntityUid cookie, float range = 16f)
     {
         foreach (var target in _lookup.GetEntitiesInRange<EyeClosingComponent>(Transform(cookie).Coordinates, range))

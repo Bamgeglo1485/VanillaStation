@@ -66,8 +66,16 @@ public sealed class AutoEyeClosingSystem : EntitySystem
         var query = EntityQueryEnumerator<EyeClosingComponent>();
         while (query.MoveNext(out var uid, out var eye))
         {
-            if (ObjectInRange(uid) && _mobStateSystem.IsAlive(uid))
-                EnsureComp<AutoEyeClosingComponent>(uid);
+            if (ObjectInRange(uid, 5) && _mobStateSystem.IsAlive(uid))
+            {
+                var eyeClose = EnsureComp<AutoEyeClosingComponent>(uid);
+                eyeClose.CloseDuration = eyeClose.BaseCloseDurationInMelee;
+            }
+            else if (ObjectInRange(uid, 16) && _mobStateSystem.IsAlive(uid))
+            {
+                var eyeClose = EnsureComp<AutoEyeClosingComponent>(uid);
+                eyeClose.CloseDuration = eyeClose.BaseCloseDuration;
+            }
             else
                 RemComp<AutoEyeClosingComponent>(uid);
         }

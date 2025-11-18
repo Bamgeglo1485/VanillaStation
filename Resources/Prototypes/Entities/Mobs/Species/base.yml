@@ -214,6 +214,8 @@
     - AnomalyHost
     # RAYTEN STARTS
   - type: EyeClosing
+    DefaultEyeOpen: null
+    DefaultEyeClose: null
     # RAYTENDS
 
 - type: entity

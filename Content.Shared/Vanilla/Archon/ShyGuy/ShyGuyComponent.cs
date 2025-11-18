@@ -48,7 +48,7 @@ public sealed partial class ShyGuyComponent : Component
     public SoundSpecifier? ChaseSound = new SoundPathSpecifier("/Audio/Vanilla/Effects/Archon/096chase.ogg");
 
     [DataField]
-    public SoundSpecifier? RageAmbient = new SoundPathSpecifier("/Audio/Vanilla/Ambience/096rage.ogg");
+    public SoundSpecifier? RageAmbient = new SoundPathSpecifier("/Audio/Vanilla/Effects/Archon/096raging.ogg");
 
     [DataField]
     public SoundSpecifier? CalmAmbient = new SoundPathSpecifier("/Audio/Vanilla/Ambience/096cry.ogg");

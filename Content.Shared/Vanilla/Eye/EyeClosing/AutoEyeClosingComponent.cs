@@ -21,10 +21,13 @@ public sealed partial class AutoEyeClosingComponent : Component
     [DataField]
     public float OpenDuration = 6f;
 
-    // Длительность закрытых глаз (в секундах).
-    // Казалось бы, человек моргнул бы быстрее, но здесь не обычное мигание:
-    // архонт подавляет автономные рефлексы, и человек залипает в "долгом моргании",
-    // теряя контроль над веками. Поэтому глаза остаются закрытыми дольше нормы.
     [DataField]
-    public float CloseDuration = 2.5f;
+    public float CloseDuration = 0.5f;
+
+    [DataField]
+    public float BaseCloseDuration = 0.5f;
+
+    // Если чел близко к архонту то он моргает дольше
+    [DataField]
+    public float BaseCloseDurationInMelee = 2.5f;
 }

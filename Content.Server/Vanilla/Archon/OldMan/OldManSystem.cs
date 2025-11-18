@@ -113,12 +113,21 @@ public sealed class OldManSystem : EntitySystem
                 continue;
             }
 
-            if (comp.Target != null && Transform(uid).GridUid != null && !_examine.InRangeUnOccluded(uid, comp.Target.Value, 23f))
+            if (comp.Target != null)
             {
-                ReturnToDimension(uid, comp, false);
-                comp.AnimationStartTime = curTime;
+                var victimPos = _trans.GetMapCoordinates(comp.Target.Value).Position;
+                var oldmanPos = _trans.GetMapCoordinates(uid).Position;
 
-                continue;
+                var dir = oldmanPos - victimPos;
+                var length = dir.Length();
+
+                if (comp.Target != null && Transform(uid).GridUid != null && length > 23)
+                {
+                    ReturnToDimension(uid, comp, false);
+                    comp.AnimationStartTime = curTime;
+
+                    continue;
+                }
             }
 
             if (comp.InDimension && comp.AnimationShown && curTime >= comp.AnimationStartTime + comp.SpawnAnimationDelay)
@@ -140,8 +149,7 @@ public sealed class OldManSystem : EntitySystem
 
         if (comp.Target == null)
         {
-            var waitTime = _random.NextFloat(comp.MinWaitTime, comp.MaxWaitTime);
-            comp.NextChaseStart = _timing.CurTime + TimeSpan.FromSeconds(waitTime);
+            comp.NextChaseStart = _timing.CurTime + TimeSpan.FromSeconds(comp.RepeatedWaitTime);
             Dirty(uid, comp);
             return;
         }

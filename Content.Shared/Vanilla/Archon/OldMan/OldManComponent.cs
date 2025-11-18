@@ -33,10 +33,13 @@ public sealed partial class OldManComponent : Component
 
     // Длительность выжидания цели в карманном измерении
     [DataField]
-    public float MinWaitTime = 10;
+    public float MinWaitTime = 120;
 
     [DataField]
-    public float MaxWaitTime = 10;
+    public float MaxWaitTime = 400;
+
+    [DataField]
+    public float RepeatedWaitTime = 10;
 
     [DataField]
     public string SpawnAnimation = "OldManSpawn";

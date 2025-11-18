@@ -8,19 +8,19 @@
     - tasks:
         - !type:HTNCompoundTask
           task: 939IdleCompound
-          
+
 - type: htnCompound
   id: 173CombatCompound
   branches:
     - tasks:
         - !type:HTNPrimitiveTask
           operator: !type:UtilityOperator
-            proto: NearbyObserversQuery
+            proto: NearbyMeleeTargets
         - !type:HTNPrimitiveTask
           operator: !type:MoveToOperator
             pathfindInPlanning: true
             removeKeyOnFinish: false
             targetKey: TargetCoordinates
             pathfindKey: TargetPathfind
-            rangeKey: RotateSpeed
+            rangeKey: MeleeRange
 
