@@ -135,7 +135,7 @@ public sealed class PocketDimensionSystem : EntitySystem
                 _transform.SetCoordinates(uid, coords);
 
                 if (TryComp<DamageableComponent>(uid, out var damagComp))
-                    _damageableSystem.SetAllDamage(uid, damagComp, 0);
+                    _damageableSystem.SetAllDamage((uid, damagComp), 0);
             }
         }
     }
