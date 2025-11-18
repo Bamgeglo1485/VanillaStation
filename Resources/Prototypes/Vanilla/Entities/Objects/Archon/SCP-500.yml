@@ -6,7 +6,7 @@
     - type: Sprite
       layers:
         - state: red
-        - sprite: Vanilla/Objects/Specific/Archon 500.rsi
+        - sprite: Vanilla/Objects/Specific/Archon/SCP500.rsi
           state: red
     - type: RandomSpawner
       rarePrototypes:
@@ -26,7 +26,7 @@
   suffix: Хорошая, Медикамент
   components:
   - type: Sprite
-    sprite: Vanilla/Objects/Specific/Archon 500.rsi
+    sprite: Vanilla/Objects/Specific/Archon/SCP500.rsi
     layers:
     - state: red
       map: ["random"]
