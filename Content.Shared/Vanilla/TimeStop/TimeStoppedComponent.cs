@@ -1,5 +1,3 @@
-using Robust.Shared.Physics;
-
 using Content.Shared.Damage;
 
 using System.Numerics;
@@ -20,14 +18,5 @@ public sealed partial class TimeStoppedComponent : Component
     public float StoredStaminaDamage;
 
     [DataField]
-    public BodyType BodyType;
-
-    [DataField]
     public int TimeStops;
-
-    [DataField]
-    public Vector2 LinearVelocity;
-
-    [DataField]
-    public float AngularVelocity;
 }

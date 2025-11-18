@@ -69,7 +69,6 @@
     icon:
       sprite: Vanilla/Objects/Devices/timestopper.rsi
       state: icon
-    raiseOnAction: true
   - type: InstantAction
     event: !type:TimeStopEvent
       prototype: TimeStop5sec

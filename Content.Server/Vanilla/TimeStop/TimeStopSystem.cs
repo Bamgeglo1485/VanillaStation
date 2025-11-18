@@ -6,6 +6,7 @@ using Content.Shared.Movement.Components;
 using Content.Shared.Vanilla.TimeStop;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Damage.Events;
+using Content.Shared.Weapons.Melee;
 using Content.Shared.Projectiles;
 using Content.Shared.Damage;
 using Content.Shared.Ghost;
@@ -26,7 +27,6 @@ public sealed class TimeStopSystem : EntitySystem
 
     [Dependency] private readonly DamageableSystem _damageableSystem = default!;
     [Dependency] private readonly SharedStaminaSystem _stamina = default!;
-    [Dependency] private readonly SharedPhysicsSystem _physics = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly MetaDataSystem _meta = default!;
@@ -35,8 +35,6 @@ public sealed class TimeStopSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<TimeStoppedComponent, BeforeDamageChangedEvent>(OnBeforeDamageChanged);
-        SubscribeLocalEvent<TimeStoppedComponent, BeforeStaminaDamageEvent>(OnBeforeStaminaDamage);
         SubscribeLocalEvent<TimeStoppedComponent, ComponentShutdown>(OnTimeStoppedShutdown);
 
         SubscribeLocalEvent<TimeStopFieldComponent, ComponentShutdown>(OnFieldShutdown);
@@ -67,7 +65,7 @@ public sealed class TimeStopSystem : EntitySystem
                 if (!Exists(ent) || Deleted(ent))
                     continue;
 
-                if (ent == uid || comp.TimeStoppedEntities.Contains(ent) || ent == Transform(uid).ParentUid || comp.TimeStopIgnored.Contains(ent))
+                if (ent == uid || comp.TimeStoppedEntities.Contains(ent) || comp.TimeStopIgnored.Contains(ent))
                     continue;
 
                 if (HasComp<TimeStoppedComponent>(ent))
@@ -127,13 +125,6 @@ public sealed class TimeStopSystem : EntitySystem
             return;
 
         var timeStopped = AddComp<TimeStoppedComponent>(entity);
-        timeStopped.BodyType = physics.BodyType;
-        timeStopped.LinearVelocity = physics.LinearVelocity;
-        timeStopped.AngularVelocity = physics.AngularVelocity;
-
-        _physics.SetBodyType(entity, BodyType.Static, body: physics);
-        _physics.SetLinearVelocity(entity, Vector2.Zero, body: physics);
-        _physics.SetAngularVelocity(entity, 0f, body: physics);
 
         field.TimeStoppedEntities.Add(entity);
 
@@ -150,10 +141,6 @@ public sealed class TimeStopSystem : EntitySystem
 
         comp.Enabled = false;
 
-        _physics.SetBodyType(entity, comp.BodyType);
-        _physics.SetLinearVelocity(entity, comp.LinearVelocity);
-        _physics.SetAngularVelocity(entity, comp.AngularVelocity);
-
         _meta.SetEntityPaused(entity, false);
 
         _damageableSystem.ChangeDamage(entity, comp.StoredDamage);
@@ -165,9 +152,9 @@ public sealed class TimeStopSystem : EntitySystem
         if (args.Handled)
             return;
 
-        var uid = args.Performer;
-
         args.Handled = true;
+
+        var uid = args.Performer;
 
         var timeStop = Spawn(args.Prototype, Transform(uid).Coordinates);
 
@@ -178,25 +165,5 @@ public sealed class TimeStopSystem : EntitySystem
         }
 
         fieldComp.TimeStopIgnored.Add(uid);
-    }
-
-    private void OnBeforeDamageChanged(EntityUid uid, TimeStoppedComponent comp, ref BeforeDamageChangedEvent args)
-    {
-        if (comp.Enabled == false)
-            return;
-
-        comp.StoredDamage += args.Damage;
-
-        args.Cancelled = true;
-    }
-
-    private void OnBeforeStaminaDamage(EntityUid uid, TimeStoppedComponent comp, ref BeforeStaminaDamageEvent args)
-    {
-        if (comp.Enabled == false)
-            return;
-
-        comp.StoredStaminaDamage += args.Value;
-
-        args.Cancelled = true;
     }
 }
