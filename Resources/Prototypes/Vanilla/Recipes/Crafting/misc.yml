@@ -16,6 +16,7 @@
   category: construction-category-misc
   objectType: Item
 
+- type: construction
   id: GorgeousPortalGun
   graph: GorgeousPortalGunGraph
   startNode: start
