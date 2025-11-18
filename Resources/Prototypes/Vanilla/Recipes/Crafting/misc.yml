@@ -16,6 +16,14 @@
   category: construction-category-misc
   objectType: Item
 
+  id: GorgeousPortalGun
+  graph: GorgeousPortalGunGraph
+  startNode: start
+  targetNode: end
+  RequiresEngineeringLevel: 3
+  category: construction-category-misc
+  objectType: Item
+
 - type: construction
   id: TimeStopper
   graph: TimeStopperGraph
